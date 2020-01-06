@@ -1,0 +1,80 @@
+gmt x2sys_list [x2sys] 6.1.0_43b9e79_2020.01.04 [64-bit] - Extract subset from crossover data base
+
+usage: gmt x2sys_list -C<column> -T<TAG> [<COEdbase>] [-A<asymm_max] [-E] [-F<flags>] [-I<ignorelist>]
+	[-L[<corrtable.txt>]] [-N<nx_min>[+p]] [-Qe|i] [-S<track>[+b]]
+	[-R<west>/<east>/<south>/<north>[+r]] [-V[<level>]] [-W<weight>] [-bo[<ncol>][t][w][+l|b]] [-do<nodata>] [--PAR=<value>]
+
+	-C <column> is the name of the data column whose crossovers we want.
+	-T <TAG> is the system tag for the data set.
+
+	OPTIONS:
+	<COEdbase> File with crossover error data base [stdin].
+	-A Return only crossovers whose distribution in time [or dist if no time]
+	   are fairly symmetric about the mid-point. Specify max abs value for
+	   asymmetry = (n_right - n_left)/(n_right + n_left) [1, i.e., use all tracks].
+	-E Enhanced ASCII output: Add segment header with track names and number of crossovers [no segment headers].
+	-F Specify any combination of acdhiINtTvwxyzn in the order of desired output:
+	   Exception: n, if chosen, will always be placed at the end of the output record.
+	   a Angle (<= 90) between the two tracks at the crossover.
+	   c Crossover error in chosen observable (see -C).
+	   d Distance along tracks at the crossover.
+	   h Heading along tracks at the crossover.
+	   i Signed time interval between the two tracks at the crossover.
+	   I Unsigned time interval between the two tracks at the crossover.
+	   n Names of the two tracks.
+	   N Id numbers of the two tracks.
+	   t Absolute time along tracks at the crossover.
+	   T Time since start of track along tracks at the crossover.
+	   v Speed along tracks at the crossover.
+	   w weight assigned to the crossover.
+	   x x-coordinate of the crossover.
+	   y y-coordinate of the crossover.
+	   z Observed values (see -C) along tracks at the crossover.
+	   Unless -S is specified, d,h,n,t,T,v,z will yield two columns.
+	-I List of tracks to ignore [Use all tracks].
+	-L Subtract systematic corrections from the data. If no correction file is given,
+	   the default file <TAG>_corrections.txt in $X2SYS_HOME/<TAG> is assumed.
+	-N Suppress results involving tracks with less than a total of <nx_min> crossovers [Use all tracks].
+	   Alternatively, append +p to suppress pairs with less than <nx_min> crossovers [Use all pairs].
+	-Q Append e or i for external or internal crossovers [Default is both].
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead,
+	     or use +e which is like +r but makes sure the region extends at least by 0.25 x <inc>.
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+	   [Default region is the entire data domain].
+	-S Return only crossovers involving this track [Use all tracks].
+	   Append +b to make it print info relative to both tracks [Default is selected track].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W If argument can be opened as a file then we expect a List of tracks and their
+	   relative weights; otherwise the argument is the constant weight for all tracks [1].
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-do Replace any NaNs in output data with <nodata>.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

@@ -1,0 +1,88 @@
+gmt grdconvert [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Convert between different grid formats
+
+usage: gmt grdconvert <ingrid>[=<id>][+s<scale>][+o<offset>][+n<nan>]
+	-G<outgrid>[=<id>][+s<scale>][+o<offset>][+n<nan>][:<driver>[/<dataType>]] [-N]
+	[-R<west>/<east>/<south>/<north>[+r]] [-V[<level>]] [-f[i|o]<info>] [--PAR=<value>]
+
+	<ingrid> is the grid file to convert.
+	-G <outgrid> is the new converted grid file.
+	   scale and offset, if given, will multiply data by scale and add offset.
+	   Optionally, +n designates an invalid grid value to act as NaN.
+
+	OPTIONS:
+	-N Do NOT write the header (for native grids only - ignored otherwise).
+	   Useful when creating files to be used by external programs.
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead,
+	     or use +e which is like +r but makes sure the region extends at least by 0.25 x <inc>.
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).
+
+The following grid file formats are supported:
+	af = Atlantic Geoscience Center format AGC (32-bit float)
+	bb = GMT native, C-binary format (8-bit integer)
+	bd = GMT native, C-binary format (64-bit float)
+	bf = GMT native, C-binary format (32-bit float)
+	bi = GMT native, C-binary format (32-bit integer)
+	bm = GMT native, C-binary format (bit-mask)
+	bs = GMT native, C-binary format (16-bit integer)
+	cb = GMT netCDF format (8-bit integer, deprecated)
+	cd = GMT netCDF format (64-bit float, deprecated)
+	cf = GMT netCDF format (32-bit float, deprecated)
+	ci = GMT netCDF format (32-bit integer, deprecated)
+	cs = GMT netCDF format (16-bit integer, deprecated)
+	ef = ESRI Arc/Info ASCII Grid Interchange format (ASCII float)
+	ei = ESRI Arc/Info ASCII Grid Interchange format (ASCII integer)
+	gd = Import/export through GDAL
+	nb = GMT netCDF format (8-bit integer), CF-1.7
+	nd = GMT netCDF format (64-bit float), CF-1.7
+	nf = GMT netCDF format (32-bit float), CF-1.7
+	ni = GMT netCDF format (32-bit integer), CF-1.7
+	ns = GMT netCDF format (16-bit integer), CF-1.7
+	rb = SUN rasterfile format (8-bit standard)
+	rf = GEODAS grid format GRD98 (NGDC)
+	sd = Golden Software Surfer format 7 (64-bit float, read-only)
+	sf = Golden Software Surfer format 6 (32-bit float)
+
+	When <id>=gd on output, the grid will be saved using the GDAL library.
+	Specify <driver> and optionally <dataType>. Driver names are as in GDAL
+		(e.g., netCDF, GTiFF, etc.)
+	<dataType> is u8|u16|i16|u32|i32|float32; i|u denote signed|unsigned
+		integer.  Default type is float32.
+	Both driver names and data types are case insensitive.

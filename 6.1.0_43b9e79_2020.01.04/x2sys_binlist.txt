@@ -1,0 +1,23 @@
+gmt x2sys_binlist [x2sys] 6.1.0_43b9e79_2020.01.04 [64-bit] - Create bin index listing from track data files
+
+usage: gmt x2sys_binlist <files> -T<TAG> [-D] [-E] [-V[<level>]] [--PAR=<value>]
+
+	<files> is one or more datafiles, or give =<files.lis> for a file with a list of datafiles.
+	-T <TAG> is the system tag for this compilation.
+
+	OPTIONS:
+	-D Calculate track-lengths per bin (see x2sys_init -j for method and -N for units).
+	-E Bin tracks using equal-area bins (with -D only).
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

@@ -1,0 +1,24 @@
+gmt x2sys_put [x2sys] 6.1.0_43b9e79_2020.01.04 [64-bit] - Update track index database from track bin file
+
+usage: gmt x2sys_put [<info.tbf>] -T<TAG> [-D] [-F] [-V[<level>]] [--PAR=<value>]
+
+	<info.tbf> is one track bin file from x2sys_binlist [Default reads stdin].
+	-T <TAG> is the system tag for this compilation.
+
+	OPTIONS:
+	-D Remove the listed tracks  [Default will add to database].
+	-F Force updates to earlier entries for a track with new information.
+	   [Default refuses to process tracks already in the database].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

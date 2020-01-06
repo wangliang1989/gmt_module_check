@@ -1,0 +1,72 @@
+gmt gmtgravmag3d [potential] 6.1.0_43b9e79_2020.01.04 [64-bit] - Compute the gravity/magnetic anomaly of a 3-D body by the method of Okabe
+
+usage: gmt gmtgravmag3d -Tp<xyz_file>[+m] -Tv<vert_file> | -Tr|s<raw_file> [-C<density>] [-G<outgrid>]
+	[-I<xinc>[<unit>][+e|n][/<yinc>[<unit>][+e|n]]] [-R<west>/<east>/<south>/<north>[+r]] [-E<thick>] [-F<xy_file>] [-L<z_observation>]
+	[-H<f_dec>/<f_dip>/<m_int></m_dec>/<m_dip>] [-S<radius>]
+	[-Z<level>] [-V[<level>]] [-fg] [-r[g|p]] [--PAR=<value>]
+
+	-T Gives names of xyz (-Tp<fname>[+m]) and vertex (-Tv<fname>) files defining a close surface.
+	   The [+m] in -Tp tells the program that file has 4 columns and fourth holds a variable magnetization.
+	   The file formats correspond to the output of the triangulate program.
+	   Alternatively use -Tr<file> for file in raw triangle format (x1 y1 z1 x2 ... z3).
+	   or -Ts<file> for file in STL format.
+
+	OPTIONS:
+	-H Sets parameters for computation of magnetic anomaly.
+	   <f_dec>/<f_dip> -> geomagnetic declination/inclination.
+	   <m_int></m_dec></m_dip> -> body magnetic intensity/declination/inclination.
+	-C Sets body <density> in SI units.
+	-F Passes locations where anomaly is going to be computed.
+	-G Sets name of the output grdfile.
+	-I Specify increment(s) and optionally append units or flags.
+	   Full syntax is <xinc>[d|m|s|e|f|k|M|n|u][+e|n][/<yinc>[d|m|s|e|f|k|M|n|u][+e|n]]]
+	   For geographic regions in degrees you can optionally append units from this list:
+	   (d)egree [Default], (m)inute, (s)econd, m(e)ter, (f)oot, (k)ilometer, (M)ile, (n)autical mile, s(u)rvey foot.
+	   Append +e to adjust the region to fit increments [Adjust increment to fit domain].
+	   Alternatively, specify number of nodes by appending +n. Then, the increments
+	   are calculated from the given domain and node-registration settings
+	   (see Appendix B for details).  Note: If -R<grdfile> was used then -I
+	   (and -R and maybe -r) have been set; use -I to override those increments.
+	-L Sets level of observation [Default = 0].
+	-E give layer thickness in m [Default = 0 m].
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead,
+	     or use +e which is like +r but makes sure the region extends at least by 0.25 x <inc>.
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+	-S Sets search radius in km.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-Z Sets z level of reference plane [Default = 0].
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type>.
+	-fg Converts geographic grids to meters using a "Flat Earth" approximation.
+	-r Set (g)ridline- or (p)ixel-registration [Just -r sets pixel registration].
+	   If not given we default to gridline registration.
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

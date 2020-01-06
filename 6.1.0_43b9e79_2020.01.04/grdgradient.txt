@@ -1,0 +1,90 @@
+gmt grdgradient [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Compute directional gradients from a grid
+
+usage: gmt grdgradient <ingrid> -G<outgrid> [-A<azim>[/<azim2>]] [-D[a][c][o][n]]
+	[-E[s|p|m]<azim>/<elev>[+a<ambient>][+d<diffuse>][+p<specular>][+s<shine>]]
+	[-N[t|e][<amp>][+a<ambient>][+s<sigma>][+o<offset>]] [-Qc|r|R] [-R<west>/<east>/<south>/<north>[+r]]
+	[-S<slopegrid>] [-V[<level>]] [-fg] [-n[b|c|l|n][+a][+b<BC>][+c][+t<threshold>]] [--PAR=<value>]
+
+	<ingrid> is name of input grid file.
+
+	OPTIONS:
+	-A Set azimuth (0-360 CW from North (+y)) for directional derivatives.
+	  -A<azim>/<azim2> will compute two directions and select the one larger in magnitude.
+	  If <azim> is a grid we expect variable azimuths on a grid coregistered with <ingrid>.
+	-D Find the direction of the vector grad z (up-slope direction).
+	   Append a to get the aspect instead (down-slope direction).
+	   Append c to report Cartesian angle (0-360 CCW from East (+x-axis)) [Default: azimuth].
+	   Append o to get bidirectional orientations [0-180] rather than directions [0-360].
+	   Append n to add 90 degrees to the values from c or o.
+	-E Compute Lambertian radiance appropriate to use with grdimage/grdview.
+	   Provide the azimuth and elevation of the light vector.
+	   Append any of [+a<ambient>][+d<diffuse>][+p<specular>][+s<shine>]
+	     for parameters that control the reflectance properties of the surface
+	     [Default values are: +a0.55+d0.6p0.4+s10].
+	   Use -Es for a simpler Lambertian algorithm (note that with this algorithm
+	     you only have to provide azimuth and elevation).
+	   Use -Ep for the Peucker piecewise linear approximation (simpler but faster algorithm).
+	   Use -Em for another algorithm that gives results close to ESRI's 'hillshade' but faster
+	     In this case the azimuth and elevation are hardwired to 315 and 45 degrees;
+	     if you provide other values they will be ignored.
+	-G Output file for results from -A or -D.
+	-N Normalize gradients so that max |grad| = <amp> [1.0].
+	  -Nt will make atan transform, then scale to <amp> [1.0].
+	  -Ne will make exp  transform, then scale to <amp> [1.0].
+	    Append +a<ambient> to add <ambient> to the result [0].
+	    For -Nt|e, optionally append +s<sigma> and/or +o<offset> to set
+	    sigma and offset for the transform [Default estimates from the data].
+	    See -Q to use the same offset, sigma for multiple grid calculations.
+	-Q Control handling of -N arguments from previous calculations. Append code:
+	     c: Create stat file and write the offset and sigma of this run.
+	     r: Read offset and sigma of the previous run from stat file.
+	     R: Remove & read.  As r but also removes the stat file after use.
+	   The values obtained are used if +o and/or +s modifiers in -N are given no argument.
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead,
+	     or use +e which is like +r but makes sure the region extends at least by 0.25 x <inc>.
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+	-S Output file for |grad z|; requires -D.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-fg Convert geographic grids to meters using a "Flat Earth" approximation.
+	-n[b|c|l|n][+a][+b<BC>][+c][+t<threshold>] Specify the grid interpolation mode.
+	   (b = B-spline, c = bicubic, l = bilinear, n = nearest-neighbor) [Default is bicubic].
+	   Append +a to switch off antialiasing (except for l) [Default: on].
+	   Append +b<BC> to change boundary conditions.  <BC> can be either:
+	     g for geographic, p for periodic, and n for natural boundary conditions.
+	     For p and n you may optionally append x or y [default is both]:
+	       x for periodic boundary conditions on x,
+	       y for periodic boundary conditions on y.
+	   [Default: Natural conditions, unless grid is known to be geographic].
+	   Append +c to clip interpolated grid to input z-min/max [Default may exceed limits].
+	   Append +t<threshold> to change the minimum weight in vicinity of NaNs. A threshold of
+	   1.0 requires all nodes involved in interpolation to be non-NaN; 0.5 will interpolate
+	   about half way from a non-NaN to a NaN node [Default: 0.5].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

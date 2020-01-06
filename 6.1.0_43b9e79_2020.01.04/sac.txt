@@ -1,0 +1,186 @@
+gmt sac [seis] 6.1.0_43b9e79_2020.01.04 [64-bit] - Plot seismograms in SAC format
+
+usage: gmt sac [<saclist>|<SACfiles>] -J<args> -R<west>/<east>/<south>/<north>[/<zmin>/<zmax>][+r]
+	[-B<args>] [-C[<t0>/<t1>]] [-D<dx>[/<dy>]] [-Ea|b|k|d|n[<n>]|u[<n>]] [-F[i][q][r]]
+	[-G[p|n][+g<fill>][+t<t0>/<t1>][+z<zero>]] [-M<size>[<unit>]/<alpha>] [-Q]
+	[-S[i]<scale>[<unit>]] [-T[+t<tmark>][+r<reduce_vel>][+s<shift>]] 
+	[-U[<label>][+c][+j<just>][+o<dx>/<dy>]] [-V[<level>]] [-W<pen>]
+	[-X[a|c|f|r]<xshift>[<unit>]] [-Y[a|c|f|r]<yshift>[<unit>]]
+	[-c[<row>,<col>|<index>]] [-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]]
+	[-p[x|y|z]<azim>[/<elev>[/<zlevel>]][+w<lon0>/<lat0>[/<z0>][+v<x0>/<y0>]]
+	[-t<transp>] [--PAR=<value>]
+
+	<SACfiles> are the name of SAC files to plot on maps. Only evenly spaced SAC data is supported.
+	<saclist> is an ASCII file (or stdin) which contains the name of SAC files to plot and controlling parameters.
+	   Each record has 1, 3 or 4 items:  <filename> [<X> <Y> [<pen>]]. 
+	   <filename> is the name of SAC file to plot.
+	   <X> and <Y> are the position of seismograms to plot on a map.
+	      On linear plots, the default <X> is the begin time of SAC file, which will be adjusted if -T option is used, 
+	      the default <Y> is determined by **-E** option.
+	      On geographic plots, the default <X> and <Y> are station longitude and latitude specified in SAC header.
+	      The <X> and <Y> given here will override the position determined by command line options.
+	   If <pen> is given, it will override the pen from -W option for current SAC file only.
+	-J Select map proJection. (<scale> in cm/degree, <width> in cm)
+	   Append +dh for map height, +du for max (upper) or +dl for min (lower) map dimension [+dw for width].
+	   Azimuthal projections set -Rg unless polar aspect or -R<...>r is set.
+
+	   -Ja|A<lon0>/<lat0>[/<hor>]/<scl (or <radius>/<lat>)|<width> (Lambert Azimuthal EA)
+	   -Jb|B<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Albers Conic EA)
+	   -Jcyl_stere|Cyl_stere/[<lon0>/[<lat0>/]]<lat1>/<lat2>/<scl>|<width> (Cylindrical Stereographic)
+	   -Jc|C<lon0>/<lat0><scl>|<width> (Cassini)
+	   -Jd|D<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Equidistant Conic)
+	   -Je|E<lon0>/<lat0>[/<horizon>]/<scl (or <radius>/<lat>)|<width>  (Azimuthal Equidistant)
+	   -Jf|F<lon0>/<lat0>[/<horizon>]/<scl (or <radius>/<lat>)|<width>  (Gnomonic)
+	   -Jg|G<lon0>/<lat0>/<scl (or <radius>/<lat>)|<width>  (Orthographic)
+	   -Jg|G[<lon0>/]<lat0>[/<horizon>|/<altitude>/<azimuth>/<tilt>/<twist>/<Width>/<Height>]/<scl>|<width> (General Perspective)
+	   -Jh|H[<lon0>/]<scl>|<width> (Hammer-Aitoff)
+	   -Ji|I[<lon0>/]<scl>|<width> (Sinusoidal)
+	   -Jj|J[<lon0>/]<scl>|<width> (Miller)
+	   -Jkf|Kf[<lon0>/]<scl>|<width> (Eckert IV)
+	   -Jks|Ks[<lon0>/]<scl>|<width> (Eckert VI)
+	   -Jl|L<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Lambert Conformal Conic)
+	   -Jm|M[<lon0>/[<lat0>/]]<scl>|<width> (Mercator)
+	   -Jn|N[<lon0>/]<scl>|<width> (Robinson projection)
+	   -Jo|O (Oblique Mercator).  Specify one of three definitions:
+	      -Jo|O[a|A]<lon0>/<lat0>/<azimuth>/<scl>|<width>
+	      -Jo|O[b|B]<lon0>/<lat0>/<lon1>/<lat1>/<scl>|<width>
+	      -Jo|Oc|C<lon0>/<lat0>/<lonp>/<latp>/<scl>|<width>
+	   -Jpoly|Poly/[<lon0>/[<lat0>/]]<scl>|<width> ((American) Polyconic)
+	   -Jq|Q[<lon0>/[<lat0>/]]<scl>|<width> (Equidistant Cylindrical)
+	   -Jr|R[<lon0>/]<scl>|<width> (Winkel Tripel)
+	   -Js|S<lon0>/<lat0>/[<horizon>/]<scl> (or <slat>/<scl> or <radius>/<lat>)|<width> (Stereographic)
+	   -Jt|T<lon0>/[<lat0>/]<scl>|<width> (Transverse Mercator)
+	   -Ju|U[<zone>/]<scl>|<width> (UTM)
+	   -Jv|V<lon0>/<scl>|<width> (van der Grinten)
+	   -Jw|W<lon0>/<scl>|<width> (Mollweide)
+	   -Jy|Y[<lon0>/[<lat0>/]]<scl>|<width> (Cylindrical Equal-area)
+	   -Jp|P[a]<scl>|<width>[/<origin>][r|z] (Polar [azimuth] (theta,radius))
+	   -Jx|X<x-scl>|<width>[d|l|p<power>|t|T][/<y-scl>|<height>[d|l|p<power>|t|T]] (Linear, log, and power projections)
+	   (See psbasemap for more details on projection syntax)
+	   -JZ|z For z component of 3-D projections.  Same syntax as -JX|x, i.e.,
+	   -Jz|Z<z-scl>|<height>[d|l|p<power>|t|T] (Linear, log, and power projections)
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -Re and -Ra to set exact or approximate regions based on your input data (if applicable).
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead,
+	     or use +e which is like +r but makes sure the region extends at least by 0.25 x <inc>.
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+
+	OPTIONS:
+	-B Specify both (1) basemap frame settings and (2) axes parameters.
+	   (1) Frame settings are modified via an optional single invocation of
+	     -B[<axes>][+g<fill>][+n][+o<lon>/<lat>][+t<title>]
+	   (2) Axes parameters are specified via one or more invocations of
+	       -B[p|s][x|y|z]<intervals>[+a<angle>][+l<label>][+p<prefix>][+u<unit>]
+	   <intervals> is composed of concatenated [<type>]<stride>[<unit>][l|p] sub-strings
+	   See psbasemap man page for more details and examples of all settings.
+	-C Read and plot seismograms in timewindow between <t0> and <t1> only. <t0> and <t1>* are relative to a reference time specified by -T.
+	   If -T option is not specified, use the reference time (kzdate and kztime) defined in SAC header instead.
+	   Default to read and plot the whole trace. If only -C is used, t0 and t1 are determined from -R option
+	-D Offset all traces by <dx>/<dy>. If <dy> is not given it is set equal to <dx>.
+	-E Choose profile type (the type of Y axis). 
+	   a: azimuth profile
+	   b: back-azimuth profile
+	   k: epicentral distance (in km) profile
+	   d: epicentral distance (in degree) profile 
+	   n: trace number profile. The <Y> position of first trace is numbered as <n> [Default <n> is 0].
+	   u: user defined profile. The <Y> positions are determined by SAC header variable user<n>, default using user0.
+	-F Data preprocessing before plotting.
+	   i: integral
+	   q: square
+	   r: remove mean value
+	   i|q|r can repeat multiple times. -Frii will convert acceleration to displacement.
+	   The order of i|q|r controls the order of the data processing.
+	-G Paint positive or negative portion of traces.
+	   If only -G is used, default to fill the positive portion black.
+	   [p|n] controls the painting of positive portion or negative portion. Repeat -G option to specify fills for pos/neg portion, respectively.
+	   +g<fill>: color to fill
+	   +t<t0>/<t1>: paint traces between t0 and t1 only. The reference time of t0 and t1 is determined by -T option.
+	   +z<zero>: define zero line. From <zero> to top is positive portion, from <zero> to bottom is negative portion.
+	-M Vertical scaling
+	   <size>: each trace will scaled to <size>[u]. The default unit is PROJ_LENGTH_UNIT.
+	      The scale factor is defined as yscale = size*(north-south)/(depmax-depmin)/map_height 
+	   <size>/<alpha>: 
+	      <alpha> < 0, use the same scaling factor for all traces. The scaling factor will scale the first trace to <size>[<u>].
+	      <alpha> = 0, multiply all traces by <size>. No unit is allowed. 
+	      <alpha> > 0, multiply all traces by size*r^alpha, r is the distance range in km.
+	-Q Plot traces vertically.
+	-S Sets time scale in seconds per <unit> while plotting on geographic plots. 
+	   Append c, i, or p to indicate cm, inch or points as the unit. Use PROJ_LENGTH_UNIT if <unit> is omitted.
+	   Use -Si<scale><unit> to give the reciprocal scale, i.e. cm per second or inch per second.
+	-T Time alignment. 
+	   +t<tmark> align all trace along time mark. Choose <tmark> from -5(b), -4(e), -3(o), -2(a), 0-9(t0-t9).
+	   +r<reduce_vel> reduce velocity in km/s.
+	   +s<shift> shift all traces by <shift> seconds.
+	-U Plot GMT Unix System Time stamp [and optionally appended text or command line].
+	   You may also set the justification point and the relative position of stamp
+	   [+jBL+o-54p/-54p].  Add +c to have the command line plotted [OFF].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Set pen attributes [Default pen is default,black]:
+	   <pen> is a comma-separated list of three optional items in the order:
+	       <width>[c|i|p], <color>, and <style>[c|i|p].
+	   <width> >= 0.0 sets pen width (default units are points); alternatively a pen
+	             name: Choose among faint, default, or [thin|thick|fat][er|est], or obese.
+	   <color> = (1) <gray> or <red>/<green>/<blue>, all in range 0-255;
+	             (2) #rrggbb, all in the range 0-255 using hexadecimal numbers;
+	             (3) <c>/<m>/<y>/<k> in 0-100% range;
+	             (4) <hue>-<sat>-<val> in ranges 0-360, 0-1, 0-1;
+	             (5) any valid color name.
+	   <style> = (1) pattern of dashes (-) and dots (.), scaled by <width>;
+	             (2) "dashed", "dotted", "dashdot", "dotdash", or "solid";
+	             (3) <pattern>[:<offset>]; <pattern> holds lengths (default unit points)
+	                 of any number of lines and gaps separated by underscores.
+	                The optional <offset> shifts elements from start of the line [0].
+	   For PDF stroke transparency, append @<transparency> in the range 0-100% [0 = opaque].
+	-X -Y Shift origin of plot to (<xshift>, <yshift>).
+	   Prepend r for shift relative to current point (default), prepend a for temporary
+	   adjustment of origin, prepend f to position relative to lower left corner of page,
+	   prepend c for offset of center of plot to center of page.
+	   For overlays (-O), the default setting is [r0], otherwise [f2.54c].
+	-c Move to next subplot panel or append row,col or index of desired panel.
+	-h[i|o][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input or o for output only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output since none will be read.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-p Select a 3-D pseudo perspective view.  Append the
+	   <azimuth>/<elevation> of the viewpoint [180/90].
+	   When used with -Jz|Z, optionally add /<zlevel> for frame level [bottom of z-axis].
+	   Prepend x or y to plot against the “wall” x = level or y = level [z].
+	   Optionally, append +w<lon0>/<lat0>[/<z0>] to specify a fixed coordinate point
+	   or +v<x0>/<y0> for a fixed projected point [region center and page center].
+	   For a plain rotation about the z-axis, give rotation angle only
+	   and optionally use +w or +v to select location of axis [plot origin].
+	-t Set the layer transparency from 0-100 [Default is 0; opaque].
+	   Requires conversion to PDF or raster formats.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

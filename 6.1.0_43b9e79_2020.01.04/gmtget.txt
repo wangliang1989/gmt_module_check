@@ -1,0 +1,10 @@
+gmt gmtget [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Get individual GMT default settings
+
+usage: gmt gmtget [-G<defaultsfile>] [-L] PARAMETER1 PARAMETER2 PARAMETER3 ...
+
+	For available PARAMETERS, see gmt.conf man page
+	OPTIONS:
+	-G Set name of specific gmt.conf file to process.
+	   [Default looks for file in current directory.  If not found,
+	   it looks in the home directory, if not found it uses GMT defaults].
+	-L Write one parameter value per line [Default writes all on one line].

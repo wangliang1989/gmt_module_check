@@ -1,0 +1,155 @@
+gmt gmtspatial [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Geospatial operations on points, lines and polygons
+
+usage: gmt gmtspatial [<table>] [-A[a<min_dist>][unit]] [-C]
+	[-D[+f<file>][+a<amax>][+d<dist>[<unit>]][+c|C<cmax>][+l][+s<sfact>][+p]]
+	[-E+p|n] [-F[l]] [-I[i|e]] [-L<dist>[<unit>]/<pnoise>/<offset>] [-N<pfile>[+a][+p<ID>][+r][+z]]
+	[-Q[<unit>][+c<min>[/<max>]][+h][+l][+p][+s[a|d]]] [-R<west>/<east>/<south>/<north>[+r]] [-Sh|i|j|s|u]
+	[-T[<cpol>]] [-V[<level>]] [-b[i|o][<ncol>][t][w][+l|b]] [-d[i|o]<nodata>] [-e[~]<pattern>] [-f[i|o]<info>]
+	[-g[a]x|y|d|X|Y|D|[<col>]z<gap>[<unit>][+n|p]] [-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]]
+	[-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]] [-je|f|g] [-o<cols>[,...][t[<word>]]]
+	[-q[i|o][~]<rows>[,...][+c<col>][+a|f|s]] [-s[<cols>][+a|r]] [-:[i|o]] [--PAR=<value>]
+
+	OPTIONS:
+	<table> is one or more data files (in ASCII, binary, netCDF).
+	   If no files are given, standard input is read.
+	-A Nearest Neighbor (NN) Analysis. Compute minimum distances between NN point pairs.
+	   Append unit used for NN distance calculation.  Returns minimum distances and point IDs for pairs.
+	   Use -Aa to replace close neighbor pairs with their weighted average location until
+	   no point pair has a NN distance less than the specified <min_dist> distance [0].
+	   Considers 3rd column as z (if present) and 4th as w, if present [weight = 1].
+	-C Clip polygons to the given region box (requires -R), possibly yielding new closed polygons.
+	   For truncation instead (possibly yielding open polygons, i.e., lines), see -T.
+	-D Look for (near-)duplicates in <table>, or append +f to compare <table> against <file>.
+	   Near-duplicates have a minimum point separation less than <dmax> [0] and a closeness
+	   ratio (mean separation/length) less than <cmax> [0.01].  Use +d and +c to change these.
+	   Use +C to use median separation instead [+c uses mean separation].
+	   If near-duplicates have lengths that differ by <sfact> or more then they are subsets or supersets [2].
+	   To flag duplicate polygons, the fractional difference in areas must be less than <amax> [0.01].
+	   By default we consider all points when comparing two lines.  Use +p to limit
+	   the comparison to points that project perpendicularly on to the other line.
+	-E Orient all polygons to have the same handedness.
+	   Append +p for counter-clockwise (positive) or +n for clockwise (negative) handedness.
+	-F Force all input segments to become closed polygons on output by adding repeated point if needed.
+	   Use -Fl instead to ensure input lines are not treated as polygons.
+	-I Compute Intersection locations between input polygon(s).
+	   Append e or i for external or internal crossings only [Default is both].
+	   Use uppercase E or I to consider all segments within the same table as one entity [separate].
+	-L Remove tile Lines.  These are superfluous lines along the -R border.
+	   Append <gap_dist> (in m) [0], coordinate noise [1e-10], and max offset from gridline [1e-10].
+	-N Determine ID of polygon (in <pfile>) enclosing each input feature.  The ID is set as follows:
+	     a) If OGR/GMT polygons, get polygon ID via -a for Z column, else
+	     b) Interpret segment labels (-Z<value>) as polygon IDs, else
+	     c) Interpret segment labels (-L<label>) as polygon IDs, else
+	     d) Append +p<ID> to set origin for auto-incrementing polygon IDs [0].
+	   Modifier +a means all points of a feature (line, polygon) must be inside the ID polygon [mid point].
+	   Modifier +z means append the ID as a new output data column [Default adds -Z<ID> to segment header].
+	   Modifier +r means no table output; just reports which polygon a feature is inside.
+	-Q Measure area and handedness of polygon(s) or length of line segments.  If -fg is used
+	   you may append unit d|m|s|e|f|k|M|n|u [k]; otherwise it will be based on the input Cartesian data unit.
+	   We also compute polygon centroid or line mid-point.  See documentation for more information.
+	   Append +c to limit output segments to those with area or length within specified range [output all segments].
+	     if <max> is not given then it defaults to infinity.
+	   Append +h to place the (area, handedness) or length result in the segment header on output.
+	   Append +p to consider all input as polygons and close them if necessary
+	     [only closed polygons are considered polygons].
+	   Append +l to consider all input as lines even if closed [closed polygons are considered polygons].
+	   Append +s to sort segments based on area or length; append descending [ascending].
+	   [Default only reports results to stdout].
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead,
+	     or use +e which is like +r but makes sure the region extends at least by 0.25 x <inc>.
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+	-S Spatial manipulation of polygons; choose among:
+	     h for detecting holes and reversing them relative to perimeters.
+	     i for intersection [Not implemented yet].
+	     j for joining polygons that were split by the Dateline [Not implemented yet].
+	     s for splitting polygons that straddle the Dateline.
+	     u for union [Not implemented yet].
+	-T Truncate polygons against the clip polygon <cpol>; if <cpol> is not given we require -R
+	   and clip against a polygon derived from the region border.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [2].
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-g Use data point separations to determine if there are data gaps.
+	   Append x|X or y|Y to identify data gaps in x or y coordinates,
+	   respectively, and append d|D for distance gaps.  Upper case X|Y|D means
+	   we first project the points (requires -J).  Append <gap>[unit][+n|p]; +n uses
+	   d=prev-curr, +p uses d=curr-prev [d=|curr-prev|]; d must exceed <gap> to detect a gap.
+	   For geographic data: choose from e|f|k|M|n|u [Default is meter (e)].
+	   For gaps based on mapped coordinates: choose unit from c|i|p [cm].
+	   For time data: the unit is controlled by TIME_UNIT.
+	   For generic data: the unit is as the data implies (user units).
+	   Repeat the -g option to specify multiple criteria, and add -ga
+	   to indicate that all criteria must be met [just one must be met].
+	-h[i|o][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input or o for output only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output since none will be read.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Set alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-j Set spherical distance calculation mode for modules that offer that flexibility.
+	   Append f for Flat Earth, g for Great Circle [Default], and e for Ellipsoidal mode.
+	-o Set alternate output column order [Default writes all columns in order].
+	   Append list of columns; t[<word>] = trailing text; use <word> for writing a single word from the text.
+	   Use -on for numerical output only.
+	-q Select input (-q or -qi) or output (-qo) rows to process [Default reads or writes all rows].
+	   Append comma-separated lists of rows or row ranges; prepend ~ to exclude those ranges instead.
+	   Append +f or +s to reset row counters per table or segment [per set (+a)].
+	   For limits on data values instead, append +c<col> and give data limits for column <col>.
+	-s Suppress output for records whose z-value (col = 2) equals NaN
+	   [Default prints all records].
+	   Append <cols> to examine other column(s) instead [2].
+	   Append +a to suppress records where any column equals NaN, or
+	   append +r to reverse the suppression (only output z = NaN records).
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

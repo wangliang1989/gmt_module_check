@@ -1,0 +1,80 @@
+gmt hotspotter [spotter] 6.1.0_43b9e79_2020.01.04 [64-bit] - Create CVA grid from seamount locations
+
+usage: gmt hotspotter [<table>] -E[+]<rottable> -G<CVAgrid> -I<xinc>[m|s][/<yinc>[m|s]]
+	-R<west>/<east>/<south>/<north>[+r] [-D<factor>] [-N<upper_age>] [-S] [-T] [-V[<level>]]
+	[-bi[<ncol>][t][w][+l|b]] [-di<nodata>] [-e[~]<pattern>] [-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]]
+	[-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]] [-qi[~]<rows>[,...][+c<col>][+a|f|s]] [-r[g|p]] [-:[i|o]] [--PAR=<value>]
+
+	-E Specify file with the rotations to be used (see documentation for format).
+	   Append +i if you want to invert the finite rotations prior to use.
+	   Alternative 1: Give a single rotation as plon/plat/prot.
+	   Alternative 2: Give two plate IDs separated by a hyphen (e.g., PAC-MBL)
+	   to extract that rotation from the GPlates rotation database.
+	-G Specify file name for output CVA grid.
+	-I Specify grid interval(s); Append m [or s] to <dx> and/or <dy> for minutes [or seconds].
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead,
+	     or use +e which is like +r but makes sure the region extends at least by 0.25 x <inc>.
+	<table> (in ASCII, binary, or netCDF) has 5 or more columns.  If no file(s) is given,
+	   standard input is read.  Expects (x,y,z,r,t) records, with t in Ma.
+
+	OPTIONS:
+	-D Scale affecting distance between points along flowline [0.5].
+	-N Set upper age in m.y. for seamounts whose plate age is NaN [180].
+	-S Normalize CVA grid to percentages of the CVA maximum.
+	-T Truncate all ages to max age in stage pole model [Default extrapolates].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [5].
+	-di Replace any <nodata> in input data with NaN.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-h[i|o][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input or o for output only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output since none will be read.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Set alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-qi Select input rows to process [Default reads all rows].
+	   Append comma-separated lists of rows or row ranges; prepend ~ to exclude those ranges instead.
+	   Append +f or +s to reset row counters per table or segment [per set (+a)].
+	   For limits on data values instead, append +c<col> and give data limits for input column <col>.
+	-r Set (g)ridline- or (p)ixel-registration [Just -r sets pixel registration].
+	   If not given we default to gridline registration.
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

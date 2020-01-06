@@ -1,0 +1,25 @@
+gmt gmtwhich [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Find full path to specified files
+
+usage: gmt gmtwhich [files] [-A] [-C] [-D] [-G[c|l|u]] [-V[<level>]] [--PAR=<value>]
+
+	OPTIONS:
+	-A Only consider files you have permission to read [all files].
+	-C Print Y if found and N if not found.  No path is returned.
+	-D Print the directory where a file is found [full path to file].
+	-G Download file if possible and not found locally.
+	   Append c to place it in the cache directory.
+	   Append l to place it in the current local directory [Default].
+	   Append u to place it in the user's data directory.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

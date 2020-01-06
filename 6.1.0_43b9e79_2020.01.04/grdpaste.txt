@@ -1,0 +1,34 @@
+gmt grdpaste [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Join two grids along their common edge
+
+usage: gmt grdpaste <grid1> <grid2> -G<outgrid> [-V[<level>]] [-f[i|o]<info>] [--PAR=<value>]
+
+	where grids <grid1> and <grid2> are to be combined into <outgrid>.
+	<grid1> and <grid2> must have same dx,dy and one edge in common.
+	If in doubt, run grdinfo first and check your files.
+	Use grdpaste and/or grdsample to adjust files as necessary.
+	If grids are geographic and adds to full 360-degree range then grid1
+	determines west.  Use grdedit -S to rotate grid to another -Rw/e/s/n.
+	-G Specify file name for output grid file.
+
+	OPTIONS:
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

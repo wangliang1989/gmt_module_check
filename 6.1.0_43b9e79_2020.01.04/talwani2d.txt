@@ -1,0 +1,62 @@
+gmt talwani2d [potential] 6.1.0_43b9e79_2020.01.04 [64-bit] - Compute geopotential anomalies over 2-D bodies by the method of Talwani
+
+usage: gmt talwani2d <modelfile> [-A] [-D<rho>] [-Ff|n[<lat>]|v]
+	[-M[hz]] [-N<trktable>] [-T[<xmin>/<xmax>/<xinc>[+n]]] [-V[<level>]] [-Z[<level>][/<ymin/<ymax>]]
+	[-d[i|o]<nodata>] [-e[~]<pattern>] [-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]]
+	[-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]] [-o<cols>[,...][t[<word>]]]  [--PAR=<value>]
+
+	<modelfile> is a multiple-segment ASCII file.
+
+	OPTIONS:
+	-A The z-axis is positive upwards [Default is positive down].
+	-D Sets fixed density contrast that overrides settings in model file (in kg/m^3).
+	-F Specify desired geopotential field component:
+	   f = FAA Free-air anomalies (mGal) [Default].
+	   n = Geoid anomalies (meter).  Optionally append <lat> for evaluation of normal gravity [45].
+	   v = VGG Vertical Gravity Gradient anomalies (Eotvos = 0.1 mGal/km).
+	-M sets units used, as follows:
+	   -Mh indicates all x-distances are given in km [meters]
+	   -Mz indicates all z-distances are given in km [meters]
+	-N Gives file with output locations x[,z].  If there are
+	   z-coordinates then these are used as observation levels.
+	   You can use -Z to override these by setting a constant level.
+	-T Set domain from <xmin> to <xmax> in steps of <xinc>.
+	   Append +n to xinc to indicate the number of points instead.
+	   Alternatively, give a file with output positions in the first column, or a comma-separated list.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-Z Set observation level for output locations [0].
+	   For FAA only: Optionally append <ymin/ymax> to get a 2.5-D solution.
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-h[i|o][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input or o for output only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output since none will be read.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Set alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-o Set alternate output column order [Default writes all columns in order].
+	   Append list of columns; t[<word>] = trailing text; use <word> for writing a single word from the text.
+	   Use -on for numerical output only.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

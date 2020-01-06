@@ -1,0 +1,91 @@
+gmt grdfilter [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Filter a grid in the space (or time) domain
+
+usage: gmt grdfilter <ingrid> -D<distance_flag> -F<type><filter_width>[/<width2>][<modifiers>] -G<outgrid>
+	[-I<xinc>[<unit>][+e|n][/<yinc>[<unit>][+e|n]]] [-Ni|p|r] [-R<west>/<east>/<south>/<north>[+r]]
+	[-T] [-V[<level>]] [-f[i|o]<info>] [-r[g|p]] [--PAR=<value>]
+
+	<ingrid> is the input grid file to be filtered.
+	-D Distance flag determines how grid (x,y) maps into distance units of filter width as follows:
+	   Cartesian (x, y) Data:
+	     -Dp grid x,y with <filter_width> in pixels (must be an odd number), Cartesian distances.
+	     -D0 grid x,y same units as <filter_width>, Cartesian distances.
+	   Geographic (lon,lat) Data:
+	     -D1 grid x,y in degrees, <filter_width> in km, Cartesian distances.
+	     -D2 grid x,y in degrees, <filter_width> in km, x_scaled by cos(middle y), Cartesian distances.
+	   The options above are faster; they allow weight matrix to be computed only once.
+	   Next three options are slower; weights must be recomputed for each scan line.
+	     -D3 grid x,y in degrees, <filter_width> in km, x_scale varies as cos(y), Cartesian distances.
+	     -D4 grid x,y in degrees, <filter_width> in km, spherical distances.
+	     -D5 grid x,y in Mercator units (-Jm1), <filter_width> in km, spherical distances.
+	-F Set the low-pass filter type and full diameter (6 sigma) filter-width.
+	   Choose between convolution-type filters which differ in how weights are assigned
+	   and geospatial filters that seek to return a representative value.
+	   Append +h to select high-pass filtering [Default is low-pass filtering].
+	   Filters are isotropic.  For rectangular filtering append /<width2> (requires -Dp|0).
+	   Convolution filters:
+	     b: Boxcar : a simple averaging of all points inside filter domain.
+	     c: Cosine arch : a weighted averaging with cosine arc weights.
+	     g: Gaussian : weighted averaging with Gaussian weights.
+	     f: Custom : Give grid file with custom filter weights (requires -D0).
+	     o: Operator : Give grid file with custom operator weights (requires -D0).
+	   Geospatial filters:
+	     h: Histogram-based mode estimator.  Append width/bin and optional modifiers:
+	        Data inside filter domain is binned using the <bin> increment
+	        Append +c to center the bins on multiples of <bin> [Default has bin edges as multiples]
+	        Append +l to return the lowest mode if multiple modes are found [return average].
+	        Append +u to return the uppermost mode if multiple modes are found [return average].
+	     l: Lower : return minimum of all points.
+	     L: Lower+ : return minimum of all positive points.
+	     m: Median : return the median (50% quantile) value of all points.
+	        Append +q<quantile> to select another quantile (in 0-1 range) [0.5].
+	     p: Maximum likelihood probability estimator : return mode of all points.
+	        We approximate the mode using the Least Median of Squares estimator.
+	        Append +l to return the lowest mode if multiple modes are found [return average].
+	        Append +u to return the uppermost mode if multiple modes are found [return average].
+	     u: Upper : return maximum of all points.
+	     U: Upper- : return maximum of all negative points.
+	     If <width> is a grid it must match output domain and registration
+	-G Set output filename for filtered grid.
+
+	OPTIONS:
+	-I Specify increment(s) and optionally append units or flags.
+	   Full syntax is <xinc>[d|m|s|e|f|k|M|n|u][+e|n][/<yinc>[d|m|s|e|f|k|M|n|u][+e|n]]]
+	   For geographic regions in degrees you can optionally append units from this list:
+	   (d)egree [Default], (m)inute, (s)econd, m(e)ter, (f)oot, (k)ilometer, (M)ile, (n)autical mile, s(u)rvey foot.
+	   Append +e to adjust the region to fit increments [Adjust increment to fit domain].
+	   Alternatively, specify number of nodes by appending +n. Then, the increments
+	   are calculated from the given domain and node-registration settings
+	   (see Appendix B for details).  Note: If -R<grdfile> was used then -I
+	   (and -R and maybe -r) have been set; use -I to override those increments.
+	   The new xinc and yinc should be divisible by the old ones (new lattice is subset of old).
+	-N Specify how NaNs in the input grid should be treated. There are three options:
+	   -Ni skips all NaN values and returns a filtered value unless all are NaN [Default].
+	   -Np sets filtered output to NaN is any NaNs are found inside filter circle.
+	   -Nr sets filtered output to NaN if the corresponding input node was NaN.
+	      (only possible if the input and output grids are co-registered).
+	-T Toggle between grid and pixel registration for output grid [Default is same as input registration].
+	-R For new Range of output grid; enter <WESN> (xmin, xmax, ymin, ymax) separated by slashes.
+	   [Default uses the same region as the input grid].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-r Set (g)ridline- or (p)ixel-registration [Just -r sets pixel registration].
+	   If not given we default to gridline registration.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

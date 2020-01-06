@@ -1,0 +1,131 @@
+gmt psconvert [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Convert [E]PS file(s) to other formats using Ghostscript
+
+usage: gmt psconvert <psfile1> <psfile2> <...> -A[+g<fill>][+m<margins>][+n][+p[<pen>]][+r][+s[m]|S<width[u]>[/<height>[u]]][+u]
+	[-C<gs_command>] [-D<dir>] [-E<resolution>] [-F<out_name>] [-G<gs_path>] [-H<factor>] [-I] [-L<listfile>] [-Mb|f<psfile>]
+	[-P] [-Q[g|p|t]1|2|4] [-S] [-Tb|e|E|f|F|g|G|j|m|s|t[+m]] [-V[<level>]]
+	[-W[+a<mode>[<alt]][+f<minfade>/<maxfade>][+g][+k][+l<lodmin>/<lodmax>][+n<name>][+o<folder>][+t<title>][+u<URL>]]
+	[-Z] [--PAR=<value>]
+	Works by modifying the page size in order that the resulting
+	image will have the size specified by the BoundingBox.
+	As an option, a tight BoundingBox may be computed.
+
+	<psfile(s)> PostScript file(s) to be converted.
+
+	OPTIONS:
+	-A Adjust the BoundingBox to the minimum required by the image contents.
+	   Append +g<paint> to paint the BoundingBox [no paint].
+	   Append +m<margin(s)> to enlarge the BoundingBox, with <margin(s)> being
+	     <off>[u] for uniform margin for all 4 sides,
+	     <xoff>[u]/<yoff>[u] for separate x- and y-margins, or
+	     <woff>[u]/<eoff>[u]/<soff>[u]/<noff>[u] for separate w-,e-,s-,n-margins.
+	   Append +n to leave the BoundingBox as is.
+	   Append +p[<pen>] to outline the BoundingBox [default,black].
+	   Append +r to force rounding of HighRes BoundingBox instead of ceil.
+	   Append +s[m]<width[u]>[/<height>[u]] option the select a new image size
+	     but maintaining the DPI set by -E (Ghostscript does the re-interpolation work).
+	     Use +sm to only change size if figure size exceeds the new maximum size(s).
+	     Append measurement unit u (c|i|p) [c].
+	   Alternatively, use -A+S<scale> to scale the image by the <scale> factor.
+	   Append +u to strip out time-stamps (produced by GMT -U options).
+	-C Specify a single, custom option that will be passed on to Ghostscript
+	   as is. Repeat to add several options [none].
+	-D Set an alternative output directory (which must exist)
+	   [Default is same directory as PS files].
+	   Use -D. to place the output in the current directory.
+	-E Set raster resolution in dpi [default = 720 for images in a PDF, 300 for other formats].
+	-F Force the output file name. By default output names are constructed
+	   using the input names as base, which are appended with an appropriate
+	   extension. Use this option to provide a different name, but WITHOUT
+	   extension. Extension is still determined and appended automatically.
+	-G Full path to your Ghostscript executable.
+	   NOTE: Under Unix systems this is generally not necessary.
+	   Under Windows, Ghostscript path is fished from the registry.
+	   If this fails you can still add the GS path to system's path
+	   or give the full path here.
+	   (e.g., -G/some/unusual/dir/bin/gs).
+	-H Temporarily increase dpi by <factor>, rasterize, then downsample [no downsampling].
+	   Used to improve raster image quality, especially for lower raster resolutions.
+	-I Ghostscript versions >= 9.00 change gray-shades by using ICC profiles.
+	   GS 9.05 and above provide the '-dUseFastColor=true' option to prevent that
+	   and that is what psconvert does by default, unless option -I is set.
+	   Note that for GS >= 9.00 and < 9.05 the gray-shade shifting is applied
+	   to all but PDF format. We have no solution to offer other than ... upgrade GS
+	-L The <listfile> is an ASCII file with names of files to be converted.
+	-M Sandwich current psfile between background and foreground plots:
+	     -Mb Append the name of a background PostScript plot [none].
+	     -Mf Append name of foreground PostScript plot [none].
+	-P Force Portrait mode. All Landscape mode plots will be rotated back
+	   so that they show unrotated in Portrait mode.
+	   This is practical when converting to image formats or preparing
+	   EPS or PDF plots for inclusion in documents.
+	-Q Anti-aliasing setting for (g)raphics or (t)ext; append size (1,2,4) of sub-sampling box.
+	   For PDF and EPS output, default is no anti-aliasing, which is the same as specifying size 1.
+	   For raster formats the defaults are -Qg4 -Qt4 unless overridden explicitly.
+	   Optionally, use -Qp to create a GeoPDF (requires -Tf).
+	-S Apart from executing it, also writes the Ghostscript command to
+	   standard error and keeps all intermediate files.
+	-T Set output format [default is jpeg]:
+	   b means BMP.
+	   e means EPS.
+	   E means EPS with setpagedevice command.
+	   f means PDF.
+	   F means multi-page PDF (requires -F).
+	   g means PNG.
+	   G means PNG (transparent where nothing is plotted).
+	   j means JPEG.
+	   m means PPM.
+	   s means SVG [if supported by your Ghostscript version].
+	   t means TIF.
+	   For b, g, j, and t, append +m to get a monochrome (grayscale) image [color].
+	   The EPS format can be combined with any of the other formats.
+	   For example, -Tef creates both an EPS and PDF file.
+	-V Provide progress report [default is silent] and show the
+	   gdal_translate command, in case you want to use this program
+	   to create a geoTIFF file.
+	-W Write a ESRI type world file suitable to make (e.g.,) .tif files
+	   recognized as geotiff by software that know how to do it. Be aware,
+	   however, that different results are obtained depending on the image
+	   contents and if the -B option has been used or not. The trouble with
+	   -B is that it creates a frame and very likely its ticks and annotations
+	   introduces pixels outside the map data extent. As a consequence,
+	   the map extent estimation will be wrong. To avoid this problem, use
+	   the --MAP_FRAME_TYPE=inside option which plots all annotation-related
+	   items inside the image and therefore does not compromise the coordinate
+	   computations. The world file naming follows the convention of jamming
+	   a 'w' in the file extension. So, if the output is tif (-Tt) the world
+	   file is a .tfw, for jpeg a .jgw, and so on.
+	   Use -W+g to do a system call to gdal_translate and produce a true
+	   geoTIFF image right away. The output file will have the extension
+	   .tiff. See the man page for other 'gotchas'. Automatically sets -A -P.
+	   Use -W+k to create a minimalist KML file that allows loading the
+	   image in Google Earth. Note that for this option the image must be
+	   in geographical coordinates. If not, a warning is issued but the
+	   KML file is created anyway.
+	   Several modifiers allow you to specify the content in the KML file:
+	   +a<altmode>[<altitude>] sets the altitude mode of this layer, where
+	      <altmode> is one of 5 recognized by Google Earth:
+	      G clamped to the ground [Default].
+	      g Append altitude (in m) relative to ground.
+	      A Append absolute altitude (in m).
+	      s Append altitude (in m) relative to seafloor.
+	      S clamped to the seafloor.
+	   +f<minfade>/<maxfade>] sets distances over which we fade from opaque
+	     to transparent [no fading].
+	   +l<minLOD>/<maxLOD>] sets Level Of Detail when layer should be
+	     active [always active]. Image goes inactive when there are fewer
+	     than minLOD pixels or more than maxLOD pixels visible.
+	     -1 means never invisible.
+	   +n<layername> sets the name of this particular layer
+	     ["GMT Image Overlay"].
+	   +o<foldername> sets the name of this particular folder
+	     ["GMT Image Folder"].  This yields a KML snipped without header/trailer.
+	   +t<doctitle> sets the document name ["GMT KML Document"].
+	   +u<URL> prepands this URL to the name of the image referenced in the
+	     KML [local file].
+	   Escape any +? modifier inside strings with \.
+	-Z Remove input PostScript file(s) after successful conversion.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

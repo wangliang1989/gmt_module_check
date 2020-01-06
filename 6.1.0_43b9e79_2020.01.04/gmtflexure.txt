@@ -1,0 +1,72 @@
+gmt gmtflexure [potential] 6.1.0_43b9e79_2020.01.04 [64-bit] - Compute flexural deformation of 2-D loads, forces, and bending moments
+
+usage: gmt gmtflexure -D<rhom>/<rhol>[/<rhoi>]/<rhow> -E<te> -Q<loadinfo> [-A[l|r]<bc>[/<args>]]
+	[-C[p|y]<value] [-F<force>] [-L] [-S] [-T<wpre>] [-V[<level>]] [-W<w0>] [-Z<zm>]
+	[-e[~]<pattern>] [-e[~]<pattern>] [-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]]
+	[-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]] [-o<cols>[,...][t[<word>]]] [--PAR=<value>]
+
+	-D Sets density values for mantle, load(crust), optional moat infill [same as load], and water in kg/m^3.
+	-E Sets elastic plate thickness in m; append k for km.  If Te > 1e10 it will be interpreted
+	   as the flexural rigidity [Default computes D from Te, Young's modulus, and Poisson's ratio].
+	   If <te> can be opened as a file it is expected to hold elastic thicknesses at each load location.
+	-Q Input load option. Choose among these options:
+	   -Qn indicates there is no load (only -A and -L contribute to deformation).
+	      If no file is given via -E<file> then append <min/max/inc> to set an equidistant profile.
+	      Append +n to inc to indicate the number of points instead.
+	   -Qq[<load>] is a file (or stdin) with (x,load in Pa) for all points.
+	   -Qt[<load>] is a file (or stdin) with (x,load in m or km) for all points (see -M).
+
+	OPTIONS:
+	-Al and -Ar specify boundary conditions at the left and right end, respectively.
+	   Four types of BC's are recognized (here, w = w(x) = the deflection):
+	   -Al0 or -Ar0 :         "Infinity" condition, w' = w'' = 0
+	   -Al1 or -Ar1 :         "Periodic" condition, w' = w''' = 0
+	   -Al2/w0 or -Ar2/w0 :   "Clamped", w at end = w0 [0], w' = 0
+	   -Al3/m/f or -Ar3/m/f : "Free" condition, specify (m)oment and (f)orce at end [0/0].
+	   Default BCs are -Al0 -Ar0.  Use SI units for any optional arguments.
+	-C Use -Cy<Young> or -Cp<poisson> to change Young's modulus [7e+10] or Poisson's ratio [0.25].
+	-F Specifies the uniform, horizontal stress in the plate [Pa m].
+	-L Use variable restoring force k(x) that depends on w(x).
+	-M Sets units used, as follows:
+	   -Mx indicates all x-distances are in km [meters]
+	   -Mz indicates all z-deflections are in km [meters]
+	-S Also compute second derivatives (curvatures) on output.
+	-T To use file <wpre> with pre-existing deflections [none].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Specify water depth in m; append k for km.  Must be positive.
+	   Subaerial topography will be scaled by -D to account for density differences.
+	-Z Specify reference depth to flexed surface in m; append k for km.  Must be positive [0].
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-h[i|o][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input or o for output only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output since none will be read.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Set alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-o Set alternate output column order [Default writes all columns in order].
+	   Append list of columns; t[<word>] = trailing text; use <word> for writing a single word from the text.
+	   Use -on for numerical output only.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

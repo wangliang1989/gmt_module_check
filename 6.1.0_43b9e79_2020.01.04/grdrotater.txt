@@ -1,0 +1,104 @@
+gmt grdrotater [spotter] 6.1.0_43b9e79_2020.01.04 [64-bit] - Finite rotation reconstruction of geographic grid
+
+usage: gmt grdrotater <grid> -E<rottable>[+i]|<ID1>-<ID2>[+i]|<plon>/<plat>/<prot> -G<outgrid> [-F<polygontable>]
+	[-A<region>] [-D<rotoutline>] [-N] [-R<west>/<east>/<south>/<north>[+r]] [-S] [-T<time(s)>] [-V[<level>]]
+	[-b[i|o][<ncol>][t][w][+l|b]] [-d[i|o]<nodata>] [-g[a]x|y|d|X|Y|D|[<col>]z<gap>[<unit>][+n|p]]
+	[-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]]
+	[-n[b|c|l|n][+a][+b<BC>][+c][+t<threshold>]] [-o<cols>[,...][t[<word>]]] [--PAR=<value>]
+
+	<grid> is the gridded data file in geographic coordinates to be rotated.
+	-G Set output filename for the new, rotated grid.  The boundary of the
+	   original grid (or a subset; see -F) after rotation is written to stdout (but see -D)
+	   unless the grid is global.  If more than one reconstruction time is chosen
+	   then -D is required unless -N is used and <outgrid> must be a filename template
+	   containing a C-format specifier for formatting a double (for the variable time).
+	-E Specify file with the rotations to be used (see documentation for format).
+	   Append +i if you want to invert the finite rotations prior to use.
+	   Alternative 1: Give a single rotation as plon/plat/prot.
+	   Alternative 2: Give two plate IDs separated by a hyphen (e.g., PAC-MBL)
+	   to extract that rotation from the GPlates rotation database.
+	   Alternatively, specify a single finite rotation (in degrees) to be applied.
+
+	OPTIONS:
+	-A Set the west/east/south/north bounds for the rotated grid [Default will
+	   determine the natural extent of the rotated grid instead].
+	-D Write the rotated polygon or grid outline to <rotoutline> [stdout].
+	   Required if more than one reconstruction time is chosen and -N is not set
+	   and must then contain a C-format specifier for formatting a double (for the variable time).
+	-F Specify a multi-segment closed polygon table that describes the area of the grid
+	   that should be projected [Default projects entire grid].
+	-N Do NOT output the rotated polygon or grid outlines.
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead,
+	     or use +e which is like +r but makes sure the region extends at least by 0.25 x <inc>.
+	-S Do NOT rotate the grid - just produce the rotated outlines (requires -D).
+	-T Set the time(s) of reconstruction.  Append a single time (-T<time>),
+	   an equidistant range of times (-T<min>/<max>/<inc> or -T<min>/<max>/<npoints>+n),
+	   or the name of a file with a list of times (-T<tfile>).  If no -T is set
+	   then the reconstruction times equal the rotation times given in -E.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [2].
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-g Use data point separations to determine if there are data gaps.
+	   Append x|X or y|Y to identify data gaps in x or y coordinates,
+	   respectively, and append d|D for distance gaps.  Upper case X|Y|D means
+	   we first project the points (requires -J).  Append <gap>[unit][+n|p]; +n uses
+	   d=prev-curr, +p uses d=curr-prev [d=|curr-prev|]; d must exceed <gap> to detect a gap.
+	   For geographic data: choose from e|f|k|M|n|u [Default is meter (e)].
+	   For gaps based on mapped coordinates: choose unit from c|i|p [cm].
+	   For time data: the unit is controlled by TIME_UNIT.
+	   For generic data: the unit is as the data implies (user units).
+	   Repeat the -g option to specify multiple criteria, and add -ga
+	   to indicate that all criteria must be met [just one must be met].
+	-h[i|o][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input or o for output only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output since none will be read.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-n[b|c|l|n][+a][+b<BC>][+c][+t<threshold>] Specify the grid interpolation mode.
+	   (b = B-spline, c = bicubic, l = bilinear, n = nearest-neighbor) [Default is bicubic].
+	   Append +a to switch off antialiasing (except for l) [Default: on].
+	   Append +b<BC> to change boundary conditions.  <BC> can be either:
+	     g for geographic, p for periodic, and n for natural boundary conditions.
+	     For p and n you may optionally append x or y [default is both]:
+	       x for periodic boundary conditions on x,
+	       y for periodic boundary conditions on y.
+	   [Default: Natural conditions, unless grid is known to be geographic].
+	   Append +c to clip interpolated grid to input z-min/max [Default may exceed limits].
+	   Append +t<threshold> to change the minimum weight in vicinity of NaNs. A threshold of
+	   1.0 requires all nodes involved in interpolation to be non-NaN; 0.5 will interpolate
+	   about half way from a non-NaN to a NaN node [Default: 0.5].
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

@@ -1,0 +1,165 @@
+gmt rose [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Plot a polar histogram (rose, sector, windrose diagrams)
+
+usage: gmt rose [<table>] [-A<sector_angle>[+r]] [-B<args>] [-C<cpt>] [-D] [-E[m|[+w]<modefile>]] [-G<fill>] [-I]
+	[-JX<width[u]>] [-L[<wlab>,<elab>,<slab>,<nlab>]] [-M[<size>][<modifiers>]] [-N] [-Q<alpha>]
+	[-R<r0>/<r1>/<theta0>/<theta1>] [-S] [-T] [-U[<label>][+c][+j<just>][+o<dx>/<dy>]]
+	[-V[<level>]] [-W[v]<pen>] [-X[a|c|f|r]<xshift>[<unit>]] [-Y[a|c|f|r]<yshift>[<unit>]]
+	[-Zu|<scale>] [-bi[<ncol>][t][w][+l|b]] [-c[<row>,<col>|<index>]] [-di<nodata>] [-e[~]<pattern>]
+	[-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]]
+	[-p[x|y|z]<azim>[/<elev>[/<zlevel>]][+w<lon0>/<lat0>[/<z0>][+v<x0>/<y0>]]
+	[-qi[~]<rows>[,...][+c<col>][+a|f|s]] [-s[<cols>][+a|r]] [-t<transp>] [-:[i|o]] [--PAR=<value>]
+
+	OPTIONS:
+	<table> is one or more data files (in ASCII, binary, netCDF).
+	   If no files are given, standard input is read.
+	-A Sector width in degrees for sector diagram [Default is windrose];
+	   Append +r to get rose diagram.
+	-B Specify both (1) basemap frame settings and (2) axes parameters.
+	   (1) Frame settings are modified via an optional single invocation of
+	     -B[<axes>][+g<fill>][+n][+o<lon>/<lat>][+t<title>]
+	   (2) Axes parameters are specified via one or more invocations of
+	       -B[p|s][x|y|z]<intervals>[+a<angle>][+l<label>][+p<prefix>][+u<unit>]
+	   <intervals> is composed of concatenated [<type>]<stride>[<unit>][l|p] sub-strings
+	   See psbasemap man page for more details and examples of all settings.
+	   The scale bar length is set to the radial gridline spacing.
+	   (Remember: radial is x-direction, azimuthal is y-direction).
+	-C Use CPT to assign fill to sectors based on the r-value. Requires -A (sector diagram)
+	-D Will center the sectors.
+	-E Plot vectors listed in the <modefile> file. For calculated mean direction, choose -Em.
+	   To write the calculated mean direction etc. to file, append +w<modfile>.
+	-F Do not draw the scale length bar [Default plots scale in lower right corner].
+	-G<fill> Specify color for diagram [Default is no fill]. Specify <fill> as one of:
+	   1) <gray> or <red>/<green>/<blue>, all in the range 0-255;
+	   2) #rrggbb, all in the range 0-255 using hexadecimal numbers;
+	   3) <c>/<m>/<y>/<k> in range 0-100%;
+	   4) <hue>-<sat>-<val> in ranges 0-360, 0-1, 0-1;
+	   5) any valid color name;
+	   6) P|p<pattern>[+b<color>][+f<color>][+r<dpi>];
+	      Give <pattern> number from 1-90 or a filename, optionally add +r<dpi> [0].
+	      Optionally, use +f<color> or +b<color> to change fore- or background colors (no <color> sets transparency).
+	   For PDF fill transparency, append @<transparency> in the range 0-100 [0 = opaque].
+	-I Inquire mode; only compute and report statistics - no plot is created.
+	-J Use -JX<width>[unit] to set the plot diameter [7.5 cm].
+	-L Override default labels [West,East,South,North (depending on GMT_LANGUAGE)
+	   for full circle and 90W,90E,-,0 for half-circle].  If no argument 
+	   is given then labels will be disabled.  Give - to disable an individual label.
+	-M Specify arrow attributes.  If -E is used then the attributes apply to the -E vector(s).
+	   Otherwise, if windrose mode is selected we apply vector attributes to individual directions.
+	   Append length of vector head, with optional modifiers:
+	   [Left and right are defined by looking from start to end of vector]
+	     +a<angle> to set angle of the vector head apex [30]
+	     +b to place a vector head at the beginning of the vector [none].
+	       Append t for terminal, c for circle, s for square, a for arrow [Default],
+	       i for tail, A for plain arrow, and I for plain tail.
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +e to place a vector head at the end of the vector [none].
+	       Append t for terminal, c for circle, s for square, a for arrow [Default],
+	       i for tail, A for plain arrow, and I for plain tail.
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +g<fill> to set head fill; oexclude <fill> to turn off fill [default fill].
+	     +h sets the vector head shape in -2/2 range [0].
+	     +j<just> to justify vector at (b)eginning [default], (e)nd, or (c)enter.
+	     +l to only draw left side of all specified vector heads [both sides].
+	     +m[f|r] to place vector head at mid-point of segment [Default expects +b|+e].
+	       Specify f or r for forward|reverse direction [forward].
+	       Append t for terminal, c for circle, s for square, or a for arrow [Default].
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +n<norm> to shrink attributes if vector length < <norm> [none].
+	     +o[<plon/plat>] sets pole [north pole] for great or small circles; only give length via input.
+	     +p[<pen>] to set pen attributes, exclude <pen> to turn off head outlines [default pen and outline].
+	     +q if start and stop opening angle is given instead of (azimuth,length) on input.
+	     +r to only draw right side of all specified vector heads [both sides].
+	     +s if (x,y) coordinates of tip is given instead of (azimuth,length) on input.
+	     +t[b|e]<trim(s)>[unit] to shift begin or end position along vector by given amount [no shifting].
+	   Default is 9p+gblack+p1p.
+	-N Normalize rose plots for area, i.e., take sqrt(r) before plotting [no normalization].
+	   Only applicable if normalization has been specified with -Sn<radius>.
+	-Q Set confidence level for Rayleigh test for uniformity [0.05].
+	-R Specifies the region (<r0> = 0, <r1> = max_radius).  For azimuth:
+	   Specify <theta0>/<theta1> = -90/90 or 0/180 (half-circles) or 0/360 only).
+	   If <r0> = <r1> = 0, psrose will compute a reasonable <r1> value.
+	-S Normalize data, i.e., divide all radii (or bin counts) by the maximum radius (or count).
+	-T Indicate that the vectors are oriented (two-headed), not directed [Default].
+	   This implies both <azimuth> and <azimuth> + 180 will be counted as inputs.
+	   Ignored if -R sets a half-circle domain.
+	-U Plot GMT Unix System Time stamp [and optionally appended text or command line].
+	   You may also set the justification point and the relative position of stamp
+	   [+jBL+o-54p/-54p].  Add +c to have the command line plotted [OFF].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Set pen attributes for outline of rose [Default is no outline].
+	   <pen> is a comma-separated list of three optional items in the order:
+	       <width>[c|i|p], <color>, and <style>[c|i|p].
+	   <width> >= 0.0 sets pen width (default units are points); alternatively a pen
+	             name: Choose among faint, default, or [thin|thick|fat][er|est], or obese.
+	   <color> = (1) <gray> or <red>/<green>/<blue>, all in range 0-255;
+	             (2) #rrggbb, all in the range 0-255 using hexadecimal numbers;
+	             (3) <c>/<m>/<y>/<k> in 0-100% range;
+	             (4) <hue>-<sat>-<val> in ranges 0-360, 0-1, 0-1;
+	             (5) any valid color name.
+	   <style> = (1) pattern of dashes (-) and dots (.), scaled by <width>;
+	             (2) "dashed", "dotted", "dashdot", "dotdash", or "solid";
+	             (3) <pattern>[:<offset>]; <pattern> holds lengths (default unit points)
+	                 of any number of lines and gaps separated by underscores.
+	                The optional <offset> shifts elements from start of the line [0].
+	   For PDF stroke transparency, append @<transparency> in the range 0-100% [0 = opaque].
+	   Use -Wv<pen> to set a different pen for the vector (requires -E) [Same as rose outline].
+	-X -Y Shift origin of plot to (<xshift>, <yshift>).
+	   Prepend r for shift relative to current point (default), prepend a for temporary
+	   adjustment of origin, prepend f to position relative to lower left corner of page,
+	   prepend c for offset of center of plot to center of page.
+	   For overlays (-O), the default setting is [r0], otherwise [f2.54c].
+	-Z Multiply the radii by <scale> before plotting; use -Zu to set input radii to 1.
+	-: Expect (azimuth,radius) input rather than (radius,azimuth) [OFF].
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [2].
+	-c Move to next subplot panel or append row,col or index of desired panel.
+	-di Replace any <nodata> in input data with NaN.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-h[i|o][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input or o for output only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output since none will be read.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Set alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-p Select a 3-D pseudo perspective view.  Append the
+	   <azimuth>/<elevation> of the viewpoint [180/90].
+	   When used with -Jz|Z, optionally add /<zlevel> for frame level [bottom of z-axis].
+	   Prepend x or y to plot against the “wall” x = level or y = level [z].
+	   Optionally, append +w<lon0>/<lat0>[/<z0>] to specify a fixed coordinate point
+	   or +v<x0>/<y0> for a fixed projected point [region center and page center].
+	   For a plain rotation about the z-axis, give rotation angle only
+	   and optionally use +w or +v to select location of axis [plot origin].
+	-qi Select input rows to process [Default reads all rows].
+	   Append comma-separated lists of rows or row ranges; prepend ~ to exclude those ranges instead.
+	   Append +f or +s to reset row counters per table or segment [per set (+a)].
+	   For limits on data values instead, append +c<col> and give data limits for input column <col>.
+	-s Suppress output for records whose z-value (col = 2) equals NaN
+	   [Default prints all records].
+	   Append <cols> to examine other column(s) instead [2].
+	   Append +a to suppress records where any column equals NaN, or
+	   append +r to reverse the suppression (only output z = NaN records).
+	-t Set the layer transparency from 0-100 [Default is 0; opaque].
+	   Requires conversion to PDF or raster formats.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

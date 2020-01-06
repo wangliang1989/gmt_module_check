@@ -1,0 +1,36 @@
+gmt x2sys_solve [x2sys] 6.1.0_43b9e79_2020.01.04 [64-bit] - Determine least-squares systematic correction from crossovers
+
+usage: gmt x2sys_solve -C<column> -Ec|d|g|h|s|t|z -T<TAG> [<coedata>] [-V[<level>]] [-W[u]]
+	[-bi[<ncol>][t][w][+l|b]] [-di<nodata>] [--PAR=<value>]
+
+	-C Specify the column name to process (e.g., faa, mag).
+	-E Equation to fit: specify <flag> to indicate model to fit per track:
+	     c (constant offset):   Determine offset [Default].
+	     d (drift by distance): Determine offset and drift-vs-distance rate.
+	     g (gravity latitude):  Determine amplitude of latitude gravity function.
+	     h (magnetic heading):  Determine amplitude of heading magnetic function.
+	     s (data scale):        Determine scaling factor.
+	     t (drift over time):   Determine offset and drift-vs-time rate.
+	     z (data scale/offset): Determine offset and scaling factor.
+	-T <TAG> is the x2sys tag for the data set.
+
+	OPTIONS:
+	<coedata> is the ASCII data output file from x2sys_list [or we read stdin].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Weights are present in last column for weighted fit [no weights].
+	   Append 'u' to report unweighted mean/std [Default, report weighted stats].
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type>.
+	-di Replace any <nodata> in input data with NaN.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

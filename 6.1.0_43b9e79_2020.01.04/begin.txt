@@ -1,0 +1,33 @@
+gmt begin [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Initiate a new GMT modern mode session
+
+usage: gmt begin [<prefix>] [<format(s)>] [<psconvertoptions] [-V[<level>]]
+
+	OPTIONS:
+	<prefix> is the prefix to use for unnamed figures [gmtsession].
+	<format(s)> sets the default plot format(s) [pdf].
+	   Choose one or more of these valid extensions separated by commas:
+	     bmp:	MicroSoft BitMap.
+	     eps:	Encapsulated PostScript.
+	     jpg:	Joint Photographic Experts Group format.
+	     pdf:	Portable Document Format [Default].
+	     png:	Portable Network Graphics.
+	     PNG:	Portable Network Graphics (with transparency layer).
+	     ppm:	Portable Pixel Map.
+	     ps:	PostScript.
+	     tif:	Tagged Image Format File.
+	<psconvertoptions> contains one or more comma-separated options that
+	   will be passed to psconvert when preparing this figure [A].
+	   The valid subset of psconvert options are
+	     A[<args>],C<args>,D<dir>,E<dpi>,H<factor>,Mb|f<file>,Q<args>,S
+	   See the psconvert documentation for details.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.

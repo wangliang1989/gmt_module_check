@@ -1,0 +1,92 @@
+gmt mgd77magref [mgd77] 6.1.0_43b9e79_2020.01.04 [64-bit] - Evaluate the IGRF or CM4 magnetic field models
+
+usage: gmt mgd77magref [<table>] [-A+y+a<alt>+t<date>] [-C<cm4file>] [-D<dstfile>] [-E<f107file>]
+	[-F<rthxyzdi[/[0|9]1234567]>] [-G] [-L<rtxyz[/1234]>] [-Sc|l<low>/<high>] [-V[<level>]]
+	[-b[i|o][<ncol>][t][w][+l|b]] [-d[i|o]<nodata>] [-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-:[i|o]] [--PAR=<value>]
+
+	OPTIONS:
+	<table> contains records that must contain lon, lat, alt, time[, other cols].
+	   longitude and latitude is the geocentric position on the ellipsoid [but see -G].
+	   alt is the altitude in km positive above the ellipsoid.
+	   time is the time of data acquisition, in <date>T<clock> format (but see -A+y).
+	   We read <stdin> if no input file is given.
+	-A Adjust how the input records are interpreted. Append
+	   +a<alt> to indicate a constant altitude [Default is 3rd column].
+	   +t<time> to indicate a constant time [Default is 4th column].
+	   +y to indicate times are given in decimal years [Default is ISO <date>T<clock> format].
+	-C Select an alternate file with coefficients for the CM4 model [/opt/GMT/share/umdl.CM4].
+	-D Select an alternate file with hourly means of the Dst index for CM4 [/opt/GMT/share/Dst_all.wdc],
+	   OR a single Dst index to apply for all records.
+	-E Select an alternate file with monthly means of absolute F10.7 solar radio flux for CM4 [/opt/GMT/share/F107_mon.plt],
+	   OR a single solar radio flux to apply for all records.
+	-F Dataflags is a string made up of 1 or more of these characters:
+		 r means output all input columns before adding the items below (all in nTesla).
+		 t means list total field.
+		 h means list horizontal field.
+		 x means list X component.
+		 y means list Y component.
+		 z means list Z component.
+		 d means list declination.
+		 i means list inclination.
+	   Append a number to indicate the requested field contribution(s):
+		 0 means Core field from IGRF only (no CM4 evaluation).
+		 1 means Core field.
+		 2 means Lithospheric field.
+		 3 Primary Magnetospheric field.
+		 4 Induced Magnetospheric field.
+		 5 Primary ionospheric field.
+		 6 Induced ionospheric field.
+		 7 Toroidal field.
+		 9 means Core field from IGRF and other contributions from CM4. DO NOT USE BOTH 1 AND 9.
+	   Append several numbers to add up the different contributions. For example,
+	     -Ft/12 computes the total field due to CM4 Core and Lithospheric sources.
+	     Two special cases are allowed which mix which Core field from IGRF and other sources from CM4.
+	     -Ft/934 computes Core field due to IGRF plus terms 3 and 4 from CM4.
+	     -Fxyz/934 the same as above but output the field components.
+		 The data is written out in the order specified in <dataflags>
+		 [Default is -Frthxyzdi/1]
+	-G Specify that coordinates are geocentric [geodetic].
+	-L Compute J field vectors from certain external sources.
+	   Dataflags is a string made up of 1 or more of these characters:
+		 r means output all input columns before adding the items below (all in Ampers/m).
+		 t means list magnitude field.
+		 x means list X component.
+		 y means list Y component.
+		 z means list Z or current function Psi.
+	   Append a number to indicate the requested J contribution(s)
+		 1 means Induced Magnetospheric field.
+		 2 means Primary ionospheric field.
+		 3 means Induced ionospheric field.
+		 4 means Poloidal field.
+	-S Limit the CM4 contributions from core and lithosphere to certain harmonic degree bands.
+	   Append c(ore) or l(ithosphere) and the low and high degrees to use [-Sc1/13 -Sl14/65].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type>.
+	   Default is 4 input columns (unless -A is used).  Note for binary input, absolute time must
+	   be in the unix time-system (unless -A+y is used).
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-h[i|o][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input or o for output only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output since none will be read.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

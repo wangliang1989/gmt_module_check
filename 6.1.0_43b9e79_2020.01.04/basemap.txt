@@ -1,0 +1,338 @@
+gmt basemap [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Plot base maps and frames
+
+usage: gmt basemap -J<args> -R<west>/<east>/<south>/<north>[/<zmin>/<zmax>][+r] [-B<args>]
+	[-A[<file>]] [-F[l|t][+c<clearance(s)>][+g<fill>][+i[[<gap>/]<pen>]][+p[<pen>]][+r[<radius>]][+s[<dx>/<dy>/][<fill>]]]
+	
+	[-L[g|j|J|n|x]<refpoint>+c[<slon>/]<slat>+w<length>[e|f|M|n|k|u][+a<align>][+f][+j<justify>][+l[<label>]][+o<dx>[/<dy>]][+u]]
+	[-Td[g|j|J|n|x]<refpoint>+w<width>[+f[<level>]][+j<justify>][+l<w,e,s,n>][+o<dx>[/<dy>]]]
+	[-Tm[g|j|J|n|x]<refpoint>+w<width>[+d[<dec>[/<dlabel>]]][+i<pen>][+j<justify>][+l<w,e,s,n>][+p<pen>][+t<ints>][+o<dx>[/<dy>]]]
+	[-U[<label>][+c][+j<just>][+o<dx>/<dy>]] [-V[<level>]] [-X[a|c|f|r]<xshift>[<unit>]]
+	[-Y[a|c|f|r]<yshift>[<unit>]] [-c[<row>,<col>|<index>]] [-f[i|o]<info>]
+	[-p[x|y|z]<azim>[/<elev>[/<zlevel>]][+w<lon0>/<lat0>[/<z0>][+v<x0>/<y0>]] [-t<transp>] [--PAR=<value>]
+
+	-J Select the map proJection. The projection type is identified by a 1- or
+	   2-character ID (e.g. 'm' or 'kf') or by an abbreviation followed by a slash
+	   (e.g. 'cyl_stere/'). When using a lower-case ID <scale> can be given either as 1:<xxxx>
+	   or in cm/degree along the standard parallel. Alternatively, when the projection ID is
+	   Capitalized, <scale>|<width> denotes the width of the plot in cm
+	   Append +dh for map height, +du for max map dimension, and +dl for min map dimension [Default +dw is width].
+	   When the central meridian (lon0) is optional and omitted, the center of the
+	   longitude range specified by -R is used. The default standard parallel is the equator
+	   Azimuthal projections set -Rg unless polar aspect or -R<...>r is given.
+	   -Ja|A<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Lambert Azimuthal Equal Area)
+	     <lon0>/<lat0> is the center of the projection.
+	     <horizon> is max distance from center of the projection (<= 180, default 90).
+	     <scale> can also be given as <radius>/<lat>, where <radius> is the distance
+	     in cm to the oblique parallel <lat>.
+	   -Jb|B<lon0>/<lat0>/<lat1>/<lat2>/<scale>|<width> (Albers Equal-Area Conic)
+	     Give origin, 2 standard parallels, and true scale
+	   -Jc|C<lon0>/<lat0><scale>|<width> (Cassini)
+	     Give central point and scale
+	   -Jcyl_stere|Cyl_stere/[<lon0>/[<lat0>/]]<scale>|<width> (Cylindrical Stereographic)
+	     Give central meridian (opt), standard parallel (opt) and scale
+	     <lat0> = 66.159467 (Miller's modified Gall), 55 (Kamenetskiy's First),
+	     45 (Gall Stereographic), 30 (Bolshoi Sovietskii Atlas Mira), 0 (Braun)
+	   -Jd|D<lon0>/<lat0>/<lat1>/<lat2>/<scale>|<width> (Equidistant Conic)
+	     Give origin, 2 standard parallels, and true scale
+	   -Je|E<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Azimuthal Equidistant)
+	     <lon0>/<lat0> is the center of the projection.
+	     <horizon> is max distance from center of the projection (<= 180, default 180).
+	     <scale> can also be given as <radius>/<lat>, where <radius> is the distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jf|F<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Gnomonic)
+	     <lon0>/<lat0> is the center of the projection.
+	     <horizon> is max distance from center of the projection (< 90, default 60).
+	     <scale> can also be given as <radius>/<lat>, where <radius> is distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jg|G<lon0>/<lat0>/<scale>|<width> (Orthographic)
+	     <lon0>/<lat0> is the center of the projection.
+	     <scale> can also be given as <radius>/<lat>, where <radius> is distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jg|G<lon0>/<lat0>/<altitude>/<azimuth>/<tilt>/<twist>/<Width>/<Height>/<scale>|<width> (General Perspective)
+	     <lon0>/<lat0> is the center of the projection.
+	     <altitude> is the height (in km) of the viewpoint above local sea level
+	        - if <altitude> less than 10 then it is the distance 
+	        from center of earth to viewpoint in earth radii
+	        - if <altitude> has a suffix of 'r' then it is the radius 
+	        from the center of earth in kilometers
+	     <azimuth> is azimuth east of North of view
+	     <tilt> is the upward tilt of the plane of projection
+	       if <tilt> < 0 then viewpoint is centered on the horizon
+	     <twist> is the CW twist of the viewpoint in degree
+	     <width> is width of the viewpoint in degree
+	     <height> is the height of the viewpoint in degrees
+	     <scale> can also be given as <radius>/<lat>, where <radius> is distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jh|H[<lon0>/]<scale>|<width> (Hammer-Aitoff)
+	     Give central meridian (opt) and scale
+	   -Ji|I[<lon0>/]<scale>|<width> (Sinusoidal)
+	     Give central meridian (opt) and scale
+	   -Jj|J[<lon0>/]<scale>|<width> (Miller)
+	     Give central meridian (opt) and scale
+	   -Jkf|Kf[<lon0>/]<scale>|<width> (Eckert IV)
+	     Give central meridian (opt) and scale
+	   -Jk|K[s][<lon0>/]<scale>|<width> (Eckert VI)
+	     Give central meridian (opt) and scale
+	   -Jl|L<lon0>/<lat0>/<lat1>/<lat2>/<scale>|<width> (Lambert Conformal Conic)
+	     Give origin, 2 standard parallels, and true scale
+	   -Jm|M[<lon0>/[<lat0>/]]<scale>|<width> (Mercator).
+	     Give central meridian (opt), true scale parallel (opt), and scale
+	   -Jn|N[<lon0>/]<scale>|<width> (Robinson projection)
+	     Give central meridian (opt) and scale
+	   -Jo|O<parameters> (Oblique Mercator).  Specify one of three definitions:
+	     -Jo|O[a|A]<lon0>/<lat0>/<azimuth>/<scale>|<width>
+	       Give origin, azimuth of oblique equator, and scale at oblique equator
+	     -Jo|O[b|B]<lon0>/<lat0>/<lon1>/<lat1>/<scale>|<width>
+	       Give origin, second point on oblique equator, and scale at oblique equator
+	     -Jo|Oc|C<lon0>/<lat0>/<lonp>/<latp>/<scale>|<width>
+	       Give origin, pole of projection, and scale at oblique equator
+	       Specify region in oblique degrees OR use -R<>r
+	       Upper-case A|B|C removes enforcement of a northern hemisphere pole.
+	   -Jp|P[a]<scale>|<width>[/<base>][r|z] (Polar (theta,radius))
+	     Linear scaling for polar coordinates.
+	     Optionally append 'a' to -Jp or -JP to use azimuths (CW from North) instead of directions (CCW from East) [default].
+	     Give scale in cm/units, and append theta value for angular offset (base) [0]
+	     Append r to reverse radial direction (s/n must be in 0-90 range) or z to annotate depths rather than radius [Default]
+	   -Jpoly|Poly/[<lon0>/[<lat0>/]]<scale>|<width> ((American) Polyconic)
+	     Give central meridian (opt), reference parallel (opt, default = equator), and scale
+	   -Jq|Q[<lon0>/[<lat0>/]]<scale>|<width> (Equidistant Cylindrical)
+	     Give central meridian (opt), standard parallel (opt), and scale
+	     <lat0> = 61.7 (Min. linear distortion), 50.5 (R. Miller equirectangular),
+	     45 (Gall isographic), 43.5 (Min. continental distortion), 42 (Grafarend & Niermann),
+	     37.5 (Min. overall distortion), 0 (Plate Carree, default)
+	   -Jr|R[<lon0>/]<scale>|<width> (Winkel Tripel)
+	     Give central meridian and scale
+	   -Js|S<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Stereographic)
+	     <lon0>/<lat0> is the center or the projection.
+	     <horizon> is max distance from center of the projection (< 180, default 90).
+	     <scale> is either <1:xxxx> (true at pole) or <slat>/<1:xxxx> (true at <slat>)
+	     or <radius>/<lat> (distance in cm to the [oblique] parallel <lat>.
+	   -Jt|T<lon0>/[<lat0>/]<scale>|<width> (Transverse Mercator).
+	         Give central meridian and scale
+	     Optionally, also give the central parallel (default = equator)
+	   -Ju|U<zone>/<scale>|<width> (UTM)
+	     Give zone (A,B,Y,Z, or 1-60 (negative for S hemisphere) or append GMT-X) and scale
+	     Or give -Ju|U<scale>|<width> to have the UTM zone determined from the region.
+	   -Jv|V[<lon0>/]<scale>|<width> (van der Grinten)
+	     Give central meridian (opt) and scale
+	   -Jw|W[<lon0>/]<scale>|<width> (Mollweide)
+	     Give central meridian (opt) and scale
+	   -Jy|Y[<lon0>/[<lat0>/]]<scale>|<width> (Cylindrical Equal-area)
+	     Give central meridian (opt), standard parallel (opt) and scale
+	     <lat0> = 50 (Balthasart), 45 (Gall), 37.5 (Hobo-Dyer), 37.4 (Trystan Edwards),
+	              37.0666 (Caster), 30 (Behrmann), 0 (Lambert, default)
+	   -Jx|X<x-scale|<width>[/<y-scale|height>] (Linear, log, power scaling)
+	     <scale> in cm/units (or 1:xxxx). Optionally, append to <x-scale> and/or <y-scale>:
+	       d         Geographic coordinate (in degrees)
+	       l         Log10 projection
+	       p<power>  x^power projection
+	       t         Calendar time projection using relative time coordinates
+	       T         Calendar time projection using absolute time coordinates
+	     Use / to specify separate x/y scaling (e.g., -Jx0.5c/0.3c).  If 1:xxxxx is used it implies -R is in meters.
+	     If -JX is used then give axes lengths rather than scales.
+	   -JZ|z For z component of 3-D projections.  Same syntax as -JX|x, i.e.,
+	   -Jz|Z<z-scl>|<height>[d|l|p<power>|t|T] (Linear, log, and power projections)
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -Re and -Ra to set exact or approximate regions based on your input data (if applicable).
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead,
+	     or use +e which is like +r but makes sure the region extends at least by 0.25 x <inc>.
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+
+	OPTIONS:
+	-A No plotting, just write coordinates of the (possibly oblique) rectangular map boundary
+	   to given file (or stdout).  Requires -R and -J only.  Spacing along border
+	   in projected coordinates is controlled by GMT default MAP_LINE_STEP [0.75p].
+	-B Specify both (1) basemap frame settings and (2) axes parameters.
+	   Frame settings are modified via an optional single invocation of
+	     -B[<axes>][+b][+g<fill>][+n][+o<lon>/<lat>][+t<title>]
+	   Axes parameters are specified via one or more invocations of
+	     -B[p|s][x|y|z]<info>
+
+	   1. Frame settings control which axes to plot, frame fill, title, and type of gridlines:
+	     <axes> is a combination of W,E,S,N,Z and plots those axes only [Default is WESNZ (all)].
+	     Use lower case w,e,s,n,z just to draw and tick (but not annotate) those axes,
+	     and use l,r,b,t,u just to draw (but not annotate and tick) those axes.
+	     For 3-D plots the Z|z[<corners>][+b] controls the vertical axis.  The <corners> specifies
+	     at which corner(s) to erect the axis via a combination of 1,2,3,4; 1 means lower left corner,
+	     2 is lower right, etc., in a counter-clockwise order. [Default automatically selects one axis].
+	     The optional +b will erect a 3-D frame box to outline the 3-D domain [no frame box]. The +b
+	     is also required for x-z or y-z gridlines to be plotted (if such gridlines are selected below).
+	     Append +g<fill> to paint the inside of the map region before further plotting [no fill].
+	     Append +n to have no frame and annotations whatsoever [Default is controlled by WESNZ/wesnz].
+	     Append +o<plon>/<plat> to draw oblique gridlines about this pole [regular gridlines].
+	     Note: the +o modifier is ignored unless gridlines are specified via the axes parameters (below).
+	     Append +t<title> to place a title over the map frame [no title].
+	   2. Axes settings control the annotation, tick, and grid intervals and labels.
+	     The full axes specification is
+	       -B[p|s][x|y|z]<intervals>[+a<angle>|n|p][+l|L<label>][+p<prefix>][+s|S<secondary_label>][+u<unit>]
+	     Alternatively, you may break this syntax into two separate -B options:
+	       -B[p|s][x|y|z][+a<angle>|n|p][+l|L<label>][+p<prefix>][+s|S<secondary_label>][+u<unit>]
+	       -B[p|s][x|y|z]<intervals>
+	     There are two levels of annotations: Primary and secondary (most situations only require primary).
+	     The -B[p] selects (p)rimary annotations while -Bs specifies (s)econdary annotations.
+	     The [x|y|z] selects which axes the settings apply to.  If none are given we default to xy.
+	     To specify different settings for different axes you must repeat the -B axes option for
+	     each dimension., i.e., provide separate -B[p|s]x, -B[p|s]y, and -B[p|s]z settings.
+	     To prepend a prefix to each annotation (e.g., $ 10, $ 20 ...), add +p<prefix>.
+	     To append a unit to each annotation (e.g., 5 km, 10 km ...), add +u<unit>.
+	     Cartesian x-axis takes optional +a<angle> for slanted or +an for orthogonal annotations [+ap].
+	     Cartesian y-axis takes optional +ap for parallel annotations [+an].
+	     To label an axis, add +l<label>.  Use +L to enforce horizontal labels for y-axes.
+	     For another axis label on the opposite axis, use +s|S as well.
+	     Use quotes if any of the <label>, <prefix> or <unit> have spaces.
+	     For Cartesian axes you can have different labels on the left vs right or bottom vs top
+	     by separating the two labels with ||, e.g., +l"Left label||Right label".
+	     Geographic map annotations will automatically have degree, minute, seconds units.
+	     The <intervals> setting controls the annotation spacing and is a textstring made up of one or
+	     more substrings of the form [a|f|g][<stride>[+-<phase>][<unit>]], where the (optional) a
+	     indicates annotation and major tick interval, f minor tick interval, and g grid interval.
+	     Here, <stride> is the spacing between ticks or annotations, the (optional)
+	     <phase> specifies phase-shifted annotations/ticks by that amount, and the (optional)
+	     <unit> specifies the <stride> unit [Default is the unit implied in -R]. There can be
+	     no spaces between the substrings; just append items to make one very long string.
+	     For custom annotations or intervals, let <intervals> be c<intfile>; see man page for details.
+	     The optional <unit> modifies the <stride> value accordingly.  For geographic maps you may use
+	       d: arc degree [Default].
+	       m: arc minute.
+	       s: arc second.
+	     For time axes, several units are recognized:
+	       Y: year - plot using all 4 digits.
+	       y: year - plot only last 2 digits.
+	       O: month - format annotation according to FORMAT_DATE_MAP.
+	       o: month - plot as 2-digit integer (1-12).
+	       U: ISO week - format annotation according to FORMAT_DATE_MAP.
+	       u: ISO week - plot as 2-digit integer (1-53).
+	       r: Gregorian week - 7-day stride from chosen start of week (Monday).
+	       K: ISO weekday - plot name of weekdays in selected language [us].
+	       k: weekday - plot number of the day in the week (see TIME_WEEK_START).
+	       D: day - format annotation according to FORMAT_DATE_MAP, which also determines whether
+	                we should plot day of month (1-31) or day of year (1-366).
+	       d: day - plot as 2- (day of month) or 3- (day of year) integer.
+	       R: Same as d but annotates from start of Gregorian week.
+	       H: hour - format annotation according to FORMAT_CLOCK_MAP.
+	       h: hour - plot as 2-digit integer (0-23).
+	       M: minute - format annotation according to FORMAT_CLOCK_MAP.
+	       m: minute - plot as 2-digit integer (0-59).
+	       S: second - format annotation according to FORMAT_CLOCK_MAP.
+	       s: second - plot as 2-digit integer (0-59; 60-61 if leap seconds are enabled).
+	     Cartesian intervals take no units.
+	     When <stride> is omitted, a reasonable value will be determined automatically, e.g., -Bafg.
+	     Log10 axis: Append l to annotate log10 (value) or p for 10^(log10(value)) [Default annotates value].
+	     Power axis: Append p to annotate value at equidistant pow increments [Default is nonlinear].
+	     See psbasemap man pages for more details and examples of all settings.
+	-F Specify a rectangular panel behind the map scale or rose.
+	   Without further options: draw border around the scale panel (using MAP_FRAME_PEN)
+	     [Default is no border].
+	   Append +c<clearance> where <clearance> is <gap>, <xgap/ygap>, or <lgap/rgap/bgap/tgap> [4p].
+	     Note: For a map inset the default clearance is zero.
+	   Append +g<fill> to set the fill for the scale panel [Default is no fill].
+	   Append +i[[<gap>/]<pen>] to add a secondary inner frame boundary [Default gap is 2p].
+	   Append +p[<pen>] to draw the border and optionally change the border pen [thicker,black].
+	   Append +r[<radius>] to plot rounded rectangles instead [Default radius is 6p].
+	   Append +s[<dx>/<dy>/][<shade>] to plot a shadow behind the scale panel [Default is 4p/-4/gray50].
+	   For separate panel attributes, use -Fl, -Ft.
+	-L Draw a map scale at specified reference point.
+	   Positioning is specified via one of four coordinate systems:
+	     Use -Lg to specify <refpoint> with map coordinates.
+	     Use -Lj or -LJ to specify <refpoint> with 2-char justification code (BL, MC, etc).
+	     Use -Ln to specify <refpoint> with normalized coordinates in 0-1 range.
+	     Use -Lx to specify <refpoint> with plot coordinates.
+	   All except -Lx require the -R and -J options to be set.
+	   Use J if item should be placed outside the map frame and j if inside.
+	   Append 2-char +j<justify> code to associate that anchor point on the map scale with <refpoint>.
+	   If +j<justify> is not given then <justify> will default to the same as <refpoint> (with -Lj),
+	     or the mirror opposite of <refpoint> (with -LJ), or MC (else).
+	   Optionally, append +o<dx>[/<dy>] to offset map scale from <refpoint> in direction implied by <justify> [0/0].
+	   Use +c<slat> (with central longitude) or +c<slon>/<slat> to specify scale origin for geographic projections.
+	   Set scale length with +w<length> and (for geo projection) append a unit from e|f|k|M|n|u [km].
+	   Several modifiers are optional:
+	   Add +f to draw a "fancy" scale [Default is plain].
+	   By default, the scale label equals the distance unit name and is placed on top [+at].  Use the +l<label>
+	   and +a<align> mechanisms to specify another label and placement (t,b,l,r).  For the fancy scale,
+	   +u appends units to annotations while for plain scale it uses unit abbreviation instead of name as label.
+	   To get a vertical scale instead for Cartesian plots, append +v.
+	-T Draw a north-pointing map rose at specified reference point.
+	   Choose between a directional (-Td) or magnetic (-Tm) rose.
+	   Both share most modifiers for locating and sizing the rose.
+	   Positioning is specified via one of four coordinate systems:
+	     Use -Td|mg to specify <refpoint> with map coordinates.
+	     Use -Td|mj or -Td|mJ to specify <refpoint> with 2-char justification code (BL, MC, etc).
+	     Use -Td|mn to specify <refpoint> with normalized coordinates in 0-1 range.
+	     Use -Td|mx to specify <refpoint> with plot coordinates.
+	   All except -Td|mx require the -R and -J options to be set.
+	   Use J if item should be placed outside the map frame and j if inside.
+	   Append 2-char +j<justify> code to associate that anchor point on the map rose with <refpoint>.
+	   If +j<justify> is not given then <justify> will default to the same as <refpoint> (with -Td|mj),
+	     or the mirror opposite of <refpoint> (with -Td|mJ), or MC (else).
+	   Optionally, append +o<dx>[/<dy>] to offset map rose from <refpoint> in direction implied by <justify> [0/0].
+	   Set the diameter of the rose with modifier +w<width>.
+	   Several modifiers are optional:
+	   Add labels with +l, which places the letters W, E, S, N at the cardinal points.
+	     Optionally, append comma-separated west, east, south, north labels instead.
+	   Directional rose: Add +f to draws a "fancy" rose [Default is plain].
+	     Optionally, add <level> of fancy rose: 1 draws E-W, N-S directions [Default],
+	     2 adds NW-SE and NE-SW, while 3 adds WNW-ESE, NNW-SSE, NNE-SSW, and ENE-WSW directions.
+	   Magnetic compass rose:  Optional add +d<dec>[/<dlabel>], where <dec> is the
+	     magnetic declination and <dlabel> is an optional label for the magnetic compass needle.
+	     If +d does not include <dlabel> we default to "delta = <declination>".
+	     Set <dlabel> to "-" to disable the declination label.
+	     Append +p<pen> to draw outline of secondary (outer) circle [no circle].
+	     Append +i<pen> to draw outline of primary (inner) circle [no circle].
+	     Append +t<pint>[/<sint>] to override default primary and secondary annotation/tick interval(s) [30/5/1].
+	   If the North label = '*' then a north star is plotted instead of the label.
+	-U Plot GMT Unix System Time stamp [and optionally appended text or command line].
+	   You may also set the justification point and the relative position of stamp
+	   [+jBL+o-54p/-54p].  Add +c to have the command line plotted [OFF].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-X -Y Shift origin of plot to (<xshift>, <yshift>).
+	   Prepend r for shift relative to current point (default), prepend a for temporary
+	   adjustment of origin, prepend f to position relative to lower left corner of page,
+	   prepend c for offset of center of plot to center of page.
+	   For overlays (-O), the default setting is [r0], otherwise [f2.54c].
+	-c Move to next subplot panel or append row,col or index of desired panel.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-p Select a 3-D pseudo perspective view.  Append the
+	   <azimuth>/<elevation> of the viewpoint [180/90].
+	   When used with -Jz|Z, optionally add /<zlevel> for frame level [bottom of z-axis].
+	   Prepend x or y to plot against the “wall” x = level or y = level [z].
+	   Optionally, append +w<lon0>/<lat0>[/<z0>] to specify a fixed coordinate point
+	   or +v<x0>/<y0> for a fixed projected point [region center and page center].
+	   For a plain rotation about the z-axis, give rotation angle only
+	   and optionally use +w or +v to select location of axis [plot origin].
+	-t Set the layer transparency from 0-100 [Default is 0; opaque].
+	   Requires conversion to PDF or raster formats.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

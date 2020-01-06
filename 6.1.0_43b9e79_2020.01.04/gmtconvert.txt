@@ -1,0 +1,139 @@
+gmt gmtconvert [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Convert, paste, or extract columns from data tables
+
+usage: gmt gmtconvert [<table>] [-A] [-C[+l<min>][+u<max>][+i]] [-D[<template>[+o<orig>]]] [-E[f|l|m|M<stride>]] [-F<arg>] [-I[tsr]]
+	[-L] [-N<col>[+a|d]] [-Q[~]<selection>] [-S[~]"search string"] [-T[hd]] [-V[<level>]] [-W[+n]] [-Z[<first>][/<last>]] [-a<col>=<name>[,...]]
+	[-b[i|o][<ncol>][t][w][+l|b]] [-d[i|o]<nodata>] [-e[~]<pattern>] [-f[i|o]<info>] [-g[a]x|y|d|X|Y|D|[<col>]z<gap>[<unit>][+n|p]]
+	[-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]]
+	[-o<cols>[,...][t[<word>]]] [-q[i|o][~]<rows>[,...][+c<col>][+a|f|s]] [-s[<cols>][+a|r]] [-:[i|o]] [--PAR=<value>]
+
+
+	OPTIONS:
+	<table> is one or more data files (in ASCII, binary, netCDF).
+	   If no files are given, standard input is read.
+	-A Paste files horizontally, not concatenate vertically [Default].
+	   All files must have the same number of segments and rows,
+	   but they may differ in their number of columns.
+	-C Only output segments whose number of records matches criteria:
+	     +l<min> Segment must have at least <min> records [0].
+	     +u<max> Segment must have at most <max> records [inf].
+	     +i will invert the test.
+	-D Write individual segments to separate files [Default writes one
+	   multisegment file to stdout].  Append file name template which MUST
+	   contain a C-style format for an integer (e.g., %d) that represents
+	   a sequential segment number across all tables (if more than one table).
+	   [Default uses gmtconvert_segment_%d.txt (or .bin for binary)].
+	   Use +o<orig> to start numbering at <orig> [0].
+	   Alternatively, supply a template with two long formats and we will
+	   replace them with the table number and table segment numbers.
+	   Use +o<t_orig>/<s_orig> to start numbering at <t_orig> for tables and <s_orig> for segments [0/0].
+	-E Extract first and last point per segment only [Output all points].
+	   Append f for first only or l for last only.
+	   Append m<stride> to pass every <stride> records; use -EM to include the last point.
+	-F Alter the way points are connected and the data are segmented.
+	    Append one of four line connection schemes:
+	     c: Form continuous line segments for each group [Default].
+	     r: Form line segments from a reference point reset for each group.
+	     n: Form networks of line segments between all points in each group.
+	     v: Form vector line segments suitable for psxy -Sv|=<size>+s
+	     Optionally, append one of five ways to define a "group":
+	       a: All data is consider a single group; reference point is first point in the group.
+	       f: Each file is a separate group; reference point is reset to first point in the group.
+	       s: Each segment is a group; reference point is reset to first point in the group [Default].
+	       r: Each segment is a group, but reference point is reset to each point in the group.
+	          Only available with the -Fr scheme.
+	       <refpoint> : Specify a fixed external reference point instead.
+	-I Invert output order of (t)ables, (s)egments, or (r)ecords.  Append any combination of:
+	     t: reverse the order of input tables on output.
+	     s: reverse the order of segments within each table on output.
+	     r: reverse the order of records within each segment on output [Default].
+	-L Output only segment headers and skip all data records.
+	   Requires ASCII input data [Output headers and data].
+	-N Numerically sort all records per segment based on data in column <col>.
+	   Append +a for ascending or +d for descending order [ascending].
+	-Q Only output specified segment numbers in <selection> [All].
+	   <selection> syntax is [~]<range>[,<range>,...] where each <range> of items is
+	   either a single number, start-stop (for range), start:step:stop (for stepped range),
+	   or +f<file> for a file list with one <range> selection per line.
+	   A leading ~ will invert the selection and write all segments but the ones listed.
+	-S Only output segments whose headers contain the pattern "string".
+	   Use -S~"string" to output segment that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.
+	   To match OGR aspatial values, use name=value, and to match headers against
+	   extended regular expressions use -S[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-T Skip certain types of records.  Append one or both of d and h [h].
+	   h: Prevent the writing of segment headers [Default].
+	   d: Prevent the writing of duplicate data records.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Convert trailing text to numbers, if possible.  Append +n to suppress NaN columns.
+	-Z Select range of output records.  If not set, <first> = 0 and <last> = last record [all records].
+	-a Give one or more comma-separated <col>=<name> associations
+	   [Default selects all aspatial fields].
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type>.
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-g Use data point separations to determine if there are data gaps.
+	   Append x|X or y|Y to identify data gaps in x or y coordinates,
+	   respectively, and append d|D for distance gaps.  Upper case X|Y|D means
+	   we first project the points (requires -J).  Append <gap>[unit][+n|p]; +n uses
+	   d=prev-curr, +p uses d=curr-prev [d=|curr-prev|]; d must exceed <gap> to detect a gap.
+	   For geographic data: choose from e|f|k|M|n|u [Default is meter (e)].
+	   For gaps based on mapped coordinates: choose unit from c|i|p [cm].
+	   For time data: the unit is controlled by TIME_UNIT.
+	   For generic data: the unit is as the data implies (user units).
+	   Repeat the -g option to specify multiple criteria, and add -ga
+	   to indicate that all criteria must be met [just one must be met].
+	-h[i|o][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input or o for output only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output since none will be read.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Set alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-o Set alternate output column order [Default writes all columns in order].
+	   Append list of columns; t[<word>] = trailing text; use <word> for writing a single word from the text.
+	   Use -on for numerical output only.
+	-q Select input (-q or -qi) or output (-qo) rows to process [Default reads or writes all rows].
+	   Append comma-separated lists of rows or row ranges; prepend ~ to exclude those ranges instead.
+	   Append +f or +s to reset row counters per table or segment [per set (+a)].
+	   For limits on data values instead, append +c<col> and give data limits for column <col>.
+	-s Suppress output for records whose z-value (col = 2) equals NaN
+	   [Default prints all records].
+	   Append <cols> to examine other column(s) instead [2].
+	   Append +a to suppress records where any column equals NaN, or
+	   append +r to reverse the suppression (only output z = NaN records).
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

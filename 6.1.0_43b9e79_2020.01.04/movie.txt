@@ -1,0 +1,103 @@
+gmt movie [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Create animation sequences and movies
+
+usage: gmt movie <mainscript> -C<canvas> -N<prefix> -T<nframes>|<timefile>[+p<width>][+s<first>][+w]
+	[-A[+l[<n>]][+s<stride>]] [-D<rate>] [-F<format>[+o<opts>]] [-G<fill>[+p<pen>]] [-H<factor>]
+	[-I<includefile>] [-L<labelinfo>] [-M[<frame>,][<format>]] [-Q[s]] [-Sb<script>] [-Sf<script>]
+	[-V[<level>]] [-W<workdir>] [-Z] [-f[i|o]<info>] [-x[[-]<n>]] [--PAR=<value>]
+
+	<mainscript> is the main GMT modern script that builds a single frame image.
+	-C Specify canvas size. Choose a known named canvas or set custom dimensions:
+	   Recognized 16:9-ratio formats:
+	      name:	pixel size:   canvas size (SI):  canvas size (US):
+	     4320p:	7680 x 4320	24 x 13.5 cm	 9.6 x 5.4 inch
+	     2160p:	3840 x 2160	24 x 13.5 cm	 9.6 x 5.4 inch
+	     1080p:	1920 x 1080	24 x 13.5 cm	 9.6 x 5.4 inch
+	      720p:	1280 x  720	24 x 13.5 cm	 9.6 x 5.4 inch
+	      540p:	 960 x  540	24 x 13.5 cm	 9.6 x 5.4 inch
+	      480p:	 854 x  480	24 x 13.5 cm	 9.6 x 5.4 inch
+	      360p:	 640 x  360	24 x 13.5 cm	 9.6 x 5.4 inch
+	      240p:	 426 x  240	24 x 13.5 cm	 9.6 x 5.4 inch
+	   Note: UHD-2 and 8k can be used for 4320p, UHD and 4k for 2160p, and HD for 1080p.
+	   Recognized 4:3-ratio formats:
+	      name:	pixel size:   canvas size (SI):	 canvas size (US):
+	      UXGA:	1600 x 1200	24 x 18 cm	 9.6 x 7.2 inch
+	     SXGA+:	1400 x 1050	24 x 18 cm	 9.6 x 7.2 inch
+	       XGA:	1024 x  768	24 x 18 cm	 9.6 x 7.2 inch
+	      SVGA:	 800 x  600	24 x 18 cm	 9.6 x 7.2 inch
+	       DVD:	 640 x  480	24 x 18 cm	 9.6 x 7.2 inch
+	   Note: Current PROJ_LENGTH_UNIT determines if you get SI or US canvas dimensions.
+	   Alternatively, set a custom canvas with dimensions and dots-per-unit manually by
+	     providing <width>[<unit>]x<height>[<unit>]x<dpu> (e.g., 15cx10cx50, 6ix6ix100, etc.).
+	-N Set the <prefix> used for movie files and directory names.
+	-T Set number of frames, or give name of file with frame-specific information.
+	   If <timefile> does not exist it must be created by the -Sf script.
+	   Append +p<width> to set number of digits used in creating the frame tags [automatic].
+	   Append +s<first> to change the value of the first frame [0].
+	   Append +w to <timefile> to have trailing text be split into individual word variables.
+
+	OPTIONS:
+	-A Animated GIF: Append +l for looping [no loop]; optionally append number of loops [infinite loop].
+	   If -F is used you may restrict the GIF animation to use every <stride> frame only [all];
+	   <stride> must be taken from the list 2, 5, 10, 20, 50, 100, 200, or 500.
+	-D Set movie display frame rate in frames/second [24].
+	-F Select the final video format(s) from among these choices. Repeatable:
+	     mp4:    Convert PNG frames into an MP4 movie.
+	     webm:   Convert PNG frames into an WebM movie.
+	     none:   Make no PNG frames - requires -M.
+	     Optionally, append +o<options> to add custom encoding options for mp4 or webm.
+	     [Default is no video products; just create the PNG frames].
+	-G Set the canvas background color [none].  Append +p<pen> to draw canvas outline [none]
+	-H Temporarily increase <dpu> by <factor>, rasterize, then downsample [no downsampling].
+	   Stabilizes sub-pixel changes between frames, such as moving text and lines.
+	-I Include a script file to be inserted into the movie_init.sh script [none].
+	   Used to add constant variables needed by all movie scripts.
+	-L Automatic labeling of frames; repeatable (max 32).  Places chosen label at the frame perimeter:
+	     e selects elapsed time as the label. Use +s<scl> to set time in sec per frame [1/<framerate>].
+	     f selects the running frame number as the label.
+	     s<string> selects the fixed text <string> as the label.
+	     c<col> uses the value in column <col> of <timefile> (first column is 0).
+	     t<col> uses word number <col> from the trailing text in <timefile> (requires -T...+w; first word is 0).
+	   Append +c<dx>[/<dy>] for the clearance between label and surrounding box.  Only
+	     used if +g or +p are set.  Append units {c|i|p} or % of fontsize [15%].
+	   Append +f[<fontinfo>] to set the size, font, and optionally the label color [20p,Helvetica,black].
+	   Append +g to fill the label textbox with <fill> color [no fill].
+	   Use +j<refpoint> to specify where the label should be plotted [TL].
+	   Append +o<dx>[/<dy>] to offset label in direction implied by <justify> [20% of font size].
+	   Append +p to draw the outline of the textbox using selected pen [no outline].
+	   Append +t to provide a C-format statement to be used with the item selected [none].
+	-M Create a master frame plot as well; append comma-separated frame number [0] and format [pdf].
+	   Master plot will be named <prefix>.<format> and placed in the current directory.
+	-Q Debugging: Leave all intermediate files and directories behind for inspection.
+	   Append s to only create the work scripts but none will be executed (except for background script).
+	-S Given names for the optional background and foreground GMT scripts [none]:
+	   -Sb Append name of background GMT modern script that may pre-compute
+	       files needed by <mainscript> and/or build a static background plot layer.
+	       If a plot is generated then the script must be in GMT modern mode.
+	   -Sf Append name of foreground GMT modern mode script which will
+	       build a static foreground plot overlay appended to all frames.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Give <workdir> where temporary files will be built [<workdir> = <prefix> set by -N].
+	-Z Erase directory <prefix> after converting to movie [leave directory with PNGs alone].
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-x Limit the number of cores used in frame generation [Default uses all cores = 1].
+	   -x<n>  Select <n> cores (up to all available).
+	   -x-<n> Select (all - <n>) cores (or at least 1).
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

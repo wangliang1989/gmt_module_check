@@ -1,0 +1,82 @@
+gmt grdfft [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Mathematical operations on grids in the spectral domain
+
+usage: gmt grdfft <ingrid> [<ingrid2>] [-G<outgrid>|<table>] [-A<azimuth>] [-C<zlevel>]
+	[-D[<scale>|g]] [-E[r|x|y][+w[k]][+n]] [-F[r|x|y]<parameters>] [-I[<scale>|g]]
+	[-N[f|s|<n_columns>/<n_rows>][+a|d|l][+e|m|n][+t<width>][+v][+w<suffix>][+z[p]]] [-S<scale>]
+	[-V[<level>]] [-fg] [-ho[<nrecs>][+c][+d][+r<remark>][+t<title>]] [--PAR=<value>]
+
+	<ingrid> is the input grid file.  For cross-spectrum also supply <ingrid2>.
+
+	OPTIONS:
+	-A Take azimuthal derivative along line <azimuth> degrees CW from North.
+	-C Continue field upward (+) or downward (-) to <zlevel> (meters).
+	-D Differentiate, i.e., multiply by kr [ * scale].  Use -Dg to get mGal from m].
+	-E Estimate spEctrum in the radial r [Default], x, or y-direction.
+	   Given one grid X, write f, Xpower[f] to output file (see -G) or stdout.
+	   Given two grids X and Y, write f, Xpower[f], Ypower[f], coherent power[f],
+	   noise power[f], phase[f], admittance[f], gain[f], coherency[f].
+	   Each quantity is followed by a column of 1 std dev. error estimates.
+	   Give +w to write wavelength instead of frequency; append k to report
+	   wavelength in km (geographic grids only) [m].
+	   Append +n to yield mean power instead of total power per frequency.
+	-F Filter r [x] [y] freq according to one of three kinds of filter specifications:
+	   a) Cosine band-pass: Append four wavelengths <lc>/<lp>/<hp>/<hc>.
+	      frequencies outside <lc>/<hc> are cut; inside <lp>/<hp> are passed, rest are tapered.
+	      Replace wavelength by - to skip, e.g., -F-/-/500/100 is a low-pass filter.
+	   b) Gaussian band-pass: Append two wavelengths <lo>/<hi> where filter amplitudes = 0.5.
+	      Replace wavelength by - to skip, e.g., -F300/- is a high-pass Gaussian filter.
+	   c) Butterworth band-pass: Append two cut-off wavelengths and order, i.e., <lo>/<hi>/<order>
+	      where filter amplitudes are 0.707.  Replace wavelength by - to skip, e.g.,
+	      try -F300/-/2 for a high-pass 2nd-order Butterworth filter.
+	-G filename for output netCDF grid file OR 1-D data table (see -E).
+	   Optional for -E (spectrum written to stdout); required otherwise.
+	-I Integrate, i.e., divide by kr [ * scale].  Use -Ig to get m from mGal].
+	-N Choose or inquire about suitable grid dimensions for FFT, and set modifiers.
+	   Setting the FFT dimensions:
+	     -Na will select dimensions promising the most accurate results.
+	     -Nf will force the FFT to use the dimensions of the grid.
+	     -Nm will select dimensions using the least work storage.
+	     -Nr will select dimensions promising the most rapid calculation.
+	     -Ns will list Singleton's [1967] recommended dimensions, then exit.
+	     -N<n_columns>/<n_rows> will do FFT on array size <n_columns>/<n_rows> (Must be >= grid size).
+	     Default chooses dimensions >= grid dimensions to optimize speed and accuracy of the FFT.
+	   Append modifiers for removing a planar trend:
+	     +d: Detrend data, i.e., remove best-fitting plane [Default].
+	     +a: Only remove mean value.
+	     +h: Only remove mid value, i.e., 0.5 * (max + min).
+	     +l: Leave data alone.
+	   Append modifiers for extending the grid via symmetries:
+	     If FFT dimensions > grid dimensions, data are extended via edge point symmetry
+	     and tapered to zero.  Several modifiers can be set to change this behavior:
+	     +e: Extend data via edge point symmetry [Default].
+	     +m: Extend data via edge mirror symmetry.
+	     +n: Do NOT extend data.
+	     +t<w>: Limit tapering to <w> % of the extended margins [100].
+	     If +n is set then +t instead sets the boundary width of the interior
+	     grid margin to be tapered [0].
+	   Append modifiers for saving modified grid before or after the 2-D FFT is called:
+	     +w[<suffix>] will write the intermediate grid passed to FFT after detrending/extension/tapering.
+	       File name will have _<suffix> [tapered] inserted before file extension.
+	     +z[p] will write raw complex spectrum to two separate grid files.
+	       File name will have _real/_imag inserted before the file extensions.
+	       Append p to store polar forms, using _mag/_phase instead.
+	   Append modifiers for messages:
+	     +v will report all suitable dimensions (except when -Nf is selected).
+	-S multiply field by scale after inverse FFT [1.0].
+	   Give -Sd to convert deflection of vertical to micro-radians.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-fg Convert geographic grids to meters using a "Flat Earth" approximation.
+	-ho Write header record for spectral estimates (requires -E) [no header].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).
+	List operations in the order desired for execution.

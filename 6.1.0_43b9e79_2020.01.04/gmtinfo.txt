@@ -1,0 +1,116 @@
+gmt gmtinfo [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Get information about data tables
+
+usage: gmt gmtinfo [<table>] [-Aa|f|s] [-C] [-D[<dx>[/<dy>]] [-E<L|l|H|h>[<col>]] [-Fi|d|t] [-I[b|e|f|p|s]<dx>[/<dy>[/<dz>..][+e|r|R<incs>]]
+	[-L] [-S[x][y]] [-T<dz>[+c<col>]] [-V[<level>]] [-a<col>=<name>[,...]] [-bi[<ncol>][t][w][+l|b]] [-d[i|o]<nodata>]
+	[-e[~]<pattern>] [-f[i|o]<info>] [-g[a]x|y|d|X|Y|D|[<col>]z<gap>[<unit>][+n|p]]
+	[-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]]
+	[-o<cols>[,...][t[<word>]]] [-qi[~]<rows>[,...][+c<col>][+a|f|s]] [-r[g|p]] [-s[<cols>][+a|r]] [-:[i|o]] [--PAR=<value>]
+
+
+	OPTIONS:
+	<table> is one or more data files (in ASCII, binary, netCDF).
+	   If no files are given, standard input is read.
+	-A Select reports for (a)ll [Default], per (f)ile, or per (s)egment.
+	-C Format the min and max into separate columns; -o may be used to limit output.
+	-D Modifies results obtained by -I by shifting the region to better align with
+	   the data center.  Optionally, append granularity for this shift [exact].
+	-E Return the record with extreme value in specified column <col> [last column].
+	   Specify l or h for min or max value, respectively.  Upper case L or H
+	   means we operate instead on the absolute values of the data.
+	-F Return various counts of tables, segments, headers, and records, depending on mode:
+	   i: One record with the number of tables, segments, data records, headers, and overall records.
+	   d: Dataset: One record per segment with tbl_no, seg_no, nrows, start_rec, stop_rec.
+	   t: Tables:  Same as D but the counts resets per table.
+	-I Return textstring -Rw/e/s/n to nearest multiple of dx/dy (assumes at lwesn[XHI] 2 columns).
+	   Give -Ie to just report the min/max extent in the -Rw/e/s/n string (no multiples).
+	   If -C is set then no -R string is issued.  Instead, the number of increments
+	   given determines how many columns are rounded off to the nearest multiple.
+	   If only one increment is given we also use it for the second column (for backwards compatibility).
+	   To override this behavior, use -Ip<dx>.
+	   If input data are regularly distributed we use observed phase shifts in determining -R [no phase shift]
+	     and allow -r to change from gridline-registration to pixel-registration.
+	   Use -Ib to report the bounding box polygon for the data files (or segments; see -A).
+	   Use -If<dx>[/<dy>] to report an extended region optimized for fastest results in FFTs.
+	   Use -Is<dx>[/<dy>] to report an extended region optimized for fastest results in surface.
+	   Append +r to modify the region further: Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	   to round region to these multiples; use +R to extend region by those increments instead,
+	   or use +e which is like +r but makes sure the region extends at least by 0.25 x <inc>.
+	-L Determine limiting region. With -I it rounds inward so bounds are within data range.
+	   Use -A to find the limiting common bounds of all segments or tables.
+	-S Add extra space for error bars. Useful together with -I.
+	   -Sx leaves space for horizontal error bar using value in third (2) column.
+	   -Sy leaves space for vertical error bar using value in third (2) column.
+	   -S or -Sxy leaves space for both error bars using values in third&fourth (2&3) columns.
+	-T Return textstring -Tzmin/zmax/dz to nearest multiple of the given dz.
+	   Calculations are based on the first (0) column; append +c<col> to use another column.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-a Give one or more comma-separated <col>=<name> associations
+	   [Default selects all aspatial fields].
+	   Reports the names and data types of the aspatial fields.
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [2].
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-g Use data point separations to determine if there are data gaps.
+	   Append x|X or y|Y to identify data gaps in x or y coordinates,
+	   respectively, and append d|D for distance gaps.  Upper case X|Y|D means
+	   we first project the points (requires -J).  Append <gap>[unit][+n|p]; +n uses
+	   d=prev-curr, +p uses d=curr-prev [d=|curr-prev|]; d must exceed <gap> to detect a gap.
+	   For geographic data: choose from e|f|k|M|n|u [Default is meter (e)].
+	   For gaps based on mapped coordinates: choose unit from c|i|p [cm].
+	   For time data: the unit is controlled by TIME_UNIT.
+	   For generic data: the unit is as the data implies (user units).
+	   Repeat the -g option to specify multiple criteria, and add -ga
+	   to indicate that all criteria must be met [just one must be met].
+	-h[i|o][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input or o for output only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output since none will be read.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Set alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-o Set alternate output column order [Default writes all columns in order].
+	   Append list of columns; t[<word>] = trailing text; use <word> for writing a single word from the text.
+	   Use -on for numerical output only.
+	-qi Select input rows to process [Default reads all rows].
+	   Append comma-separated lists of rows or row ranges; prepend ~ to exclude those ranges instead.
+	   Append +f or +s to reset row counters per table or segment [per set (+a)].
+	   For limits on data values instead, append +c<col> and give data limits for input column <col>.
+	-r Set (g)ridline- or (p)ixel-registration [Just -r sets pixel registration].
+	   If not given we default to gridline registration.
+	-s Suppress output for records whose z-value (col = 2) equals NaN
+	   [Default prints all records].
+	   Append <cols> to examine other column(s) instead [2].
+	   Append +a to suppress records where any column equals NaN, or
+	   append +r to reverse the suppression (only output z = NaN records).
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

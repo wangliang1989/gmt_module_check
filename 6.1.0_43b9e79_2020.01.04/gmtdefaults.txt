@@ -1,0 +1,9 @@
+gmt gmtdefaults [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - List current GMT default settings
+
+usage: gmt gmtdefaults [-D[s|u]]
+
+	-D Print the current GMT default settings.
+	   Append s to print the SI version of the system defaults.
+	   Append u to print the US version of the system defaults.
+
+	ALL settings will be written to standard output.

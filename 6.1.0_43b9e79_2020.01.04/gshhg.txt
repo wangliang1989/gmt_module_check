@@ -1,0 +1,37 @@
+gmt gshhg [gshhg] 6.1.0_43b9e79_2020.01.04 [64-bit] - Extract data tables from binary GSHHG or WDBII data files
+
+usage: gmt gshhg gshhs|wdb_rivers|wdb_borders_[f|h|i|l|c].b [-A<area>] [-G] [-I<id>] [-L] [-N<level>]
+	[-Qe|i] [-V[<level>]] [-bo[<ncol>][t][w][+l|b]] [-do<nodata>] [-o<cols>[,...][t[<word>]]] [--PAR=<value>]
+
+	gshhs|wdb_rivers|wdb_borders_[f|h|i|l|c].b is a GSHHG polygon or line file.
+
+	OPTIONS:
+	-A Extract polygons whose area is greater than or equal to <area> (in km^2) [all].
+	-G Write '%' at start of each segment header [P or L] (overwrites -M)
+	   and write 'NaN NaN' after each segment to enable import by MATLAB or GNU Octave.
+	-L List header records only (no data records will be written).
+	-I Output data for polygon number <id> only.  Use -Ic to get all continent polygons
+	   [Default is all polygons].
+	-N Output features whose level matches <level> [Default outputs all levels].
+	-Q Control river-lakes: Use -Qe to exclude river-lakes, and -Qi to ONLY get river-lakes
+	   [Default outputs all polygons].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [2].
+	-do Replace any NaNs in output data with <nodata>.
+	-o Set alternate output column order [Default writes all columns in order].
+	   Append list of columns; t[<word>] = trailing text; use <word> for writing a single word from the text.
+	   Use -on for numerical output only.
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

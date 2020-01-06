@@ -1,0 +1,286 @@
+gmt gmtselect [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Select data table subsets based on multiple spatial criteria
+
+usage: gmt gmtselect [<table>] [-A<min_area>[/<min_level>/<max_level>][+a[g|i][s|S]][+r|l][+p<percent>]]
+	[-C<ptfile>+d<dist>[<unit>]] [-D<resolution>][+f] [-E[f][n]] [-F<polygon>] [-G<gridmask>] [-J<args>]
+	[-I[cfglrsz] [-L<lfile>+d<dist>[<unit>][+p]] [-N<info>] [-R<west>/<east>/<south>/<north>[+r]]
+	[-V[<level>]] [-Z<min>[/<max>][+c<col>][+a][+i]] [-a<col>=<name>[,...]] [-b[i|o][<ncol>][t][w][+l|b]]
+	[-d[i|o]<nodata>] [-e[~]<pattern>] [-f[i|o]<info>] [-g[a]x|y|d|X|Y|D|[<col>]z<gap>[<unit>][+n|p]]
+	[-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]]
+	[-o<cols>[,...][t[<word>]]] [-q[i|o][~]<rows>[,...][+c<col>][+a|f|s]] [-s[<cols>][+a|r]] [-:[i|o]] [--PAR=<value>]
+
+	OPTIONS:
+	<table> is one or more data files (in ASCII, binary, netCDF).
+	   If no files are given, standard input is read.
+	-A Place limits on coastline features from the GSHHG data base.
+	   Features smaller than <min_area> (in km^2) or of levels (0-4) outside the min-max levels
+	   will be skipped [0/4 (4 means lake inside island inside lake)].
+	   Select +a and one or two codes to control how Antarctica is handled:
+	     Add g to use shelf ice grounding line for Antarctica coastline, or
+	     Add i to use ice/water front for Antarctica coastline [Default].
+	     Add s to skip Antarctica (all data south of 60S) [use all], or
+	     Add S to skip anything BUT Antarctica (all data north of 60S) [use all].
+	   Append +r to only get riverlakes from level 2, or +l to only get lakes [both].
+	   Append +p<percent> to exclude features whose size is < <percent>% of the full-resolution feature [use all].
+	   (ignored  unless -N is set).
+	-C Pass locations that are within <dist> of any point in the ASCII <ptfile>.
+	   Append e (meter), f (foot), k (km), M (mile), n (nautical mile), u (survey foot)
+	   d (arc degree), m (arc minute), or s (arc second) [e].
+	   Spherical distances are based on great-circle calculations;
+	   see -j<mode> for other modes of measurements.
+	   Give distance as 0 if 3rd column of <ptfile> has individual distances.
+	   Use -R -J to compute mapped Cartesian distances in cm, inch, m, or points [cm].
+	-D Choose one of the following resolutions: (Ignored unless -N is set).
+	     f - full resolution (may be very slow for large regions).
+	     h - high resolution (may be slow for large regions).
+	     i - intermediate resolution.
+	     l - low resolution [Default].
+	     c - crude resolution, for tasks that need crude continent outlines only.
+	   Append +f to use a lower resolution should the chosen one not be available [abort].
+	-E Indicate if points exactly on a polygon boundary are inside or outside.
+	   Append f and/or n to modify the -F option or -N option, respectively,
+	   to consider such points to be outside the feature [inside].
+	-F Pass locations that are inside the polygons in the ASCII <polygon> file.
+	-G Pass locations that are inside the non-zero, non-NaN nodes of the grid <gridmask>.
+	-I Reverse the tests, i.e., pass locations outside the region.
+	   Supply a combination of cflrz where each flag means:
+	     c will pass locations beyond the minimum distance to the points in -C.
+	     f will pass locations outside the polygons in -F.
+	     g will pass locations outside the grid mask in -G.
+	     l will pass locations beyond the minimum distance to the lines in -L.
+	     r will pass locations outside the region given in -R [and -J].
+	     s will pass locations that otherwise would be skipped in -N.
+	     z will pass locations outside the range given in -Z (single -Z required).
+	-J Select the map proJection. The projection type is identified by a 1- or
+	   2-character ID (e.g. 'm' or 'kf') or by an abbreviation followed by a slash
+	   (e.g. 'cyl_stere/'). When using a lower-case ID <scale> can be given either as 1:<xxxx>
+	   or in cm/degree along the standard parallel. Alternatively, when the projection ID is
+	   Capitalized, <scale>|<width> denotes the width of the plot in cm
+	   Append +dh for map height, +du for max map dimension, and +dl for min map dimension [Default +dw is width].
+	   When the central meridian (lon0) is optional and omitted, the center of the
+	   longitude range specified by -R is used. The default standard parallel is the equator
+	   Azimuthal projections set -Rg unless polar aspect or -R<...>r is given.
+	   -Ja|A<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Lambert Azimuthal Equal Area)
+	     <lon0>/<lat0> is the center of the projection.
+	     <horizon> is max distance from center of the projection (<= 180, default 90).
+	     <scale> can also be given as <radius>/<lat>, where <radius> is the distance
+	     in cm to the oblique parallel <lat>.
+	   -Jb|B<lon0>/<lat0>/<lat1>/<lat2>/<scale>|<width> (Albers Equal-Area Conic)
+	     Give origin, 2 standard parallels, and true scale
+	   -Jc|C<lon0>/<lat0><scale>|<width> (Cassini)
+	     Give central point and scale
+	   -Jcyl_stere|Cyl_stere/[<lon0>/[<lat0>/]]<scale>|<width> (Cylindrical Stereographic)
+	     Give central meridian (opt), standard parallel (opt) and scale
+	     <lat0> = 66.159467 (Miller's modified Gall), 55 (Kamenetskiy's First),
+	     45 (Gall Stereographic), 30 (Bolshoi Sovietskii Atlas Mira), 0 (Braun)
+	   -Jd|D<lon0>/<lat0>/<lat1>/<lat2>/<scale>|<width> (Equidistant Conic)
+	     Give origin, 2 standard parallels, and true scale
+	   -Je|E<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Azimuthal Equidistant)
+	     <lon0>/<lat0> is the center of the projection.
+	     <horizon> is max distance from center of the projection (<= 180, default 180).
+	     <scale> can also be given as <radius>/<lat>, where <radius> is the distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jf|F<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Gnomonic)
+	     <lon0>/<lat0> is the center of the projection.
+	     <horizon> is max distance from center of the projection (< 90, default 60).
+	     <scale> can also be given as <radius>/<lat>, where <radius> is distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jg|G<lon0>/<lat0>/<scale>|<width> (Orthographic)
+	     <lon0>/<lat0> is the center of the projection.
+	     <scale> can also be given as <radius>/<lat>, where <radius> is distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jg|G<lon0>/<lat0>/<altitude>/<azimuth>/<tilt>/<twist>/<Width>/<Height>/<scale>|<width> (General Perspective)
+	     <lon0>/<lat0> is the center of the projection.
+	     <altitude> is the height (in km) of the viewpoint above local sea level
+	        - if <altitude> less than 10 then it is the distance 
+	        from center of earth to viewpoint in earth radii
+	        - if <altitude> has a suffix of 'r' then it is the radius 
+	        from the center of earth in kilometers
+	     <azimuth> is azimuth east of North of view
+	     <tilt> is the upward tilt of the plane of projection
+	       if <tilt> < 0 then viewpoint is centered on the horizon
+	     <twist> is the CW twist of the viewpoint in degree
+	     <width> is width of the viewpoint in degree
+	     <height> is the height of the viewpoint in degrees
+	     <scale> can also be given as <radius>/<lat>, where <radius> is distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jh|H[<lon0>/]<scale>|<width> (Hammer-Aitoff)
+	     Give central meridian (opt) and scale
+	   -Ji|I[<lon0>/]<scale>|<width> (Sinusoidal)
+	     Give central meridian (opt) and scale
+	   -Jj|J[<lon0>/]<scale>|<width> (Miller)
+	     Give central meridian (opt) and scale
+	   -Jkf|Kf[<lon0>/]<scale>|<width> (Eckert IV)
+	     Give central meridian (opt) and scale
+	   -Jk|K[s][<lon0>/]<scale>|<width> (Eckert VI)
+	     Give central meridian (opt) and scale
+	   -Jl|L<lon0>/<lat0>/<lat1>/<lat2>/<scale>|<width> (Lambert Conformal Conic)
+	     Give origin, 2 standard parallels, and true scale
+	   -Jm|M[<lon0>/[<lat0>/]]<scale>|<width> (Mercator).
+	     Give central meridian (opt), true scale parallel (opt), and scale
+	   -Jn|N[<lon0>/]<scale>|<width> (Robinson projection)
+	     Give central meridian (opt) and scale
+	   -Jo|O<parameters> (Oblique Mercator).  Specify one of three definitions:
+	     -Jo|O[a|A]<lon0>/<lat0>/<azimuth>/<scale>|<width>
+	       Give origin, azimuth of oblique equator, and scale at oblique equator
+	     -Jo|O[b|B]<lon0>/<lat0>/<lon1>/<lat1>/<scale>|<width>
+	       Give origin, second point on oblique equator, and scale at oblique equator
+	     -Jo|Oc|C<lon0>/<lat0>/<lonp>/<latp>/<scale>|<width>
+	       Give origin, pole of projection, and scale at oblique equator
+	       Specify region in oblique degrees OR use -R<>r
+	       Upper-case A|B|C removes enforcement of a northern hemisphere pole.
+	   -Jp|P[a]<scale>|<width>[/<base>][r|z] (Polar (theta,radius))
+	     Linear scaling for polar coordinates.
+	     Optionally append 'a' to -Jp or -JP to use azimuths (CW from North) instead of directions (CCW from East) [default].
+	     Give scale in cm/units, and append theta value for angular offset (base) [0]
+	     Append r to reverse radial direction (s/n must be in 0-90 range) or z to annotate depths rather than radius [Default]
+	   -Jpoly|Poly/[<lon0>/[<lat0>/]]<scale>|<width> ((American) Polyconic)
+	     Give central meridian (opt), reference parallel (opt, default = equator), and scale
+	   -Jq|Q[<lon0>/[<lat0>/]]<scale>|<width> (Equidistant Cylindrical)
+	     Give central meridian (opt), standard parallel (opt), and scale
+	     <lat0> = 61.7 (Min. linear distortion), 50.5 (R. Miller equirectangular),
+	     45 (Gall isographic), 43.5 (Min. continental distortion), 42 (Grafarend & Niermann),
+	     37.5 (Min. overall distortion), 0 (Plate Carree, default)
+	   -Jr|R[<lon0>/]<scale>|<width> (Winkel Tripel)
+	     Give central meridian and scale
+	   -Js|S<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Stereographic)
+	     <lon0>/<lat0> is the center or the projection.
+	     <horizon> is max distance from center of the projection (< 180, default 90).
+	     <scale> is either <1:xxxx> (true at pole) or <slat>/<1:xxxx> (true at <slat>)
+	     or <radius>/<lat> (distance in cm to the [oblique] parallel <lat>.
+	   -Jt|T<lon0>/[<lat0>/]<scale>|<width> (Transverse Mercator).
+	         Give central meridian and scale
+	     Optionally, also give the central parallel (default = equator)
+	   -Ju|U<zone>/<scale>|<width> (UTM)
+	     Give zone (A,B,Y,Z, or 1-60 (negative for S hemisphere) or append GMT-X) and scale
+	     Or give -Ju|U<scale>|<width> to have the UTM zone determined from the region.
+	   -Jv|V[<lon0>/]<scale>|<width> (van der Grinten)
+	     Give central meridian (opt) and scale
+	   -Jw|W[<lon0>/]<scale>|<width> (Mollweide)
+	     Give central meridian (opt) and scale
+	   -Jy|Y[<lon0>/[<lat0>/]]<scale>|<width> (Cylindrical Equal-area)
+	     Give central meridian (opt), standard parallel (opt) and scale
+	     <lat0> = 50 (Balthasart), 45 (Gall), 37.5 (Hobo-Dyer), 37.4 (Trystan Edwards),
+	              37.0666 (Caster), 30 (Behrmann), 0 (Lambert, default)
+	   -Jx|X<x-scale|<width>[/<y-scale|height>] (Linear, log, power scaling)
+	     <scale> in cm/units (or 1:xxxx). Optionally, append to <x-scale> and/or <y-scale>:
+	       d         Geographic coordinate (in degrees)
+	       l         Log10 projection
+	       p<power>  x^power projection
+	       t         Calendar time projection using relative time coordinates
+	       T         Calendar time projection using absolute time coordinates
+	     Use / to specify separate x/y scaling (e.g., -Jx0.5c/0.3c).  If 1:xxxxx is used it implies -R is in meters.
+	     If -JX is used then give axes lengths rather than scales.
+	-L Pass locations that are within <dist> of any line in ASCII <linefile>.
+	   Append e (meter), f (foot), k (km), M (mile), n (nautical mile), u (survey foot)
+	   d (arc degree), m (arc minute), or s (arc second) [e].
+	   Spherical distances are based on great-circle calculations;
+	   see -j<mode> for other modes of measurements.
+	   Give distance as 0 if 2nd column of segment headers have individual distances.
+	   Use -R -J to compute mapped Cartesian distances in cm, inch, or points [cm].
+	   Optionally, Append +p to exclude points projecting beyond a line's endpoints.
+	-N Set if a point outside or inside a geographic feature should be s(kipped) or k(ept).
+	   Append o to let feature boundary be considered outside [Default is inside].
+	   Specify this information with s or k using 1 of 2 formats:
+	     -N<wet>/<dry>.
+	     -N<ocean>/<land>/<lake>/<island>/<pond>.
+	   k means keep and s means skip [Default is s/k/s/k/s (i.e., s/k)].
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead,
+	     or use +e which is like +r but makes sure the region extends at least by 0.25 x <inc>.
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-Z Assume the 3rd data column contains z-values and we want to keep records with
+	   <min> <= z <= <max>.  Use - for <min> or <max> if there is no lower/upper limit.
+	   Append +c<col> to select another column than the third [2].
+	   If <max> is not given we pass records whose z equal <min> within 5 ulps.
+	   The -Z option is repeatable.  If given more than once then these modifiers may be useful:
+	     +a: Pass the record if any of the tests are true [all tests must be true in order to pass].
+	     +i: Reverse an individual test since -Iz only applies to a single test.
+	     If +c is not given then it is incremented automatically, starting at 2.
+	-a Give one or more comma-separated <col>=<name> associations
+	   [Default selects all aspatial fields].
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type>.
+	   Default is 2 input columns (3 if -Z is used).
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-g Use data point separations to determine if there are data gaps.
+	   Append x|X or y|Y to identify data gaps in x or y coordinates,
+	   respectively, and append d|D for distance gaps.  Upper case X|Y|D means
+	   we first project the points (requires -J).  Append <gap>[unit][+n|p]; +n uses
+	   d=prev-curr, +p uses d=curr-prev [d=|curr-prev|]; d must exceed <gap> to detect a gap.
+	   For geographic data: choose from e|f|k|M|n|u [Default is meter (e)].
+	   For gaps based on mapped coordinates: choose unit from c|i|p [cm].
+	   For time data: the unit is controlled by TIME_UNIT.
+	   For generic data: the unit is as the data implies (user units).
+	   Repeat the -g option to specify multiple criteria, and add -ga
+	   to indicate that all criteria must be met [just one must be met].
+	-h[i|o][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input or o for output only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output since none will be read.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Set alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	   Does not apply to files given via -C, -F, or -L.
+	-o Set alternate output column order [Default writes all columns in order].
+	   Append list of columns; t[<word>] = trailing text; use <word> for writing a single word from the text.
+	   Use -on for numerical output only.
+	-q Select input (-q or -qi) or output (-qo) rows to process [Default reads or writes all rows].
+	   Append comma-separated lists of rows or row ranges; prepend ~ to exclude those ranges instead.
+	   Append +f or +s to reset row counters per table or segment [per set (+a)].
+	   For limits on data values instead, append +c<col> and give data limits for column <col>.
+	-s Suppress output for records whose z-value (col = 2) equals NaN
+	   [Default prints all records].
+	   Append <cols> to examine other column(s) instead [2].
+	   Append +a to suppress records where any column equals NaN, or
+	   append +r to reverse the suppression (only output z = NaN records).
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

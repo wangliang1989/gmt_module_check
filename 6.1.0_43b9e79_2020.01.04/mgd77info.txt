@@ -1,0 +1,44 @@
+gmt mgd77info [mgd77] 6.1.0_43b9e79_2020.01.04 [64-bit] - Extract information about MGD77 files
+
+usage: gmt mgd77info <cruise(s)> [-C[m|e]] [-E[m|e]] [-I<code>] [-Mf[<item>]|r|e|h] [-L[v]]
+	[-V[<level>]] [--PAR=<value>]
+
+	<cruises> can be one of five kinds of specifiers:
+	1) 8-character NGDC IDs, e.g., 01010083, JA010010, etc., etc.
+	2) 2-character <agency> codes which will return all cruises from each agency.
+	3) 4-character <agency><vessel> codes, which will return all cruises from those vessels.
+	4) A single =<list>, where <list> is a table with NGDC IDs, one per line.
+	5) If nothing is specified we return all cruises in the data base.
+	   [See the documentation for agency and vessel codes].
+
+	OPTIONS:
+	-C List abbreviations of all columns present for each cruise.
+	   Append m for listing just the MGD77 columns present.
+	   Append e for listing just any extra columns present.
+	-E Give the information summary of each cruise's geographical/temporal extent.
+	   Append m for counting just the number of non-NaN values for each MGD77 field.
+	   Append e for counting just the of non-NaN values for each extra field.
+	-M Print header items (and MGD77+ history).  Append type of presentation:
+	     f: Print header items individually, one per line.  Append name of a particular
+	        item (e.g., Port_of_Departure), all [Default], or - to see a list of items.
+	        You can also use the number of the item.
+	     r: Display raw original MGD77 header records.
+	     e: Display the MGD77+ file's E77 status.
+	     h: Display the MGD77+ file's history.
+	-I Ignore certain data file formats from consideration. Append combination of act to ignore
+	   (a) MGD77 ASCII, (c) MGD77+ netCDF, (m) MGD77T ASCII, or (t) plain table files [Default ignores none].
+	-L List all the institutions and their 2-character GEODAS codes only.  Append v to also
+	   display the vessels and their 4-character codes for each institution.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

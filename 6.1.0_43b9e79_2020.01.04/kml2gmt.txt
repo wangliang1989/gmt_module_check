@@ -1,0 +1,41 @@
+gmt kml2gmt [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Extract GMT table data from Google Earth KML files
+
+usage: gmt kml2gmt [<kmlfiles>] [-E] [-Fs|l|p] [-V[<level>]] [-Z] [-bo[<ncol>][t][w][+l|b]] [-do<nodata>]
+	[-ho[<nrecs>][+c][+d][+r<remark>][+t<title>]] [-:[i|o]] [--PAR=<value>]
+
+	<kmlfiles> is one or more Google Earth KML files.
+	  If no file(s) is given, standard input is read.
+
+	OPTIONS:
+	<kmlfiles> is one or more KML files from Google Earth or similar.
+	   If no files are given, standard input is read.
+	-E Get Z from the ExtendData property (only single <SimpleData name="string"> implemented so far).
+	-F Restrict feature type; choose from (s)symbol, (l)ine, or (p)olygon.
+	   Use to only output data for the selected feature type [all].
+	-Z Output the z-column from the KML file [Only lon,lat is output].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-do Replace any NaNs in output data with <nodata>.
+	-h[i|o][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input or o for output only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output since none will be read.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

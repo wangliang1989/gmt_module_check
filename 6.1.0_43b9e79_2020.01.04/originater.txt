@@ -1,0 +1,77 @@
+gmt originater [spotter] 6.1.0_43b9e79_2020.01.04 [64-bit] - Associate seamounts with nearest hotspot point sources
+
+usage: gmt originater [<table>] -E<rottable>[+i] -F<hotspottable>[+d] [-D<d_km>] [-H] [-L[<flag>]]
+	[-N<upper_age>] [-Qr/t] [-S<n_hs>] [-T] [-V[<level>]] [-W<maxdist>] [-Z]
+	[-bi[<ncol>][t][w][+l|b]] [-d[i|o]<nodata>] [-e[~]<pattern>] [-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]]
+	[-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]] [-q[i|o][~]<rows>[,...][+c<col>][+a|f|s]]
+	[-s[<cols>][+a|r]] [-:[i|o]] [--PAR=<value>]
+
+	-E Specify file with the rotations to be used (see documentation for format).
+	   Append +i if you want to invert the finite rotations prior to use.
+	   Alternative 1: Give a single rotation as plon/plat/prot.
+	   Alternative 2: Give two plate IDs separated by a hyphen (e.g., PAC-MBL)
+	   to extract that rotation from the GPlates rotation database.
+	-F Specify file name for hotspot locations.
+	   Append +d if we should look for hotspot drift tables.
+	   If found then we interpolate to get hotspot location as a function of time [fixed].
+
+	OPTIONS:
+	<table> (in ASCII, binary, or netCDF) has 5 or more columns.  If no file(s) is given,
+	   standard input is read.  Expects (x,y,z,r,t) records, with t in Ma.
+	-D Set sampling interval in km along tracks [5].
+	-L Output information for closest approach for nearest hotspot only (ignores -S).
+	   -Lt gives (time, dist, z) [Default].
+	   -Lw gives (omega, dist, z).
+	   -Ll gives (lon, lat, time, dist, z).
+	   dist is in km; use upper case T,W,L to get dist in spherical degrees.
+	-N Set age (in m.y.) for seafloor where age == NaN [180].
+	-Q Input files has (x,y,z) only. Append constant r/t to use.
+	-S Report the <n_hs> closest hotSpots [1].
+	-T Truncate seamount ages exceeding the upper age set with -N [no truncation].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Report seamounts whose closest encounter to a hotspot is less than <maxdist> km
+	   [Default reports for all seamounts].
+	-Z Write hotspot ID number rather than hotspot TAG.
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [5].
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-h[i|o][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input or o for output only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output since none will be read.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Set alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-q Select input (-q or -qi) or output (-qo) rows to process [Default reads or writes all rows].
+	   Append comma-separated lists of rows or row ranges; prepend ~ to exclude those ranges instead.
+	   Append +f or +s to reset row counters per table or segment [per set (+a)].
+	   For limits on data values instead, append +c<col> and give data limits for column <col>.
+	-s Suppress output for records whose z-value (col = 2) equals NaN
+	   [Default prints all records].
+	   Append <cols> to examine other column(s) instead [2].
+	   Append +a to suppress records where any column equals NaN, or
+	   append +r to reverse the suppression (only output z = NaN records).
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

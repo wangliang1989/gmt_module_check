@@ -1,0 +1,54 @@
+gmt x2sys_datalist [x2sys] 6.1.0_43b9e79_2020.01.04 [64-bit] - Extract content of track data files
+
+usage: gmt x2sys_datalist <files> -T<TAG> [-A] [-E] [-F<fields>] [-L[<corrtable.txt>]] [-I<ignorelist>]
+	[-R<west>/<east>/<south>/<north>[+r]] [-S] [-V[<level>]] [-bo[<ncol>][t][w][+l|b]] [-do<nodata>] [--PAR=<value>]
+
+	<files> is one or more datafiles, or give =<files.lis> for a file with a list of datafiles.
+	-T <TAG> is the system tag for the data set.
+
+	OPTIONS:
+	-A Use any adjustment splines per track to redistribute COEs between tracks
+	   according to their relative weight [no adjustments].
+	-E Add segment headers with track names between separate file output [no added segment headers].
+	-F Comma-separated list of column names to output [Default are all fields].
+	-I List of tracks to ignore [Use all tracks].
+	-L Subtract systematic corrections from the data. If no correction file is given,
+	   the default file <TAG>_corrections.txt in $X2SYS_HOME/<TAG> is assumed.
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead,
+	     or use +e which is like +r but makes sure the region extends at least by 0.25 x <inc>.
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+	-S Suppress output records where all data columns are NaN [Output all records].
+	   (Note: data columns exclude navigation (lon|x,lat|y,time) columns.)
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-do Replace any NaNs in output data with <nodata>.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

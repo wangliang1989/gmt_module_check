@@ -1,0 +1,126 @@
+gmt project [core] 6.1.0_43b9e79_2020.01.04 [64-bit] - Project data onto lines or great circles, or generate tracks
+
+usage: gmt project [<table>] -C<ox>/<oy> [-A<azimuth>] [-E<bx>/<by>] [-F<flags>] [-G<dist>[/<colat>][+h]]
+	[-L[w|<l_min>/<l_max>]] [-N] [-Q] [-S] [-T<px>/<py>] [-V[<level>]] [-W<w_min>/<w_max>] [-Z<major>/<minor>/<azimuth>[+e]]
+	[-b[i|o][<ncol>][t][w][+l|b]] [-d[i|o]<nodata>] [-e[~]<pattern>] [-f[i|o]<info>] [-g[a]x|y|d|X|Y|D|[<col>]z<gap>[<unit>][+n|p]]
+	[-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]]
+	[-o<cols>[,...][t[<word>]]] [-q[i|o][~]<rows>[,...][+c<col>][+a|f|s]] [-s[<cols>][+a|r]] [-:[i|o]] [--PAR=<value>]
+
+	project will read stdin or file, and does not want input if -G option.
+	The projection may be defined in (only) one of three ways:
+	   (1) by a center -C and an azimuth -A,
+	   (2) by a center -C and end point of the path -E,
+	   (3) by a center -C and a roTation pole position -T.
+	   In a spherical projection [default], all cases place the central meridian
+	   of the transformed coordinates (p,q) through -C (p = 0 at -C).  The equator
+	   of the (p,q) system (line q = 0) passes through -C and makes an angle
+	   <azimuth> with North (case 1), or passes through -E (case 2), or is
+	   determined by the pole -T (case 3).  In (3), point -C need not be on equator.
+	   In a Cartesian [-N option] projection, p = q = 0 at -O in all cases;
+	   (1) and (2) orient the p axis, while (3) orients the q axis.
+
+	-C Set the location of the center to be <ox>/<oy>.
+
+	OPTIONS:
+	<table> is one or more data files (in ASCII, binary, netCDF).
+	   If no files are given, standard input is read.
+	-A Set the option (1) Azimuth, (<azimuth> in degrees CW from North).
+	-D Force the location of the Discontinuity in the r coordinate;
+	   -Dd (dateline) means [-180 < r < 180], -Dg (greenwich) means [0 < r < 360].
+	   The default does not check; in spherical case this usually results in [-180,180].
+	-E Set the option (2) location of end point E to be <bx>/<by>.
+	-F Indicate what output you want as one or more of xyzpqrs in any order;
+	   where x,y,[z] refer to input data locations and optional values,
+	   p,q are the coordinates of x,y in the projection's coordinate system,
+	   r,s is the projected position of x,y (taking q = 0) in the (x,y) coordinate system.
+	   p,q may be scaled from degrees into kilometers by the -Q option.  See -L, -Q, -W.
+	   Note z refers to all input data columns beyond the required x,y
+	   [Default is all fields, i.e., -Fxyzpqrs].
+	   If -G is set, -F is not available and output defaults to rsp.
+	-G Generate (r,s,p) points along profile every <dist> units. (No input data used.)
+	   If E given, will generate from C to E; else must give -L<l_min>/<l_max> for length.
+	   Optionally, append /<colat> for a small circle path through C and E (requires -C -E) [90].
+	   Finally, append +h if you want information about the pole in a segment header [no header].
+	-L Check the Length along the projected track and use only certain points.
+	   -Lw will use only those points Within the span from C to E (Must have set -E).
+	   -L<l_min>/<l_max> will only use points whose p is [l_min <= p <= l_max].
+	   Default uses all points.  Note p = 0 at C and increases toward E in <azimuth> direction.
+	-N Flat Earth mode; a Cartesian projection is made.  Default is spherical.
+	-Q Convert to Map units, so x,y,r,s are degrees,
+	   while p,q,dist,l_min,l_max,w_min,w_max are km.
+	   If not set, then p,q,dist,l_min,l_max,w_min,w_max are assumed to be in same units as x,y,r,s.
+	-S Output should be Sorted into increasing p value.
+	-T Set the option (3) location of the roTation pole to the projection to be <px>/<py>.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Check the width across the projected track and use only certain points.
+	   This will use only those points whose q is [w_min <= q <= w_max].
+	   Note that q is positive to your LEFT as you walk from C toward E in <azimuth> direction.
+	-Z With -G and -C, generate an ellipse of given major and minor axes (in km if geographic) and azimuth
+	   of major axis. Append +e for adjusting increment to fix perimeter exactly [use increment as given in -G].
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [2].
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-g Use data point separations to determine if there are data gaps.
+	   Append x|X or y|Y to identify data gaps in x or y coordinates,
+	   respectively, and append d|D for distance gaps.  Upper case X|Y|D means
+	   we first project the points (requires -J).  Append <gap>[unit][+n|p]; +n uses
+	   d=prev-curr, +p uses d=curr-prev [d=|curr-prev|]; d must exceed <gap> to detect a gap.
+	   For geographic data: choose from e|f|k|M|n|u [Default is meter (e)].
+	   For gaps based on mapped coordinates: choose unit from c|i|p [cm].
+	   For time data: the unit is controlled by TIME_UNIT.
+	   For generic data: the unit is as the data implies (user units).
+	   Repeat the -g option to specify multiple criteria, and add -ga
+	   to indicate that all criteria must be met [just one must be met].
+	-h[i|o][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input or o for output only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output since none will be read.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Set alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-o Set alternate output column order [Default writes all columns in order].
+	   Append list of columns; t[<word>] = trailing text; use <word> for writing a single word from the text.
+	   Use -on for numerical output only.
+	-q Select input (-q or -qi) or output (-qo) rows to process [Default reads or writes all rows].
+	   Append comma-separated lists of rows or row ranges; prepend ~ to exclude those ranges instead.
+	   Append +f or +s to reset row counters per table or segment [per set (+a)].
+	   For limits on data values instead, append +c<col> and give data limits for column <col>.
+	-s Suppress output for records whose z-value (col = 2) equals NaN
+	   [Default prints all records].
+	   Append <cols> to examine other column(s) instead [2].
+	   Append +a to suppress records where any column equals NaN, or
+	   append +r to reverse the suppression (only output z = NaN records).
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).
