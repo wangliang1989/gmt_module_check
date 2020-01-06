@@ -1,0 +1,47 @@
+gmt rotconverter [spotter] 6.0.0 [64-bit] - Manipulate total reconstruction and stage rotations
+
+usage: gmt rotconverter [+][-] <rotA> [[+][-] <rotB>] [[+][-] <rotC>] ... [-A] [-D]
+	[-F<out>] [-G] [-M[<factor>]] [-N] [-S] [-T] [-V[<level>]] [-W]
+	[-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [--PAR=<value>]
+
+	<rotA>, <rotB>, etc. are total reconstruction or stage rotation pole files.
+	   Alternatively, give two plate IDs separated by a hyphen (e.g., PAC-MBL)
+	   to extract that rotation from the GPlates rotation database (if installed)
+	   Or, they can be a single rotation in lon/lat[/tstart[/tstop]]/angle format.
+	   All rotation poles are assumed to be in geocentric coordinates.
+	   Rotations will be added/subtracted in the order given.
+
+	OPTIONS:
+	-A Report angles as time [Default uses time].
+	-D Report all longitudes in -180/+180 range [Default is 0-360].
+	-F Set output file type: t for total reconstruction and s for stage rotations [Default is -Ft].
+	-G Write rotations using GPlates format [Default is spotter format].
+	-M Reduce opening angles for stage rotations by <factor> [0.5].
+	   Typically used to get half-rates needed for flowlines.
+	-N Ensure all poles are in northern hemisphere [Default ensures positive opening angles/rates].
+	-S Ensure all poles are in southern hemisphere [Default ensures positive opening angles/rates].
+	-T Transpose the result (i.e., change sign of final rotation angle).
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Ensure all rotations have negative opening angles/rates [Default ensures positive opening angles/rates].
+	   Only one of -N, -S, -W may be used at the same time.
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

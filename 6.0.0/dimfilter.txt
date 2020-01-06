@@ -1,0 +1,64 @@
+gmt dimfilter [core] 6.0.0 [64-bit] - Directional filtering of grids in the space domain
+
+usage: gmt dimfilter <ingrid> -D<distance_flag> -F<type><filter_width>[<modifier>] -G<outgrid> -N<type><n_sectors>[<modifier>]
+	[-I<xinc>[<unit>][+e|n][/<yinc>[<unit>][+e|n]]] [-L] [-Q] [-R<west>/<east>/<south>/<north>[+r]]
+	[-T] [-V[<level>]] [-f[i|o]<info>] [-ho[<nrecs>][+c][+d][+r<remark>][+t<title>]] [--PAR=<value>]
+
+	<ingrid> is grid to be filtered.
+	Distance flag determines how grid (x,y) maps into distance units of filter width as follows:
+	   -D0 grid x,y same units as <filter_width>, cartesian Distances.
+	   -D1 grid x,y in degrees, <filter_width> in km, cartesian Distances.
+	   -D2 grid x,y in degrees, <filter_width> in km, x_scaled by cos(middle y), cartesian Distances.
+	   These first three options are faster; they allow weight matrix to be computed only once.
+	   Next two options are slower; weights must be recomputed for each scan line.
+	   -D3 grid x,y in degrees, <filter_width> in km, x_scale varies as cos(y), cartesian Distances.
+	   -D4 grid x,y in degrees, <filter_width> in km, spherical Distances.
+	-F Sets the primary filter type and full (6 sigma) filter-width  Choose between
+	   (b)oxcar, (c)osine arch, (g)aussian, (m)edian filters
+	   or p(maximum likelihood Probability estimator -- a mode estimator):
+	      Append +l to return the lowest mode if multiple modes are found [return average].
+	      Append +u to return the uppermost mode if multiple modes are found [return average].
+	-G Sets output name for filtered grid.
+	-N Sets the secondary filter type and the number of sectors.  Choose between
+	   (l)ower, (u)pper, (a)verage, (m)edian, and (p) the mode estimator). If using p:
+	      Append +l to return the lowest mode if multiple modes are found [return average].
+	      Append +u to return the uppermost mode if multiple modes are found [return average].
+
+	OPTIONS:
+	-I Sets new Increment of output grid; enter xinc, optionally xinc/yinc.
+	   Default is yinc = xinc.  Append an m [or s] to xinc or yinc to indicate minutes [or seconds];
+	   The new xinc and yinc should be divisible by the old ones (new lattice is subset of old).
+	-L Write dim.template.sh to stdout and stop; no other options allowed.
+	-Q Select error analysis mode; see documentation for how to prepare for using this option.
+	-R Sets new Range of output grid; enter <WESN> (xmin, xmax, ymin, ymax) separated by slashes.
+	-T Toggles between grid and pixel registration for output grid [Default is same as input registration].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

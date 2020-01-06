@@ -1,0 +1,104 @@
+gmt gravfft [potential] 6.0.0 [64-bit] - Spectral calculations of gravity, isostasy, admittance, and coherence for grids
+
+usage: gmt gravfft <topo_grd> [<ingrid2>] -G<outgrid> [-C<n/wavelength/mean_depth/tbw>]
+	[-D<density|grid>] [-E<n_terms>] [-F[f[+s]|b|g|v|n|e]] [-I<wbctk>]
+	[-N[f|s|<n_columns>/<n_rows>][+a|d|l][+e|m|n][+t<width>][+v][+w<suffix>][+z[p]]] [-Q]
+	[-T<te/rl/rm/rw>[/<ri>][+m]] [-V[<level>]] [-W<wd>] [-Z<zm>[/<zl>]] [-fg] [--PAR=<value>]
+
+	topo_grd is the input grdfile with topography values
+	-G Filename for output netCDF grdfile with gravity [or geoid] values
+
+	OPTIONS:
+	-C Compute admittance curves based on a theoretical model.
+	   Append <n/wavelength/mean_depth/tbw> as specified below:
+	   Total profile length in meters = <n> * <wavelength> (unless -Kx is set).
+	   --> Rest of parameters are set within -T AND -Z options
+	   Append dataflags (one or two) of tbw:
+	     t writes "elastic plate" admittance.
+	     b writes "loading from below" admittance.
+	     w writes wavelength instead of wavenumber.
+	-D Sets density contrast across surface (used when not -T).
+	   Give a co-registered density grid for a variable density contrast [constant].
+	-I Use <ingrid2> and <topo_grd> to estimate admittance|coherence and write
+	   it to stdout (-G ignored if set). This grid should contain gravity or geoid
+	   for the same region of <topo_grd>. Default computes admittance. Output
+	   contains 3 or 4 columns. Frequency (wavelength), admittance (coherence)
+	   one sigma error bar and, optionally, a theoretical admittance.
+	   Append dataflags (one to three) of wbct:
+	     w writes wavelength instead of wavenumber.
+	     k Use km or wavelength unit [m].
+	     c computes coherence instead of admittance.
+	     b writes a forth column with "loading from below" 
+	       theoretical admittance.
+	     t writes a forth column with "elastic plate" 
+	       theoretical admittance.
+	-E Number of terms used in Parker's expansion [Default = 3].
+	-F Specify desired geopotential field:
+	   b = Bouguer anomalies (mGal).
+	   f = Free-air anomalies (mGal) [Default].
+	       Append +s to adjust for implied slab correction [none].
+	   g = Geoid anomalies (m).
+	   v = Vertical Gravity Gradient (VGG; 1 Eovtos = 0.1 mGal/km).
+	   e = East deflections of the vertical (micro-radian).
+	   n = North deflections of the vertical (micro-radian).
+	-N Choose or inquire about suitable grid dimensions for FFT, and set modifiers.
+	   Setting the FFT dimensions:
+	     -Na will select dimensions promising the most accurate results.
+	     -Nf will force the FFT to use the dimensions of the grid.
+	     -Nm will select dimensions using the least work storage.
+	     -Nr will select dimensions promising the most rapid calculation.
+	     -Ns will list Singleton's [1967] recommended dimensions, then exit.
+	     -N<n_columns>/<n_rows> will do FFT on array size <n_columns>/<n_rows> (Must be >= grid size).
+	     Default chooses dimensions >= grid dimensions to optimize speed and accuracy of the FFT.
+	   Append modifiers for removing a planar trend:
+	     +d: Detrend data, i.e., remove best-fitting plane [Default].
+	     +a: Only remove mean value.
+	     +h: Only remove mid value, i.e., 0.5 * (max + min).
+	     +l: Leave data alone.
+	   Append modifiers for extending the grid via symmetries:
+	     If FFT dimensions > grid dimensions, data are extended via edge point symmetry
+	     and tapered to zero.  Several modifiers can be set to change this behavior:
+	     +e: Extend data via edge point symmetry [Default].
+	     +m: Extend data via edge mirror symmetry.
+	     +n: Do NOT extend data.
+	     +t<w>: Limit tapering to <w> % of the extended margins [100].
+	     If +n is set then +t instead sets the boundary width of the interior
+	     grid margin to be tapered [0].
+	   Append modifiers for saving modified grid before or after the 2-D FFT is called:
+	     +w[<suffix>] will write the intermediate grid passed to FFT after detrending/extension/tapering.
+	       File name will have _<suffix> [tapered] inserted before file extension.
+	     +z[p] will write raw complex spectrum to two separate grid files.
+	       File name will have _real/_imag inserted before the file extensions.
+	       Append p to store polar forms, using _mag/_phase instead.
+	   Append modifiers for messages:
+	     +v will report all suitable dimensions (except when -Nf is selected).
+	   Warning: both -D -T...+m and -Q will implicitly set -N's +h.
+	-Q Writes out a grid with the flexural topography (with z positive up)
+	   whose average depth is set to the value given by -Z<zm>.
+	-S Computes predicted geopotential (see -F) grid due to a subplate load
+	   produced by the current bathymetry and the theoretical admittance.
+	   The necessary parameters are set within -T and -Z options
+	-T Computes the isostatic compensation. Input file is topo load.
+	   Append elastic thickness and densities of load, mantle, and
+	   water, all in SI units. Give average mantle depth via -Z
+	   If the elastic thickness is > 1e10 it will be interpreted as the
+	   flexural rigidity (by default it is computed from Te and Young modulus).
+	   If an optional infill density <ri> != <rl> is appended we find an approximate solution.
+	   Optionally, append +m to write a grid with the Moho's geopotential effect
+	   (see -F) from model selected by -T.
+	-W Specify water depth (or observation level) in m; append k for km.  Must be positive.
+	-Z Specify Moho [and swell] average compensation depths.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-fg Convert geographic grids to meters using a "Flat Earth" approximation.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

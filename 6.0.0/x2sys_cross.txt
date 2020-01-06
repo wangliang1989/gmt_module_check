@@ -1,0 +1,65 @@
+gmt x2sys_cross [x2sys] 6.0.0 [64-bit] - Calculate crossovers between track data files
+
+usage: gmt x2sys_cross <files> -T<TAG> [-A<combi.lis>] [-C[<fname>]] [-D[S|N]] [-Il|a|c] [-Qe|i]
+	[-R<west>/<east>/<south>/<north>[+r]] [-Sl|h|u<speed>] [-V[<level>]] [-W<size>] [-Z]
+	[-bo[<ncol>][t][w][+l|b]] [-do<nodata>] [--PAR=<value>]
+
+	Output is x y t1 t2 d1 d2 az1 az2 v1 v2 xval1 xmean1 xval2 xmean2 ...
+	If time is not selected (or present) we use record numbers as proxies i1 i2
+
+	<files> is one or more datafiles, or give =<files.lis> for a file with a list of datafiles.
+	-T <TAG> is the system tag for the data set.
+
+	OPTIONS:
+	-A Give list of file pairs that are ok to compare [Default is all combinations].
+	-C Print run time for each pair. Optionally append <fname> to save them in file.
+	-D Control geographic coordinate conversions. By default we automatically convert
+	   lon,lat to polar coordinates if within one hemisphere. -D turns this off, while
+	   -DS or -DN forces the conversion using the specified pole [auto-selected].
+	-I Set the interpolation mode.  Choose among:
+	     l Linear interpolation [Default].
+	     a Akima spline interpolation.
+	     c Cubic spline interpolation.
+	-Q Append e for external crossovers.
+	   Append i for internal crossovers [Default is all crossovers].
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead [0].
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+	-S Set limits on lower and upper speeds (units determined by -Ns):
+	     -Sl sets lower speed [Default is 0].
+	     -Sh no headings should be computed if velocity drops below this value [0].
+	     -Su sets upper speed [Default is Infinity].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Set maximum points on either side of crossover to use in interpolation [Default is 3].
+	-Z Return z-values for each track [Default is crossover and mean value].
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-do Replace any NaNs in output data with <nodata>.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

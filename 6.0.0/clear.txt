@@ -1,0 +1,23 @@
+gmt clear [core] 6.0.0 [64-bit] - Delete current default settings, or the cache, data or sessions directories
+
+usage: gmt clear all|cache|data|sessions|settings [-V[<level>]]
+
+	Deletes the specified item.  Choose one of these targets:
+	   cache     Deletes the user's cache directory [/Users/liang/.gmt/cache].
+	   data      Deletes the user's data download directory [/Users/liang/.gmt/server].
+	   sessions  Deletes the user's sessions directory [/Users/liang/.gmt/sessions].
+	   settings  Deletes a modern mode session's gmt.conf file.
+	   all       All of the above.
+
+	OPTIONS:
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.

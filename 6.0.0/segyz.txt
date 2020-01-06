@@ -1,0 +1,88 @@
+gmt segyz [segy] 6.0.0 [64-bit] - Plot a SEGY file in 3-D
+
+usage: gmt segyz [<segyfile>] -D<dev> -F<color> | -W -Jx|X<args>
+	-R[<unit>]<xmin>/<xmax>/<ymin>/<ymax>[+r] [-A] [-C<clip>] [-E<slop>] [-I] [-L<nsamp>]
+	[-M<ntraces>] [-N] [-Q<mode><value>] [-S<header>] [-T<tracefile>]
+	[-U[<label>][+c][+j<just>][+o<dx>/<dy>]] [-V[<level>]] [-W] [-X[a|c|f|r]<xshift>[<unit>]]
+	[-Y[a|c|f|r]<yshift>[<unit>]] [-Z]
+	[-c[<row>,<col>]] [-p[x|y|z]<azim>[/<elev>[/<zlevel>]][+w<lon0>/<lat0>[/<z0>][+v<x0>/<y0>]] [-t<transp>] [--PAR=<value>]
+
+	<segyfile> is an IEEE SEGY file [or standard input].
+
+	-D Set <dev> to give deviation in X units of plot for 1.0 on scaled trace.
+	   <dev> is single number (applied equally in X and Y directions) or <devX>/<devY>.
+	-Jx|X for linear projection.  Scale in cm/units (or width in cm).
+	    Use / to specify separate x/y scaling.
+	    If -JX is used then give axes lengths in cm rather than scales.
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead [0].
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+	NB units for y are s or km
+
+	OPTIONS:
+	-A Flip the default byte-swap state (default assumes data have a bigendian byte-order).
+	-C Clip scaled trace excursions at <clip>, applied after bias.
+	-E Set <error> slop to allow for -T. Recommended in case of arithmetic errors!
+	-I Fill negative rather than positive excursions.
+	-L Let <nsamp> override number of samples.
+	-M Fix number of traces. Default reads all traces.
+	   -M0 will read number in binary header, -M<ntraces> will attempt to read only <ntraces> traces.
+	-N Trace normalize the plot, with order of operations: [normalize][bias][clip](deviation).
+	-Q Append <mode><value> to change any of 5 different settings:
+	     -Qb<bias> to bias scaled traces (-Qb-0.1 subtracts 0.1 from values).
+	     -Qi<dpi> to change image dots-per-inch [300].
+	     -Qu<redvel> to apply reduction velocity (-ve removes reduction already present).
+	     -Qx<mult> to multiply trace locations by <mult>.
+	     -Qy<dy> to override sample interval.
+	-S Specify <x/y> to set variable spacing.
+	   x,y are (number) for fixed location, c for cdp, o for offset, b<n> for long int at byte n.
+	-U Plot GMT Unix System Time stamp [and optionally appended text or command line].
+	   You may also set the justification point and the relative position of stamp
+	   [+jBL+o-54p/-54p].  Add +c to have the command line plotted [OFF].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Plot wiggle trace (must specify either -W or -F).
+	-X -Y Shift origin of plot to (<xshift>, <yshift>).
+	   Prepend r for shift relative to current point (default), prepend a for temporary
+	   adjustment of origin, prepend f to position relative to lower left corner of page,
+	   prepend c for offset of center of plot to center of page.
+	   For overlays (-O), the default setting is [r0], otherwise [f2.54c].
+	-Z Suppress plotting traces whose rms amplitude is 0.
+	-c Move to next subplot panel or append row,col of desired panel.
+	-p Select a 3-D pseudo perspective view.  Append the
+	   <azimuth>/<elevation> of the viewpoint [180/90].
+	   When used with -Jz|Z, optionally add /<zlevel> for frame level [bottom of z-axis].
+	   Prepend x or y to plot against the “wall” x = level or y = level [z].
+	   Optionally, append +w<lon0>/<lat0>[/<z0>] to specify a fixed coordinate point
+	   or +v<x0>/<y0> for a fixed projected point [region center and page center].
+	   For a plain rotation about the z-axis, give rotation angle only
+	   and optionally use +w or +v to select location of axis [plot origin].
+	-t Set the layer transparency from 0-100 [Default is 0; opaque].
+	   Requires conversion to PDF or raster formats.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

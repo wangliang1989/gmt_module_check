@@ -1,0 +1,76 @@
+gmt gmtsimplify [core] 6.0.0 [64-bit] - Line reduction using the Douglas-Peucker algorithm
+
+usage: gmt gmtsimplify [<table>] -T<tolerance>[<unit>] [-V[<level>]] [-b[i|o][<ncol>][t][w][+l|b]]
+	[-d[i|o]<nodata>] [-e[~]<pattern>] [-f[i|o]<info>] [-g[a]x|y|d|X|Y|D|[<col>]z<gap>[<unit>][+n|p]]
+	[-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]]
+	[-o<cols>[,...][t[<word>]]] [-:[i|o]] [--PAR=<value>]
+
+	-T Set tolerance as the maximum distance mismatch.
+	   Append e (meter), f (foot), k (km), M (mile), n (nautical mile), u (survey foot)
+	   d (arc degree), m (arc minute), or s (arc second) [e].
+	   Spherical distances are based on great-circle calculations;
+	   see -j<mode> for other modes of measurements.
+	   No units means we will do a Cartesian calculation instead.
+
+	OPTIONS:
+	<table> is one or more data files (in ASCII, binary, netCDF).
+	   If no files are given, standard input is read.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [2].
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-g Use data point separations to determine if there are data gaps.
+	   Append x|X or y|Y to identify data gaps in x or y coordinates,
+	   respectively, and append d|D for distance gaps.  Upper case X|Y|D means
+	   we first project the points (requires -J).  Append <gap>[unit][+n|p]; +n uses
+	   d=prev-curr, +p uses d=curr-prev [d=|curr-prev|]; d must exceed <gap> to detect a gap.
+	   For geographic data: choose from e|f|k|M|n|u [Default is meter (e)].
+	   For gaps based on mapped coordinates: choose unit from c|i|p [cm].
+	   For time data: the unit is controlled by TIME_UNIT.
+	   For generic data: the unit is as the data implies (user units).
+	   Repeat the -g option to specify multiple criteria, and add -ga
+	   to indicate that all criteria must be met [just one must be met].
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Sets alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-o Set alternate output column order [Default writes all columns in order].
+	   Append list of columns; t[<word>] = trailing text; use <word> for writing a single word from the text.
+	   Use -on for numerical output only.
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

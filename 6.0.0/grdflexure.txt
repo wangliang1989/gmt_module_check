@@ -1,0 +1,82 @@
+gmt grdflexure [potential] 6.0.0 [64-bit] - Compute flexural deformation of 3-D surfaces for various rheologies
+
+usage: gmt grdflexure <topogrid> -D<rhom>/<rhol>[/<rhoi>]/<rhow> -E<te> -G<outgrid> [-A<Nx/Ny/Nxy>] [-C[p|y]<value] [-F<nu_a>[/<h_a>/<nu_m>]]
+	[-L<list>] [-M<tm>] [-N[f|s|<n_columns>/<n_rows>][+a|d|l][+e|m|n][+t<width>][+v][+w<suffix>][+z[p]]] [-S<beta>] [-T<t0>[/<t1>/<dt>|<file>|<n>[+l]]]
+	[-V[<level>]] [-W<wd>] [-Z<zm>] [-fg] [--PAR=<value>]
+
+	<topogrid> is the input grdfile with topography (load) values, in meters. If -T is used,
+	   <topogrid> may be a filename template with a floating point format (C syntax) and
+	   a different load file name will be set and loaded for each time step.
+	   Time steps with no corresponding load file are allowed.
+	   Alternatively, give =<flist> where <flist> contains a list of load grids and load times.
+	-D Sets density values for mantle, load(crust), optional moat infill [same as load], and water|air in kg/m^3.
+	-E Sets elastic plate thickness in m; append k for km.  If Te > 1e10 it will be interpreted
+	   as the flexural rigidity [Default computes D from Te, Young's modulus, and Poisson's ratio].
+	-G filename for output grdfile with flexed surface.  If -T is set then <outgrid>
+	   must be a filename template that contains a floating point format (C syntax) and
+	   we use the corresponding time (in units specified in -T) to generate the file name.
+	   If the floating point format is followed by %c then we scale time to unit in -T and append the unit.
+
+	OPTIONS:
+	-A Sets in-plane force components Nx, Ny and shear force Nxy [isotropic deformation].
+	   Negative values mean compression, positive values mean extensional forces.
+	-C use -Cy<Young> or -Cp<poisson> to change Young's modulus [7e+10] or Poisson's ratio [0.25].
+	-F Sets upper mantle viscosity, and optionally its thickness and lower mantle viscosity.
+	   Viscosity units in Pa s; thickness in meter (append k for km).
+	-L Give filename for output table with names of all grids (and model times) produced.
+	   If no filename is given then we write the list to stdout.
+	-M Set Maxwell time for visco-elastic flexure (unit is years; append k for kyr and M for Myr).
+	-N Choose or inquire about suitable grid dimensions for FFT, and set modifiers.
+	   Setting the FFT dimensions:
+	     -Na will select dimensions promising the most accurate results.
+	     -Nf will force the FFT to use the dimensions of the grid.
+	     -Nm will select dimensions using the least work storage.
+	     -Nr will select dimensions promising the most rapid calculation.
+	     -Ns will list Singleton's [1967] recommended dimensions, then exit.
+	     -N<n_columns>/<n_rows> will do FFT on array size <n_columns>/<n_rows> (Must be >= grid size).
+	     Default chooses dimensions >= grid dimensions to optimize speed and accuracy of the FFT.
+	   Append modifiers for removing a planar trend:
+	     +d: Detrend data, i.e., remove best-fitting plane [Default].
+	     +a: Only remove mean value.
+	     +h: Only remove mid value, i.e., 0.5 * (max + min).
+	     +l: Leave data alone.
+	   Append modifiers for extending the grid via symmetries:
+	     If FFT dimensions > grid dimensions, data are extended via edge point symmetry
+	     and tapered to zero.  Several modifiers can be set to change this behavior:
+	     +e: Extend data via edge point symmetry [Default].
+	     +m: Extend data via edge mirror symmetry.
+	     +n: Do NOT extend data.
+	     +t<w>: Limit tapering to <w> % of the extended margins [100].
+	     If +n is set then +t instead sets the boundary width of the interior
+	     grid margin to be tapered [0].
+	   Append modifiers for saving modified grid before or after the 2-D FFT is called:
+	     +w[<suffix>] will write the intermediate grid passed to FFT after detrending/extension/tapering.
+	       File name will have _<suffix> [tapered] inserted before file extension.
+	     +z[p] will write raw complex spectrum to two separate grid files.
+	       File name will have _real/_imag inserted before the file extensions.
+	       Append p to store polar forms, using _mag/_phase instead.
+	   Append modifiers for messages:
+	     +v will report all suitable dimensions (except when -Nf is selected).
+	-S Specify starved moat fraction in 0-1 range (1 = fully filled, 0 = no infill) [1].
+	-T Specify start, stop, and time increments for sequence of calculations [one step, no time dependency].
+	   For a single specific time, just give <start>. unit is years; append k for kyr and M for Myr.
+	   For a logarithmic time scale, append +l and specify n steps instead of time increment.
+	   To read a list of times from the first column in a file instead, use -T<tfile>.
+	   Note that time axis is positive back in time.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Specify water depth in m; append k for km.  Must be positive.
+	   Subaerial topography will be scaled by -D to account for density differences.
+	-Z Specify reference depth to flexed surface in m; append k for km.  Must be positive.
+	-fg Convert geographic grids to meters using a "Flat Earth" approximation.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

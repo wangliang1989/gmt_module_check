@@ -1,0 +1,88 @@
+gmt backtracker [spotter] 6.0.0 [64-bit] - Generate forward and backward flowlines and hotspot tracks
+
+usage: gmt backtracker [<table>] -E<rottable>[+i]|<ID1>-<ID2>[+i]|<plon>/<plat>/<prot> [-A[<young></old>]] [-Df|b]
+	[-F<driftfile] [-Lf|b<d_km>] [-M[<factor>]] [-N<upper_age>] [-Q<t_fix>] [-S<stem>] [-T<t_zero>]
+	[-V[<level>]] [-W] [-b[i|o][<ncol>][t][w][+l|b]] [-d[i|o]<nodata>] [-e[~]<pattern>]
+	[-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]]
+	[-o<cols>[,...][t[<word>]]] [-s[<cols>][+a|r]] [-:[i|o]] [--PAR=<value>]
+
+	<table> (in ASCII, binary, or netCDF) has 3 or more columns.  If no file(s) is given, standard input is read.
+	   First 3 columns must have lon, lat (or lat, lon, see -:) and age (Ma).
+	-E Specify file with the rotations to be used (see documentation for format).
+	   Append +i if you want to invert the finite rotations prior to use.
+	   Alternative 1: Give a single rotation as plon/plat/prot.
+	   Alternative 2: Give two plate IDs separated by a hyphen (e.g., PAC-MBL)
+	   to extract that rotation from the GPlates rotation database.
+	   Alternatively, specify a single finite rotation (in degrees) to be applied to all input points.
+
+	OPTIONS:
+	-A Output tracks for ages (or stages, see -L) between young and old [Default is entire track].
+	   If no limit is given, then each seamount should have their limits in columns 4 and 5 instead.
+	   Only applicable in conjunction with the -L option.
+	-Db Backtrack mode: move forward in time (from older to younger positions) [Default].
+	-Df Flowline mode: move backward in time (from younger to older positions).
+	-F Give file with lon, lat, time records describing motion of hotspot responsible for
+	   the seamount/path we are concerned with [fixed hotspots].  If given, then the
+	   input lon, lat is replaced by the position of the drifting hotspot at the given age.
+	   Note: If -F is used the <d_km> in -L is assumed to be point spacing in Ma.
+	-Lb Compute hotspot tracks sampled every <d_km> interval [Default projects single points].
+	-Lf Compute flowline for seamounts of unknown but maximum age [Default projects single points].
+	    If no <d_km> is given, the start/stop points for each stage are returned.
+	    If B and F is used instead, stage id is returned as z-value [Default is predicted ages].
+	-M Reduce opening angles for stage rotations by <factor> [0.5].
+	   Typically used to get half-rates needed for flowlines.
+	-N Extend earliest stage pole back to <upper_age> [no extension].
+	-Q Assign <t_fix> age to all input points [Use 3rd column ages].
+	-S Add -L<smt_no> to segment header and 4th output column (requires -L).
+	-T Set the current age in Ma [0].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Return projected point and confidence ellipse for the finite rotation.
+	   The input time must exactly match the age of a finite rotation or else we skip the point.
+	   Output record will be lon,lat,az,major,minor.
+	   -Wt will output lon,lat,time,az,major,minor.
+	   -Wa will output lon,lat,angle,az,major,minor.
+	   Use -D to specify which direction to rotate [forward in time].
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [3].
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Sets alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-o Set alternate output column order [Default writes all columns in order].
+	   Append list of columns; t[<word>] = trailing text; use <word> for writing a single word from the text.
+	   Use -on for numerical output only.
+	-s Suppress output for records whose z-value (col = 2) equals NaN
+	   [Default prints all records].
+	   Append <cols> to examine other column(s) instead [2].
+	   Append +a to suppress records where any column equals NaN, or
+	   append +r to reverse the suppression (only output z = NaN records).
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

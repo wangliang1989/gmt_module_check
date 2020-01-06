@@ -1,0 +1,57 @@
+gmt inset [core] 6.0.0 [64-bit] - Manage figure inset setup and completion
+
+usage: gmt inset begin -D[g|j|J|n|x]<refpoint>+w<width>[<unit>][/<height>[<unit>]][+j<justify>][+o<dx>[/<dy>]] |
+	-D<xmin>/<xmax>/<ymin>/<ymax>[+r][+u<unit>]
+	[-F[+c<clearance(s)>][+g<fill>][+i[[<gap>/]<pen>]][+p[<pen>]][+r[<radius>]][+s[<dx>/<dy>/][<fill>]]] [-M<margins>] [-N] [-V[<level>]] [--PAR=<value>]
+
+usage: gmt inset end [-V[<level>]]
+
+	-D Design a simple map inset as specified below:
+	     Specify the map inset region using one of three specifications:
+	     a) Give <west>/<east>/<south>/<north> of geographic rectangle bounded by meridians and parallels.
+	        Append +r if coordinates are the lower left and upper right corners of a rectangular area.
+	     b) Give <xmin>/<xmax>/<ymin>/<ymax>[+u<unit>] of bounding rectangle in projected coordinates [meters].
+	     c) Set reference point and dimensions of the inset:
+	        Positioning is specified via one of four coordinate systems:
+	          Use -Dg to specify <refpoint> with map coordinates.
+	          Use -Dj or -DJ to specify <refpoint> with 2-char justification code (BL, MC, etc).
+	          Use -Dn to specify <refpoint> with normalized coordinates in 0-1 range.
+	          Use -Dx to specify <refpoint> with plot coordinates.
+	        All except -Dx require the -R and -J options to be set.
+	        Use J if item should be placed outside the map frame and j if inside.
+	        Append +w<width>[<u>]/<height>[<u>] of bounding rectangle (<u> is a unit from c|i|p).
+	        Append 2-char +j<justify> code to associate that anchor point on the inset with <refpoint>.
+	        If +j<justify> is not given then <justify> will default to the same as <refpoint> (with -Dj),
+	          or the mirror opposite of <refpoint> (with -DJ), or BL (else).
+	        Optionally, append +o<dx>[/<dy>] to offset inset from <refpoint> in direction implied by <justify> [0/0].
+	     Append +s<file> to save inset lower left corner and dimensions to <file>.
+	     Append +t to translate plot origin to the lower left corner of the inset.
+	   Set panel attributes separately via the -F option.
+
+	OPTIONS:
+	-F Specify a rectangular panel behind the map inset.
+	   Without further options: draw border around the scale panel (using MAP_FRAME_PEN)
+	     [Default is no border].
+	   Append +c<clearance> where <clearance> is <gap>, <xgap/ygap>, or <lgap/rgap/bgap/tgap> [4p].
+	     Note: For a map inset the default clearance is zero.
+	   Append +g<fill> to set the fill for the scale panel [Default is no fill].
+	   Append +i[[<gap>/]<pen>] to add a secondary inner frame boundary [Default gap is 2p].
+	   Append +p[<pen>] to draw the border and optionally change the border pen [thicker,black].
+	   Append +r[<radius>] to plot rounded rectangles instead [Default radius is 6p].
+	   Append +s[<dx>/<dy>/][<shade>] to plot a shadow behind the scale panel [Default is 4p/-4/gray50].
+	-M Allows for space around the inset. Append a uniform <margin>, separate <xmargin>/<ymargin>,
+	   or individual <wmargin>/<emargin>/<smargin>/<nmargin> for each side [no margin].
+	-N Do Not clip anything that exceeds the map inset boundaries [Default will clip].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

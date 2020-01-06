@@ -1,0 +1,146 @@
+gmt grdmask [core] 6.0.0 [64-bit] - Create mask grid from polygons or point coverage
+
+usage: gmt grdmask [<table>] -G<outgrid> -I<xinc>[<unit>][+e|n][/<yinc>[<unit>][+e|n]]
+	-R<west>/<east>/<south>/<north>[+r] [-A[m|p|x|y]] [-N[z|Z|p|P][<values>]]
+	[-S<radius>[<unit>] | <xlim>/<ylim>] [-V[<level>]] [-a<col>=<name>[,...]]
+	[-bi[<ncol>][t][w][+l|b]] [-di<nodata>] [-e[~]<pattern>] [-f[i|o]<info>] [-g[a]x|y|d|X|Y|D|[<col>]z<gap>[<unit>][+n|p]]
+	[-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]] [-je|f|g] [-n[b|c|l|n][+a][+b<BC>][+c][+t<threshold>]]
+	[-r[g|p]] [-s[<cols>][+a|r]] [-x[[-]<n>]] [-:[i|o]] [--PAR=<value>]
+
+	<table> is one or more data files (in ASCII, binary, netCDF).
+	   If no files are given, standard input is read.
+	-G Specify file name for output mask grid file.
+	-I Specify increment(s) and optionally append units or flags.
+	   Full syntax is <xinc>[d|m|s|e|f|k|M|n|u][+e|n][/<yinc>[d|m|s|e|f|k|M|n|u][+e|n]]]
+	   For geographic regions in degrees you can optionally append units from this list:
+	   (d)egree [Default], (m)inute, (s)econd, m(e)ter, (f)oot, (k)ilometer, (M)ile, (n)autical mile, s(u)rvey foot.
+	   Append +e to adjust the region to fit increments [Adjust increment to fit domain].
+	   Alternatively, specify number of nodes by appending +n. Then, the increments
+	   are calculated from the given domain and node-registration settings
+	   (see Appendix B for details).  Note: If -R<grdfile> was used then -I
+	   (and -R and maybe -r) have been set; use -I to override those increments.
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead [0].
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+
+	OPTIONS:
+	-A Suppress connecting geographic points using great circle arcs, i.e., connect by straight lines,
+	   unless m or p is appended to first follow meridian then parallel, or vice versa.
+	   For Cartesian data, use -Ax or -Ay to connect first in x, then y, or vice versa.
+	   Ignored if -S is used since input data are then considered to be points.
+	-N Set <out>/<edge>/<in> to use if node is outside, on the path, or inside.
+	   NaN is a valid entry.  Default values are 0/0/1.
+	   Alternatively, use -Nz (inside) or -NZ (inside & edge) to set the inside
+	   nodes of a polygon to a z-value obtained as follows (in this order):
+	     a) If OGR/GMT files, get z-value via -aZ=<name> for attribute <name>.
+	     b) Interpret segment z-values (-Z<zval>) as the z-value.
+	     c) Interpret segment labels (-L<label>) as the z-value.
+	   Finally, use -Np|P and append origin for running polygon IDs [0].
+	   For -Nz|Z|p|P you may optionally append /<out [0].
+	-S Set search radius to identify inside points.
+	   Append e (meter), f (foot), k (km), M (mile), n (nautical mile), u (survey foot)
+	   d (arc degree), m (arc minute), or s (arc second) [e].
+	   Spherical distances are based on great-circle calculations;
+	   see -j<mode> for other modes of measurements.
+	   Mask nodes are set to <in> or <out> depending on whether they are
+	   inside the circle of specified radius [0] from the nearest data point.
+	   Give radius as 'z' if individual radii are provided via the 3rd data column
+	   and append a fixed unit unless Cartesian.
+	   For Cartesian grids with different x and y units you may append <xlim>/<ylim>;
+	   this sets all nodes within the rectangular area of the given half-widths to inside.
+	   One can also achieve the rectangular selection effect by using the -S<n_cells>c
+	   form. Here n_cells means the number of cells around each data point. As an example,
+	   -S0c means that only the cell where point lies is masked, -S1c masks one cell
+	   beyond that (i.e. makes a 3x3 neighborhood), and so on.
+	   [Default is to assume <table> contains polygons and use inside/outside searching].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-a Give one or more comma-separated <col>=<name> associations
+	   [Default selects all aspatial fields].
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [2].
+	-di Replace any <nodata> in input data with NaN.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-g Use data point separations to determine if there are data gaps.
+	   Append x|X or y|Y to identify data gaps in x or y coordinates,
+	   respectively, and append d|D for distance gaps.  Upper case X|Y|D means
+	   we first project the points (requires -J).  Append <gap>[unit][+n|p]; +n uses
+	   d=prev-curr, +p uses d=curr-prev [d=|curr-prev|]; d must exceed <gap> to detect a gap.
+	   For geographic data: choose from e|f|k|M|n|u [Default is meter (e)].
+	   For gaps based on mapped coordinates: choose unit from c|i|p [cm].
+	   For time data: the unit is controlled by TIME_UNIT.
+	   For generic data: the unit is as the data implies (user units).
+	   Repeat the -g option to specify multiple criteria, and add -ga
+	   to indicate that all criteria must be met [just one must be met].
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Sets alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-j Sets spherical distance calculation mode for modules that offer that flexibility.
+	   Append f for Flat Earth, g for Great Circle [Default], and e for Ellipsoidal mode.
+	-n+b<BC> Set boundary conditions.  <BC> can be either:
+	   g for geographic, p for periodic, and n for natural boundary conditions.
+	   For p and n you may optionally append x or y [default is both]:
+	     x applies the boundary condition for x only
+	     y applies the boundary condition for y only
+	   [Default: Natural conditions, unless grid is geographic].
+	-r Set (g)ridline- or (p)ixel-registration [Just -r sets pixel registration].
+	   If not given we default to gridline registration.
+	-s Suppress output for records whose z-value (col = 2) equals NaN
+	   [Default prints all records].
+	   Append <cols> to examine other column(s) instead [2].
+	   Append +a to suppress records where any column equals NaN, or
+	   append +r to reverse the suppression (only output z = NaN records).
+	-x Limit the number of cores used in multi-threaded algorithms.
+	   Default uses all available cores [4].
+	   -x<n>  Select <n> cores (up to all available).
+	   -x-<n> Select (all - <n>) cores (or at least 1).
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

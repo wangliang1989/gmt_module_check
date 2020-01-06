@@ -1,0 +1,161 @@
+gmt velo [geodesy] 6.0.0 [64-bit] - Plot velocity vectors, crosses, and wedges
+
+usage: gmt velo [<table>] -J<args> -R<west>/<east>/<south>/<north>[+r] [-A<vecpar>] [-B<args>] [-D<sigscale>]
+	[-G<fill>] [-L] [-N] [-S<symbol><scale>[/<args>]]
+	[-U[<label>][+c][+j<just>][+o<dx>/<dy>]] [-V] [-W<pen>] [-X[a|c|f|r]<xshift>[<unit>]]
+	[-Y[a|c|f|r]<yshift>[<unit>]] [-c[<row>,<col>]] [-di<nodata>] [-e[~]<pattern>] [-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]]
+	[-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]] [-t<transp>] [-:[i|o]] [--PAR=<value>]
+
+	-J Select map proJection. (<scale> in cm/degree, <width> in cm)
+	   Append +dh for map height, +du for max (upper) or +dl for min (lower) map dimension [+dw for width].
+	   Azimuthal projections set -Rg unless polar aspect or -R<...>r is set.
+
+	   -Ja|A<lon0>/<lat0>[/<hor>]/<scl (or <radius>/<lat>)|<width> (Lambert Azimuthal EA)
+	   -Jb|B<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Albers Conic EA)
+	   -Jcyl_stere|Cyl_stere/[<lon0>/[<lat0>/]]<lat1>/<lat2>/<scl>|<width> (Cylindrical Stereographic)
+	   -Jc|C<lon0>/<lat0><scl>|<width> (Cassini)
+	   -Jd|D<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Equidistant Conic)
+	   -Je|E<lon0>/<lat0>[/<horizon>]/<scl (or <radius>/<lat>)|<width>  (Azimuthal Equidistant)
+	   -Jf|F<lon0>/<lat0>[/<horizon>]/<scl (or <radius>/<lat>)|<width>  (Gnomonic)
+	   -Jg|G<lon0>/<lat0>/<scl (or <radius>/<lat>)|<width>  (Orthographic)
+	   -Jg|G[<lon0>/]<lat0>[/<horizon>|/<altitude>/<azimuth>/<tilt>/<twist>/<Width>/<Height>]/<scl>|<width> (General Perspective)
+	   -Jh|H[<lon0>/]<scl>|<width> (Hammer-Aitoff)
+	   -Ji|I[<lon0>/]<scl>|<width> (Sinusoidal)
+	   -Jj|J[<lon0>/]<scl>|<width> (Miller)
+	   -Jkf|Kf[<lon0>/]<scl>|<width> (Eckert IV)
+	   -Jks|Ks[<lon0>/]<scl>|<width> (Eckert VI)
+	   -Jl|L<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Lambert Conformal Conic)
+	   -Jm|M[<lon0>/[<lat0>/]]<scl>|<width> (Mercator)
+	   -Jn|N[<lon0>/]<scl>|<width> (Robinson projection)
+	   -Jo|O (Oblique Mercator).  Specify one of three definitions:
+	      -Jo|O[a|A]<lon0>/<lat0>/<azimuth>/<scl>|<width>
+	      -Jo|O[b|B]<lon0>/<lat0>/<lon1>/<lat1>/<scl>|<width>
+	      -Jo|Oc|C<lon0>/<lat0>/<lonp>/<latp>/<scl>|<width>
+	   -Jpoly|Poly/[<lon0>/[<lat0>/]]<scl>|<width> ((American) Polyconic)
+	   -Jq|Q[<lon0>/[<lat0>/]]<scl>|<width> (Equidistant Cylindrical)
+	   -Jr|R[<lon0>/]<scl>|<width> (Winkel Tripel)
+	   -Js|S<lon0>/<lat0>/[<horizon>/]<scl> (or <slat>/<scl> or <radius>/<lat>)|<width> (Stereographic)
+	   -Jt|T<lon0>/[<lat0>/]<scl>|<width> (Transverse Mercator)
+	   -Ju|U[<zone>/]<scl>|<width> (UTM)
+	   -Jv|V<lon0>/<scl>|<width> (van der Grinten)
+	   -Jw|W<lon0>/<scl>|<width> (Mollweide)
+	   -Jy|Y[<lon0>/[<lat0>/]]<scl>|<width> (Cylindrical Equal-area)
+	   -Jp|P[a]<scl>|<width>[/<origin>][r|z] (Polar [azimuth] (theta,radius))
+	   -Jx|X<x-scl>|<width>[d|l|p<power>|t|T][/<y-scl>|<height>[d|l|p<power>|t|T]] (Linear, log, and power projections)
+	   (See psbasemap for more details on projection syntax)
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead [0].
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+
+	OPTIONS:
+	<table> is one or more data files (in ASCII, binary, netCDF).
+	   If no files are given, standard input is read.
+	-B Specify both (1) basemap frame settings and (2) axes parameters.
+	   (1) Frame settings are modified via an optional single invocation of
+	     -B[<axes>][+g<fill>][+n][+o<lon>/<lat>][+t<title>]
+	   (2) Axes parameters are specified via one or more invocations of
+	       -B[p|s][x|y|z]<intervals>[+a<angle>][+l<label>][+p<prefix>][+u<unit>]
+	   <intervals> is composed of concatenated [<type>]<stride>[<unit>][l|p] sub-strings
+	   See psbasemap man page for more details and examples of all settings.
+	-A Specify arrow head attributes:
+	   Append length of vector head, with optional modifiers:
+	   [Left and right are defined by looking from start to end of vector]
+	     +a<angle> to set angle of the vector head apex [30]
+	     +b to place a vector head at the beginning of the vector [none].
+	       Append t for terminal, c for circle, s for square, a for arrow [Default],
+	       i for tail, A for plain arrow, and I for plain tail.
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +e to place a vector head at the end of the vector [none].
+	       Append t for terminal, c for circle, s for square, a for arrow [Default],
+	       i for tail, A for plain arrow, and I for plain tail.
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +g<fill> to set head fill or use - to turn off fill [default fill].
+	     +h sets the vector head shape in -2/2 range [0].
+	     +j<just> to justify vector at (b)eginning [default], (e)nd, or (c)enter.
+	     +l to only draw left side of all specified vector heads [both sides].
+	     +m[f|r] to place vector head at mid-point of segment [Default expects +b|+e].
+	       Specify f or r for forward|reverse direction [forward].
+	       Append t for terminal, c for circle, s for square, or a for arrow [Default].
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +n<norm> to shrink attributes if vector length < <norm> [none].
+	     +o[<plon/plat>] sets pole [north pole] for great or small circles; only give length via input.
+	     +p[-][<pen>] to set pen attributes, prepend - to turn off head outlines [default pen and outline].
+	     +q if start and stop opening angle is given instead of (azimuth,length) on input.
+	     +r to only draw right side of all specified vector heads [both sides].
+	     +s if (x,y) coordinates of tip is given instead of (azimuth,length) on input.
+	     +t[b|e]<trim(s)>[unit] to shift begin or end position along vector by given amount [no shifting].
+	   Default is 9p+gblack+p1p
+	-D Multiply uncertainties by <sigscale>. (Se and Sw only)i
+	-E Set color used for uncertainty wedges in -Sw option.
+	-G Specify color (for symbols/polygons) or pattern (for polygons). fill can be either
+	   1) <r/g/b> (each 0-255) for color or <gray> (0-255) for gray-shade [0].
+	   2) p[or P]<iconsize>/<pattern> for predefined patterns (0-90).
+	-L Draw line or symbol outline using the current pen (see -W).
+	-N Do Not skip/clip symbols that fall outside map border [Default will ignore those outside].
+	-S Select symbol type and scale (plus optional args; see documentation). Choose between:
+	     e  Velocity ellipses: in X,Y,Vx,Vy,SigX,SigY,CorXY,name format.
+	     r  Velocity ellipses: in X,Y,Vx,Vy,a,b,theta,name format.
+	     n  Anisotropy : in X,Y,Vx,Vy.
+	     w  Rotational wedges: in X,Y,Spin,Spinsig.
+	     x  Strain crosses : in X,Y,Eps1,Eps2,Theta.
+	-U Plot GMT Unix System Time stamp [and optionally appended text or command line].
+	   You may also set the justification point and the relative position of stamp
+	   [+jBL+o-54p/-54p].  Add +c to have the command line plotted [OFF].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Set pen attributes [default,black].
+	-X -Y Shift origin of plot to (<xshift>, <yshift>).
+	   Prepend r for shift relative to current point (default), prepend a for temporary
+	   adjustment of origin, prepend f to position relative to lower left corner of page,
+	   prepend c for offset of center of plot to center of page.
+	   For overlays (-O), the default setting is [r0], otherwise [f2.54c].
+	-c Move to next subplot panel or append row,col of desired panel.
+	-di Replace any <nodata> in input data with NaN.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Sets alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-t Set the layer transparency from 0-100 [Default is 0; opaque].
+	   Requires conversion to PDF or raster formats.
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

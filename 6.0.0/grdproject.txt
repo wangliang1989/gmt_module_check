@@ -1,0 +1,195 @@
+gmt grdproject [core] 6.0.0 [64-bit] - Forward and inverse map transformation of grids
+
+usage: gmt grdproject <ingrid> -G<outgrid> -J<args> [-C[<dx>/<dy>]] [-D<xinc>[<unit>][+e|n][/<yinc>[<unit>][+e|n]]]
+	[-E<dpi>] [-F[e|f|k|M|n|u|c|i|p]] [-I] [-Mc|i|p] [-R<west>/<east>/<south>/<north>[+r]] [-V[<level>]]
+	[-n[b|c|l|n][+a][+b<BC>][+c][+t<threshold>]] [-r[g|p]] [--PAR=<value>]
+
+	<ingrid> is data set to be projected.
+	-G Set name of output grid
+	-J Select the map proJection. The projection type is identified by a 1- or
+	   2-character ID (e.g. 'm' or 'kf') or by an abbreviation followed by a slash
+	   (e.g. 'cyl_stere/'). When using a lower-case ID <scale> can be given either as 1:<xxxx>
+	   or in cm/degree along the standard parallel. Alternatively, when the projection ID is
+	   Capitalized, <scale>|<width> denotes the width of the plot in cm
+	   Append +dh for map height, +du for max map dimension, and +dl for min map dimension [Default +dw is width].
+	   When the central meridian (lon0) is optional and omitted, the center of the
+	   longitude range specified by -R is used. The default standard parallel is the equator
+	   Azimuthal projections set -Rg unless polar aspect or -R<...>r is given.
+	   -Ja|A<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Lambert Azimuthal Equal Area)
+	     <lon0>/<lat0> is the center of the projection.
+	     <horizon> is max distance from center of the projection (<= 180, default 90).
+	     <scale> can also be given as <radius>/<lat>, where <radius> is the distance
+	     in cm to the oblique parallel <lat>.
+	   -Jb|B<lon0>/<lat0>/<lat1>/<lat2>/<scale>|<width> (Albers Equal-Area Conic)
+	     Give origin, 2 standard parallels, and true scale
+	   -Jc|C<lon0>/<lat0><scale>|<width> (Cassini)
+	     Give central point and scale
+	   -Jcyl_stere|Cyl_stere/[<lon0>/[<lat0>/]]<scale>|<width> (Cylindrical Stereographic)
+	     Give central meridian (opt), standard parallel (opt) and scale
+	     <lat0> = 66.159467 (Miller's modified Gall), 55 (Kamenetskiy's First),
+	     45 (Gall Stereographic), 30 (Bolshoi Sovietskii Atlas Mira), 0 (Braun)
+	   -Jd|D<lon0>/<lat0>/<lat1>/<lat2>/<scale>|<width> (Equidistant Conic)
+	     Give origin, 2 standard parallels, and true scale
+	   -Je|E<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Azimuthal Equidistant)
+	     <lon0>/<lat0> is the center of the projection.
+	     <horizon> is max distance from center of the projection (<= 180, default 180).
+	     <scale> can also be given as <radius>/<lat>, where <radius> is the distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jf|F<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Gnomonic)
+	     <lon0>/<lat0> is the center of the projection.
+	     <horizon> is max distance from center of the projection (< 90, default 60).
+	     <scale> can also be given as <radius>/<lat>, where <radius> is distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jg|G<lon0>/<lat0>/<scale>|<width> (Orthographic)
+	     <lon0>/<lat0> is the center of the projection.
+	     <scale> can also be given as <radius>/<lat>, where <radius> is distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jg|G<lon0>/<lat0>/<altitude>/<azimuth>/<tilt>/<twist>/<Width>/<Height>/<scale>|<width> (General Perspective)
+	     <lon0>/<lat0> is the center of the projection.
+	     <altitude> is the height (in km) of the viewpoint above local sea level
+	        - if <altitude> less than 10 then it is the distance 
+	        from center of earth to viewpoint in earth radii
+	        - if <altitude> has a suffix of 'r' then it is the radius 
+	        from the center of earth in kilometers
+	     <azimuth> is azimuth east of North of view
+	     <tilt> is the upward tilt of the plane of projection
+	       if <tilt> < 0 then viewpoint is centered on the horizon
+	     <twist> is the CW twist of the viewpoint in degree
+	     <width> is width of the viewpoint in degree
+	     <height> is the height of the viewpoint in degrees
+	     <scale> can also be given as <radius>/<lat>, where <radius> is distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jh|H[<lon0>/]<scale>|<width> (Hammer-Aitoff)
+	     Give central meridian (opt) and scale
+	   -Ji|I[<lon0>/]<scale>|<width> (Sinusoidal)
+	     Give central meridian (opt) and scale
+	   -Jj|J[<lon0>/]<scale>|<width> (Miller)
+	     Give central meridian (opt) and scale
+	   -Jkf|Kf[<lon0>/]<scale>|<width> (Eckert IV)
+	     Give central meridian (opt) and scale
+	   -Jk|K[s][<lon0>/]<scale>|<width> (Eckert VI)
+	     Give central meridian (opt) and scale
+	   -Jl|L<lon0>/<lat0>/<lat1>/<lat2>/<scale>|<width> (Lambert Conformal Conic)
+	     Give origin, 2 standard parallels, and true scale
+	   -Jm|M[<lon0>/[<lat0>/]]<scale>|<width> (Mercator).
+	     Give central meridian (opt), true scale parallel (opt), and scale
+	   -Jn|N[<lon0>/]<scale>|<width> (Robinson projection)
+	     Give central meridian (opt) and scale
+	   -Jo|O<parameters> (Oblique Mercator).  Specify one of three definitions:
+	     -Jo|O[a|A]<lon0>/<lat0>/<azimuth>/<scale>|<width>
+	       Give origin, azimuth of oblique equator, and scale at oblique equator
+	     -Jo|O[b|B]<lon0>/<lat0>/<lon1>/<lat1>/<scale>|<width>
+	       Give origin, second point on oblique equator, and scale at oblique equator
+	     -Jo|Oc|C<lon0>/<lat0>/<lonp>/<latp>/<scale>|<width>
+	       Give origin, pole of projection, and scale at oblique equator
+	       Specify region in oblique degrees OR use -R<>r
+	       Upper-case A|B|C removes enforcement of a northern hemisphere pole.
+	   -Jp|P[a]<scale>|<width>[/<base>][r|z] (Polar (theta,radius))
+	     Linear scaling for polar coordinates.
+	     Optionally append 'a' to -Jp or -JP to use azimuths (CW from North) instead of directions (CCW from East) [default].
+	     Give scale in cm/units, and append theta value for angular offset (base) [0]
+	     Append r to reverse radial direction (s/n must be in 0-90 range) or z to annotate depths rather than radius [Default]
+	   -Jpoly|Poly/[<lon0>/[<lat0>/]]<scale>|<width> ((American) Polyconic)
+	     Give central meridian (opt), reference parallel (opt, default = equator), and scale
+	   -Jq|Q[<lon0>/[<lat0>/]]<scale>|<width> (Equidistant Cylindrical)
+	     Give central meridian (opt), standard parallel (opt), and scale
+	     <lat0> = 61.7 (Min. linear distortion), 50.5 (R. Miller equirectangular),
+	     45 (Gall isographic), 43.5 (Min. continental distortion), 42 (Grafarend & Niermann),
+	     37.5 (Min. overall distortion), 0 (Plate Carree, default)
+	   -Jr|R[<lon0>/]<scale>|<width> (Winkel Tripel)
+	     Give central meridian and scale
+	   -Js|S<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Stereographic)
+	     <lon0>/<lat0> is the center or the projection.
+	     <horizon> is max distance from center of the projection (< 180, default 90).
+	     <scale> is either <1:xxxx> (true at pole) or <slat>/<1:xxxx> (true at <slat>)
+	     or <radius>/<lat> (distance in cm to the [oblique] parallel <lat>.
+	   -Jt|T<lon0>/[<lat0>/]<scale>|<width> (Transverse Mercator).
+	         Give central meridian and scale
+	     Optionally, also give the central parallel (default = equator)
+	   -Ju|U<zone>/<scale>|<width> (UTM)
+	     Give zone (A,B,Y,Z, or 1-60 (negative for S hemisphere) or append GMT-X) and scale
+	     Or give -Ju|U<scale>|<width> to have the UTM zone determined from the region.
+	   -Jv|V[<lon0>/]<scale>|<width> (van der Grinten)
+	     Give central meridian (opt) and scale
+	   -Jw|W[<lon0>/]<scale>|<width> (Mollweide)
+	     Give central meridian (opt) and scale
+	   -Jy|Y[<lon0>/[<lat0>/]]<scale>|<width> (Cylindrical Equal-area)
+	     Give central meridian (opt), standard parallel (opt) and scale
+	     <lat0> = 50 (Balthasart), 45 (Gall), 37.5 (Hobo-Dyer), 37.4 (Trystan Edwards),
+	              37.0666 (Caster), 30 (Behrmann), 0 (Lambert, default)
+	   -Jx|X<x-scale|<width>[/<y-scale|height>] (Linear, log, power scaling)
+	     <scale> in cm/units (or 1:xxxx). Optionally, append to <x-scale> and/or <y-scale>:
+	       d         Geographic coordinate (in degrees)
+	       l         Log10 projection
+	       p<power>  x^power projection
+	       t         Calendar time projection using relative time coordinates
+	       T         Calendar time projection using absolute time coordinates
+	     Use / to specify separate x/y scaling (e.g., -Jx0.5c/0.3c).  If 1:xxxxx is used it implies -R is in meters.
+	     If -JX is used then give axes lengths rather than scales.
+
+	OPTIONS:
+	-C Coordinates are relative to projection center [Default is relative to lower left corner].
+	   Optionally append dx/dy to add (or subtract if -I) (i.e., false easting & northing) [0/0].
+	-D Specify increment(s) and optionally append units or flags.
+	   Full syntax is <xinc>[d|m|s|e|f|k|M|n|u][+e|n][/<yinc>[d|m|s|e|f|k|M|n|u][+e|n]]]
+	   For geographic regions in degrees you can optionally append units from this list:
+	   (d)egree [Default], (m)inute, (s)econd, m(e)ter, (f)oot, (k)ilometer, (M)ile, (n)autical mile, s(u)rvey foot.
+	   Append +e to adjust the region to fit increments [Adjust increment to fit domain].
+	   Alternatively, specify number of nodes by appending +n. Then, the increments
+	   are calculated from the given domain and node-registration settings
+	   (see Appendix B for details).  Note: If -R<grdfile> was used then -D
+	   (and -R and maybe -r) have been set; use -D to override those increments.
+	-E Set dpi for output grid.
+	-F Force projected values to be in actual distance units [Default uses the given map scale].
+	   Specify unit by appending e (meter), f (foot) k (km), M (mile), n (nautical mile), u (survey foot),
+	   or i (inch), c (cm), or p (points) [e].
+	-I Inverse transformation from rectangular to geographical.
+	-M Temporarily reset PROJ_LENGTH_UNIT to be c (cm), i (inch), or p (point).
+	   Cannot be used if -F is set.
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead [0].
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-n[b|c|l|n][+a][+b<BC>][+c][+t<threshold>] Specify the grid interpolation mode.
+	   (b = B-spline, c = bicubic, l = bilinear, n = nearest-neighbor) [Default is bicubic].
+	   Append +a to switch off antialiasing (except for l) [Default: on].
+	   Append +b<BC> to change boundary conditions.  <BC> can be either:
+	     g for geographic, p for periodic, and n for natural boundary conditions.
+	     For p and n you may optionally append x or y [default is both]:
+	       x for periodic boundary conditions on x,
+	       y for periodic boundary conditions on y.
+	   [Default: Natural conditions, unless grid is known to be geographic].
+	   Append +c to clip interpolated grid to input z-min/max [Default may exceed limits].
+	   Append +t<threshold> to change the minimum weight in vicinity of NaNs. A threshold of
+	   1.0 requires all nodes involved in interpolation to be non-NaN; 0.5 will interpolate
+	   about half way from a non-NaN to a NaN node [Default: 0.5].
+	-r Set (g)ridline- or (p)ixel-registration [Just -r sets pixel registration].
+	   If not given we default to gridline registration.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

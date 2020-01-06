@@ -1,0 +1,63 @@
+gmt grd2kml [core] 6.0.0 [64-bit] - Create KML image quadtree from single grid
+
+usage: gmt grd2kml <grid> -N<name> [-C<cpt>] [-E<url>] [-F<filter>] [-H<factor>] [-I[<intensgrid>|<value>|<modifiers>]]
+	[-L<size>] [-Q] [-T<title>] [-V[<level>]] [-f[i|o]<info>] [--PAR=<value>]
+
+	<grid> is the data set to be plotted.  Its z-values are in user units and will be
+	  converted to colors via the CPT [turbo].
+	-N Sets file name prefix for image directory and KML file. If the directory
+	   already exist we will overwrite the files.
+
+	OPTIONS:
+	-C Color palette file to convert z to rgb. Optionally, instead give name of a master cpt
+	   to automatically assign 16 continuous colors over the data range [turbo].
+	   Another option is to specify -C<color1>,<color2>[,<color3>,...] to build a
+	   linear continuous cpt from those colors automatically.
+	-E To store all files remotely, give leading URL [local files only].
+	-F Specify filter type used for downsampling.  Choose among.
+	     b: Boxcar      : Simple averaging of all points inside filter domain.
+	     c: Cosine arch : Weighted averaging with cosine arc weights.
+	     g: Gaussian    : Weighted averaging with Gaussian weights [Default].
+	     m: Median      : Median (50% quantile) value of all points.
+	-H Tell psconvert to do sub-pixel smoothing using factor <factor> [no sub-pixel smoothing].
+	-I Apply directional illumination. Append name of intensity grid file.
+	   For a constant intensity (i.e., change the ambient light), append a single value.
+	   To derive intensities from <grid> instead, append +a<azim> [-45] and +n<method> [t1]
+	   or use -I+d to accept the default values (see grdgradient for details).
+	-L Set tile size as a power of 2 [256].
+	-Q Use PS Level 3 colormasking to make nodes with z = NaN transparent.
+	-T Set title (document description) for the top-level KML.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-n[b|c|l|n][+a][+b<BC>][+c][+t<threshold>] Specify the grid interpolation mode.
+	   (b = B-spline, c = bicubic, l = bilinear, n = nearest-neighbor) [Default is bicubic].
+	   Append +a to switch off antialiasing (except for l) [Default: on].
+	   Append +b<BC> to change boundary conditions.  <BC> can be either:
+	     g for geographic, p for periodic, and n for natural boundary conditions.
+	     For p and n you may optionally append x or y [default is both]:
+	       x for periodic boundary conditions on x,
+	       y for periodic boundary conditions on y.
+	   [Default: Natural conditions, unless grid is known to be geographic].
+	   Append +c to clip interpolated grid to input z-min/max [Default may exceed limits].
+	   Append +t<threshold> to change the minimum weight in vicinity of NaNs. A threshold of
+	   1.0 requires all nodes involved in interpolation to be non-NaN; 0.5 will interpolate
+	   about half way from a non-NaN to a NaN node [Default: 0.5].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

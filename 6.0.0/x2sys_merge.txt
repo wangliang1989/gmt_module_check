@@ -1,0 +1,23 @@
+gmt x2sys_merge [x2sys] 6.0.0 [64-bit] - Merge an updated COEs table (smaller) into the main table (bigger)
+
+usage: gmt x2sys_merge -A<main_COEdbase> -M<new_COEdbase> [-V[<level>]] [--PAR=<value>]
+
+	-A Give file with the main crossover error data base.
+	-M Give file with the new crossover error data base.
+	   The new COEs will replace the old ones present in <main_COEdbase>.
+	   Result is printed to stdout.
+
+	OPTIONS:
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

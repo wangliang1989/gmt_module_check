@@ -1,0 +1,70 @@
+gmt sphtriangulate [core] 6.0.0 [64-bit] - Delaunay or Voronoi construction of spherical data
+
+==> The hard work is done by algorithms 772 (STRIPACK) & 773 (SSRFPACK) by R. J. Renka [1997] <==
+
+usage: gmt sphtriangulate [<table>] [-A] [-C] [-D] [-L<unit>] [-N<table>]
+	[-Qd|v] [-T] [-V[<level>]] [-bi[<ncol>][t][w][+l|b]] [-di<nodata>] [-e[~]<pattern>]
+	[-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]]
+	[-je|f|g] [-s[<cols>][+a|r]] [-:[i|o]] [--PAR=<value>]
+
+	OPTIONS:
+	<table> is one or more data file (in ASCII, binary, netCDF) with (x,y,z[,w]).
+	   If no files are given, standard input is read.
+	-A Compute and print triangle or polygon areas in header records (see -L for units).
+	   If -T is selected we print arc lengths instead.
+	   Cannot be used with the binary output option.
+	-C Conserve memory (Converts lon/lat <--> x/y/z when needed) [store both in memory].
+	-D Skip repeated input vertex at the end of a closed segment.
+	-L Set distance unit arc (d)egree, m(e)ter, (f)oot, (k)m, (M)ile, (n)autical mile, or s(u)rvey foot [e].
+	-N Output filename for Delaunay or Voronoi polygon information [Store in output segment headers].
+	   Delaunay: output is the node triplets and area (i, j, k, area).
+	   Voronoi: output is the node coordinates and polygon area (lon, lat, area).
+	   Cannot be used with -T.
+	-Q Append d for Delaunay triangles or v for Voronoi polygons [Delaunay].
+	   If -bo is used then -N may be used to specify a separate file where the
+	   polygon information normally is written.
+	-T Write arcs [Default writes polygons].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [2].
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-di Replace any <nodata> in input data with NaN.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Sets alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-j Sets spherical distance calculation mode for modules that offer that flexibility.
+	   Append f for Flat Earth, g for Great Circle [Default], and e for Ellipsoidal mode.
+	-s Suppress output for records whose z-value (col = 2) equals NaN
+	   [Default prints all records].
+	   Append <cols> to examine other column(s) instead [2].
+	   Append +a to suppress records where any column equals NaN, or
+	   append +r to reverse the suppression (only output z = NaN records).
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

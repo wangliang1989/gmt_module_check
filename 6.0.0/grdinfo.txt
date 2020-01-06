@@ -1,0 +1,89 @@
+gmt grdinfo [core] 6.0.0 [64-bit] - Extract information from grids
+
+usage: gmt grdinfo <grid> [-C[n|t]] [-D[<offx>[/<offy>][+i]] [-F] [-I[<dx>[/<dy>]|b|i|r]] [-L[a|0|1|2|p]] [-M]
+	[-R<west>/<east>/<south>/<north>[+r]] [-T[<dz>][+a[<alpha>]][+s]] [-V[<level>]] [-f[i|o]<info>]
+	[-ho[<nrecs>][+c][+d][+r<remark>][+t<title>]] [-o<cols>[,...][t[<word>]]] [--PAR=<value>]
+
+	<grid> may be one or more grid files.
+
+	OPTIONS:
+	-C Format report in fields on a single line using the format
+	   <file w e s n z0 z1 dx dy n_columns n_rows [x0 y0 x1 y1] [med L1scale] [mean std rms] [n_nan] [mode LMSscale]>,
+	   where -M adds [x0 y0 x1 y1] and [n_nan], -L1 adds [median L1scale], -L2 adds [mean std rms],
+	   and -Lp adds [mode LMSscale]).
+	   Use -Ct to place <file> at the end of the output record, or -Cn to write only numerical columns.
+	-D Report tiles using tile size set in -I. Optionally, extend each tile region by <offx>/<offy>.
+	   Append +i to only report tiles if the subregion has data (limited to one input grid).
+	   If no grid is given then -R must be given and we tile based on the given region.
+	-F Report domain in world mapping format [Default is generic].
+	-I Return textstring -Rw/e/s/n to nearest multiple of dx/dy.
+	   If -C is set then rounding off will occur but no -R string is issued.
+	   If no argument is given then the -I<xinc>/<yinc> string is issued.
+	   If -Ib is given then the grid's bounding box polygon is issued.
+	   If -Ii is given then the original img2grd -R string is issued, if available.
+	     If the grid is not an img grid then the regular -R string is issued.
+	   If -Ir is given then the grid's -R string is issued.
+	-L Set report mode:
+	   -L0 reports range of data by actually reading them (not from header).
+	   -L1 reports median and L1 scale (MAD w.r.t. median) of data set.
+	   -L[2] reports mean, standard deviation, and rms of data set.
+	   -Lp reports mode (lms) and LMS-scale (MAD w.r.t. mode) of data set.
+	   -La all of the above.
+	   If grid is geographic then we report area-weighted statistics.
+	-M Search for the global min and max locations (x0,y0) and (x1,y1).
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead [0].
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+	-T Print global -Tzmin/zmax[/dz] (in rounded multiples of dz, if given).
+	   Append +a[<alpha>] to trim grid range by excluding the two <alpha>/2 tails [2 %].
+	     Note: +a is limited to a single grid.  Give <alpha> in percent.
+	   Append +s to force a symmetrical range about zero.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-o Set alternate output column order [Default writes all columns in order].
+	   Append list of columns; t[<word>] = trailing text; use <word> for writing a single word from the text.
+	   Use -on for numerical output only.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

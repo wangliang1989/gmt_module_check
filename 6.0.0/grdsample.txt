@@ -1,0 +1,62 @@
+gmt grdsample [core] 6.0.0 [64-bit] - Resample a grid onto a new lattice
+
+usage: gmt grdsample <ingrid> -G<outgrid> [-I<xinc>[<unit>][+e|n][/<yinc>[<unit>][+e|n]]]
+	[-R<west>/<east>/<south>/<north>[+r]] [-T] [-V[<level>]] [-f[i|o]<info>]
+	[-n[b|c|l|n][+a][+b<BC>][+c][+t<threshold>]] [-r[g|p]] [-x[[-]<n>]] [--PAR=<value>]
+
+	<ingrid> is data set to be resampled.
+	-G Set the name of the interpolated output grid file.
+
+	OPTIONS:
+	-I Specify increment(s) and optionally append units or flags.
+	   Full syntax is <xinc>[d|m|s|e|f|k|M|n|u][+e|n][/<yinc>[d|m|s|e|f|k|M|n|u][+e|n]]]
+	   For geographic regions in degrees you can optionally append units from this list:
+	   (d)egree [Default], (m)inute, (s)econd, m(e)ter, (f)oot, (k)ilometer, (M)ile, (n)autical mile, s(u)rvey foot.
+	   Append +e to adjust the region to fit increments [Adjust increment to fit domain].
+	   Alternatively, specify number of nodes by appending +n. Then, the increments
+	   are calculated from the given domain and node-registration settings
+	   (see Appendix B for details).  Note: If -R<grdfile> was used then -I
+	   (and -R and maybe -r) have been set; use -I to override those increments.
+	   When omitted: grid spacing is copied from input grid.
+	-R Specify a subregion [Default is old region].
+	-T Toggle between grid registration and pixel registration.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-n[b|c|l|n][+a][+b<BC>][+c][+t<threshold>] Specify the grid interpolation mode.
+	   (b = B-spline, c = bicubic, l = bilinear, n = nearest-neighbor) [Default is bicubic].
+	   Append +a to switch off antialiasing (except for l) [Default: on].
+	   Append +b<BC> to change boundary conditions.  <BC> can be either:
+	     g for geographic, p for periodic, and n for natural boundary conditions.
+	     For p and n you may optionally append x or y [default is both]:
+	       x for periodic boundary conditions on x,
+	       y for periodic boundary conditions on y.
+	   [Default: Natural conditions, unless grid is known to be geographic].
+	   Append +c to clip interpolated grid to input z-min/max [Default may exceed limits].
+	   Append +t<threshold> to change the minimum weight in vicinity of NaNs. A threshold of
+	   1.0 requires all nodes involved in interpolation to be non-NaN; 0.5 will interpolate
+	   about half way from a non-NaN to a NaN node [Default: 0.5].
+	-r Set (g)ridline- or (p)ixel-registration [Just -r sets pixel registration].
+	   If not given we default to gridline registration.
+	-x Limit the number of cores used in multi-threaded algorithms.
+	   Default uses all available cores [4].
+	   -x<n>  Select <n> cores (up to all available).
+	   -x-<n> Select (all - <n>) cores (or at least 1).
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

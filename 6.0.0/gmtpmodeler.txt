@@ -1,0 +1,82 @@
+gmt gmtpmodeler [spotter] 6.0.0 [64-bit] - Evaluate a plate motion model at given locations
+
+usage: gmt gmtpmodeler <table> -E<rottable>[+i]|<ID1>-<ID2>[+i]|<plon>/<plat>/<prot> [-F<polygontable>]
+	[-N<upper_age>] [-SadrswxyXY] [-T<time>] [-V[<level>]] [-b[i|o][<ncol>][t][w][+l|b]] [-d[i|o]<nodata>] [-e[~]<pattern>]
+	[-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]] [--PAR=<value>]
+
+	<table> is a data table with geographic coordinates and optionally crustal ages.
+	-E Specify file with the rotations to be used (see documentation for format).
+	   Append +i if you want to invert the finite rotations prior to use.
+	   Alternative 1: Give a single rotation as plon/plat/prot.
+	   Alternative 2: Give two plate IDs separated by a hyphen (e.g., PAC-MBL)
+	   to extract that rotation from the GPlates rotation database.
+
+	OPTIONS:
+	-F Specify a multi-segment closed polygon file that describes the area
+	   of the data table to work on [Default works on the entire table].
+	-N Extend earliest stage pole back to <upper_age> [no extension].
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead [0].
+	-S Select one or more model predictions as a function of crustal age.  Choose from:
+	   a : Plate spreading azimuth.
+	   d : Distance to origin of crust in km.
+	   r : Plate motion rate in mm/yr or km/Myr.
+	   s : Plate motion stage ID (1 is youngest).
+	   w : Rotation rate in degrees/Myr.
+	   x : Change in longitude since formation.
+	   y : Change in latitude since formation.
+	   X : Longitude at origin of crust.
+	   Y : Latitude at origin of crust.
+	   Default writes lon,lat,age,<adrswxyXY> to standard output
+	-T Set fixed time of reconstruction to override any input ages.
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [3].
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Sets alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-o Set alternate output column order [Default writes all columns in order].
+	   Append list of columns; t[<word>] = trailing text; use <word> for writing a single word from the text.
+	   Use -on for numerical output only.
+	-s Suppress output for records whose z-value (col = 2) equals NaN
+	   [Default prints all records].
+	   Append <cols> to examine other column(s) instead [2].
+	   Append +a to suppress records where any column equals NaN, or
+	   append +r to reverse the suppression (only output z = NaN records).
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

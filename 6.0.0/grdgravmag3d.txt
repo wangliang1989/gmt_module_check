@@ -1,0 +1,71 @@
+gmt grdgravmag3d [potential] 6.0.0 [64-bit] - Computes the gravity effect of one (or two) grids by the method of Okabe
+
+usage: gmt grdgravmag3d grdfile_top [grdfile_bot] [-C<density>] [-D] [-E<thick>] [-F<xy_file>]
+	[-G<outfile>] [-H<...>] [-I<xinc>[<unit>][+e|n][/<yinc>[<unit>][+e|n]]] [-L<z_obs>]
+	[-Q[n<n_pad>]|[pad_dist]|[<w/e/s/n>]]
+	[-R<west>/<east>/<south>/<north>[+r]] [-S<radius>] [-V[<level>]] [-Z[<level>]|[t|p]] [-fg]  [-x[[-]<n>]] [--PAR=<value>]
+
+	grdfile_top is the grdfile whose gravity effect is to be computed.
+	   If two grids are provided then the gravity/magnetic effect of the
+	   volume between them is computed
+
+	-C Sets body density in SI.
+	-F Passes file with locations where anomaly is going to be computed.
+	-G Sets name of the output grdfile.
+
+	OPTIONS:
+	-D Specifies that z is positive down [Default positive up].
+	-E Gives layer thickness in m [Default = 500 m].
+	-H Sets parameters for computation of magnetic anomaly (Can be used multiple times)
+	   <f_dec>/<f_dip> -> geomagnetic declination/inclination.
+	   <m_int>/<m_dec>/<m_dip> -> body magnetic intensity/declination/inclination.
+	  OR for a grid mode 
+	   +m<magfile> where 'magfile' is the name of the magnetic intensity file.
+	   To compute a component, specify any of:
+	     x|X|e|E  to compute the E-W component.
+	     y|Y|n|N  to compute the N-S component.
+	     z|Z      to compute the Vertical component.
+	     h|H      to compute the Horizontal component.
+	     t|T|f|F  to compute the total field.
+	     For a variable inclination and declination use IGRF. Set any of -H+i|+g|+r|+f|+n to do that.
+	-I Specify increment(s) and optionally append units or flags.
+	   Full syntax is <xinc>[d|m|s|e|f|k|M|n|u][+e|n][/<yinc>[d|m|s|e|f|k|M|n|u][+e|n]]]
+	   For geographic regions in degrees you can optionally append units from this list:
+	   (d)egree [Default], (m)inute, (s)econd, m(e)ter, (f)oot, (k)ilometer, (M)ile, (n)autical mile, s(u)rvey foot.
+	   Append +e to adjust the region to fit increments [Adjust increment to fit domain].
+	   Alternatively, specify number of nodes by appending +n. Then, the increments
+	   are calculated from the given domain and node-registration settings
+	   (see Appendix B for details).  Note: If -R<grdfile> was used then -I
+	   (and -R and maybe -r) have been set; use -I to override those increments.
+	   The new xinc and yinc should be divisible by the old ones (new lattice is subset of old).
+	-L Sets level of observation [Default = 0].
+	-fg Map units true; x,y in degrees, dist units in m [Default dist unit = x,y unit].
+	-Q Extends the domain of computation with respect to output -R region.
+	   -Qn<N> artificially extends the width of the outer rim of cells to have a fake
+	   width of N * dx[/dy].
+	   -Q<pad_dist> extend the region by west-pad, east+pad, etc.
+	   -Q<region> Same syntax as -R.
+	-R For new Range of output grid; enter <WESN> (xmin, xmax, ymin, ymax) separated by slashes.
+	   [Default uses the same region as the input grid].
+	-S Sets search radius in km (but only in the two grids mode) [Default = 30 km].
+	-Z Sets z level of reference plane [Default = 0].
+	   Alternatively, set -Zt or Zb to close the body at its top (bottom) plane.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-fg Converts geographic grids to meters using a "Flat Earth" approximation.
+	-x Limit the number of cores used in multi-threaded algorithms.
+	   Default uses all available cores [4].
+	   -x<n>  Select <n> cores (up to all available).
+	   -x-<n> Select (all - <n>) cores (or at least 1).
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

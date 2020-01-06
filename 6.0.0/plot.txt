@@ -1,0 +1,523 @@
+gmt plot [core] 6.0.0 [64-bit] - Plot lines, polygons, and symbols in 2-D
+
+usage: gmt plot [<table>] -J<args> -R<west>/<east>/<south>/<north>[/<zmin>/<zmax>][+r] [-A[m|p|x|y]]
+	[-B<args>] [-C<cpt>] [-D<dx>/<dy>] [-E[x|y|X|Y][+a][+c[l|f]][+n][+p<pen>][+w<width>]] [-F<arg>] [-G<fill>]
+	[-I[<intens>]] [-L[+b|d|D][+xl|r|x0][+yb|t|y0][+p<pen>]] [-N[c|r]] 
+	[-S[<symbol>][<size>[unit]]] [-T] [-U[<label>][+c][+j<just>][+o<dx>/<dy>]] [-V[<level>]] [-W[<pen>][<attr>]]
+	[-X[a|c|f|r]<xshift>[<unit>]] [-Y[a|c|f|r]<yshift>[<unit>]] [-Z[l|f]<val>] [-a<col>=<name>[,...]]
+	[-bi[<ncol>][t][w][+l|b]] [-c[<row>,<col>]] [-di<nodata>] [-e[~]<pattern>]
+	[-f[i|o]<info>] [-g[a]x|y|d|X|Y|D|[<col>]z<gap>[<unit>][+n|p]] [-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]]
+	[-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]] [-l<label>[<mods>]] [-p[x|y|z]<azim>[/<elev>[/<zlevel>]][+w<lon0>/<lat0>[/<z0>][+v<x0>/<y0>]]
+	[-t[<transp>]] [-:[i|o]] [--PAR=<value>]
+
+	-J Select map proJection. (<scale> in cm/degree, <width> in cm)
+	   Append +dh for map height, +du for max (upper) or +dl for min (lower) map dimension [+dw for width].
+	   Azimuthal projections set -Rg unless polar aspect or -R<...>r is set.
+
+	   -Ja|A<lon0>/<lat0>[/<hor>]/<scl (or <radius>/<lat>)|<width> (Lambert Azimuthal EA)
+	   -Jb|B<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Albers Conic EA)
+	   -Jcyl_stere|Cyl_stere/[<lon0>/[<lat0>/]]<lat1>/<lat2>/<scl>|<width> (Cylindrical Stereographic)
+	   -Jc|C<lon0>/<lat0><scl>|<width> (Cassini)
+	   -Jd|D<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Equidistant Conic)
+	   -Je|E<lon0>/<lat0>[/<horizon>]/<scl (or <radius>/<lat>)|<width>  (Azimuthal Equidistant)
+	   -Jf|F<lon0>/<lat0>[/<horizon>]/<scl (or <radius>/<lat>)|<width>  (Gnomonic)
+	   -Jg|G<lon0>/<lat0>/<scl (or <radius>/<lat>)|<width>  (Orthographic)
+	   -Jg|G[<lon0>/]<lat0>[/<horizon>|/<altitude>/<azimuth>/<tilt>/<twist>/<Width>/<Height>]/<scl>|<width> (General Perspective)
+	   -Jh|H[<lon0>/]<scl>|<width> (Hammer-Aitoff)
+	   -Ji|I[<lon0>/]<scl>|<width> (Sinusoidal)
+	   -Jj|J[<lon0>/]<scl>|<width> (Miller)
+	   -Jkf|Kf[<lon0>/]<scl>|<width> (Eckert IV)
+	   -Jks|Ks[<lon0>/]<scl>|<width> (Eckert VI)
+	   -Jl|L<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Lambert Conformal Conic)
+	   -Jm|M[<lon0>/[<lat0>/]]<scl>|<width> (Mercator)
+	   -Jn|N[<lon0>/]<scl>|<width> (Robinson projection)
+	   -Jo|O (Oblique Mercator).  Specify one of three definitions:
+	      -Jo|O[a|A]<lon0>/<lat0>/<azimuth>/<scl>|<width>
+	      -Jo|O[b|B]<lon0>/<lat0>/<lon1>/<lat1>/<scl>|<width>
+	      -Jo|Oc|C<lon0>/<lat0>/<lonp>/<latp>/<scl>|<width>
+	   -Jpoly|Poly/[<lon0>/[<lat0>/]]<scl>|<width> ((American) Polyconic)
+	   -Jq|Q[<lon0>/[<lat0>/]]<scl>|<width> (Equidistant Cylindrical)
+	   -Jr|R[<lon0>/]<scl>|<width> (Winkel Tripel)
+	   -Js|S<lon0>/<lat0>/[<horizon>/]<scl> (or <slat>/<scl> or <radius>/<lat>)|<width> (Stereographic)
+	   -Jt|T<lon0>/[<lat0>/]<scl>|<width> (Transverse Mercator)
+	   -Ju|U[<zone>/]<scl>|<width> (UTM)
+	   -Jv|V<lon0>/<scl>|<width> (van der Grinten)
+	   -Jw|W<lon0>/<scl>|<width> (Mollweide)
+	   -Jy|Y[<lon0>/[<lat0>/]]<scl>|<width> (Cylindrical Equal-area)
+	   -Jp|P[a]<scl>|<width>[/<origin>][r|z] (Polar [azimuth] (theta,radius))
+	   -Jx|X<x-scl>|<width>[d|l|p<power>|t|T][/<y-scl>|<height>[d|l|p<power>|t|T]] (Linear, log, and power projections)
+	   (See psbasemap for more details on projection syntax)
+	   -JZ|z For z component of 3-D projections.  Same syntax as -JX|x, i.e.,
+	   -Jz|Z<z-scl>|<height>[d|l|p<power>|t|T] (Linear, log, and power projections)
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead [0].
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+
+	OPTIONS:
+	<table> is one or more data files (in ASCII, binary, netCDF).
+	   If no files are given, standard input is read.
+	-A Suppress drawing geographic line segments as great circle arcs, i.e., draw
+	   straight lines unless m or p is appended to first follow meridian
+	   then parallel, or vice versa.
+	   For Cartesian data, use -Ax or -Ay to draw x- or y-staircase curves.
+	-B Specify both (1) basemap frame settings and (2) axes parameters.
+	   (1) Frame settings are modified via an optional single invocation of
+	     -B[<axes>][+g<fill>][+n][+o<lon>/<lat>][+t<title>]
+	   (2) Axes parameters are specified via one or more invocations of
+	       -B[p|s][x|y|z]<intervals>[+a<angle>][+l<label>][+p<prefix>][+u<unit>]
+	   <intervals> is composed of concatenated [<type>]<stride>[<unit>][l|p] sub-strings
+	   See psbasemap man page for more details and examples of all settings.
+	-C Use CPT (or specify -Ccolor1,color2[,color3,...]) to assign symbol
+	   colors based on z-value in 3rd column.
+	   Note: requires -S. Without -S, psxy excepts lines/polygons
+	   and looks for -Z<val> options in each segment header. Then, color is
+	   applied for polygon fill (-L) or polygon pen (no -L).
+	-D Offset symbol or line positions by <dx>/<dy> [no offset].
+	-E Draw (symmetrical) standard error bars for x and/or y.  Append +a for
+	   asymmetrical errors (reads two columns) [symmetrical reads one column].
+	   If X or Y are specified instead then a box-and-whisker diagram is drawn,
+	   requiring four extra columns with the 0%, 25%, 75%, and 100% quantiles.
+	   (The x or y coordinate is expected to represent the 50% quantile.)
+	   Add cap-width with +w [7p] and error pen attributes with +p<pen>
+	   Given -C, use +cl to apply cpt color to error pen and +cf for error fill [both].
+	   Append +n for a notched box-and whisker (notch width represents uncertainty.
+	   in the median.  A 5th extra column with the sample size is required.
+	   The settings of -W, -G affect the appearance of the 25-75% box.
+	-F Alter the way points are connected and the data are segmented.
+	    Append one of three line connection schemes:
+	     c: Draw continuous line segments for each group [Default].
+	     r: Draw line segments from a reference point reset for each group.
+	     n: Draw networks of line segments between all points in each group.
+	     Optionally, append one of five ways to define a "group":
+	       a: All data is consider a single group; reference point is first point in the group.
+	       f: Each file is a separate group; reference point is reset to first point in the group.
+	       s: Each segment is a group; reference point is reset to first point in the group [Default].
+	       r: Each segment is a group, but reference point is reset to each point in the group.
+	          Only available with the -Fr scheme.
+	       <refpoint> : Specify a fixed external reference point instead.
+	-G<fill> Specify color or pattern [no fill]. Specify <fill> as one of:
+	   1) <gray> or <red>/<green>/<blue>, all in the range 0-255;
+	   2) <c>/<m>/<y>/<k> in range 0-100%;
+	   3) <hue>-<sat>-<val> in ranges 0-360, 0-1, 0-1;
+	   4) any valid color name;
+	   5) P|p<pattern>[+b<color>][+f<color>][+r<dpi>];
+	      Give <pattern> number from 1-90 or a filename, optionally add +r<dpi> [300].
+	      Optionally, use +f,+b to change fore- or background colors (set - for transparency).
+	   For PDF fill transparency, append @<transparency> in the range 0-100 [0 = opaque].
+	   -G option can be present in all segment headers (not with -S).
+	-I Use the intensity to modulate the fill color (requires -C or -G).
+	   If no intensity is given we expect it to follow symbol size in the data record.
+	-L Force closed polygons.  Alternatively, append modifiers to build polygon from a line.
+	   Append +d to build symmetrical envelope around y(x) using deviations dy(x) from col 3.
+	   Append +D to build asymmetrical envelope around y(x) using deviations dy1(x) and dy2(x) from cols 3-4.
+	   Append +b to build asymmetrical envelope around y(x) using bounds yl(x) and yh(x) from cols 3-4.
+	   Append +xl|r|x0 to connect 1st and last point to anchor points at xmin, xmax, or x0, or
+	   append +yb|t|y0 to connect 1st and last point to anchor points at ymin, ymax, or y0.
+	   Polygon may be painted (-G) and optionally outlined via +p<pen> [no outline].
+	-N Do not skip or clip symbols that fall outside the map border [clipping is on]
+	   Use -Nr to turn off clipping and plot repeating symbols for periodic maps.
+	   Use -Nc to retain clipping but turn off plotting of repeating symbols for periodic maps.
+	   [Default will clip or skip symbols that fall outside and plot repeating symbols].
+	-S Select symbol type and symbol size (in cm).  Choose between
+	   -(xdash), +(plus), st(a)r, (b|B)ar, (c)ircle, (d)iamond, (e)llipse,
+	   (f)ront, octa(g)on, (h)exagon, (i)nvtriangle, (j)rotated rectangle,
+	   (k)ustom, (l)etter, (m)athangle, pe(n)tagon, (p)oint, (q)uoted line, (r)ectangle,
+	   (R)ounded rectangle, (s)quare, (t)riangle, (v)ector, (w)edge, (x)cross, (y)dash,
+	   =(geovector, i.e., great or small circle vectors) or ~(decorated line).
+	   If no size is specified, then the 3rd column must have sizes.
+	   If no symbol is specified, then last column must have symbol codes.
+	   [Note: if -C is selected then 3rd means 4th column, etc.]
+	   Symbols A, C, D, G, H, I, N, S, T are adjusted to have same area
+	   as a circle of the specified diameter.
+	   Bars: Append +b[<base>] to give the y-value of the base [Default = 0 (1 for log-scales)].
+	      Append u if width is in x-input units [Default is cm].
+	      Use +B instead if heights are measured relative to base [relative to origin].
+	      Use upper case -SB for horizontal bars (<base> then refers to x
+	      and width may be in y-units [Default is vertical]. To read the <base>
+	      value from file, specify +b with no trailing value.
+	   Decorated line: Give [d|f|l|n|s|x]<info>[:<symbolinfo>].
+	     <code><info> controls placement of a symbol along lines.  Select
+	       d<dist>[c|i|p] or D<dist>[d|m|s|e|f|k|M|n|u]  [Default is d10.16c].
+	          d: Give distance between symbols with specified map unit in c|i|p.
+	          D: Specify geographic distance between symbols in d|m|s|e|f|k|M|n|u,
+	          The first symbol appears at <frac>*<dist>; change by appending /<frac> [0.25].
+	       f<file.d> reads file <file.d> and places symbols at locations
+	          that match individual points along the decorated lines.
+	       l|L<line1>[,<line2>,...] Give start and stop coordinates for
+	          straight line segments; symbols will be placed where these
+	          lines intersect decorated lines.  The format of each <line>
+	          is <start>/<stop>, where <start> or <stop> = <lon/lat> or a
+	          2-character XY key that uses the "pstext"-style justification
+	          format to specify a point on the map as [LCR][BMT].
+	          L Let point pairs define great circles [Straight lines].
+	       n|N<n_symbol> sets number of equidistant symbols per decorated line.
+	          N: Starts symbol exactly at the start of decorated line
+	            [Default centers the symbols on the decorated line].
+	          N-1 places a single symbol at start of the decorated line, while
+	          N+1 places a single symbol at the end of the decorated line.
+	          Append /<min_dist> to enforce a minimum spacing between
+	          consecutive symbols [0]
+	       x|X<xfile.d> reads the multi-segment file <xfile.d> and places
+	          symbols at intersections between decorated lines and lines in
+	          <xfile.d>.  Use X to resample the lines first.
+	     <symbolinfo> controls the symbol attributes.  Choose from
+	        +a<angle> will place all symbol at a fixed angle.
+	        Or, specify +an (line-normal) or +ap (line-parallel) [Default].
+	        +d turns on debug which draws helper points and lines.
+	        +g<fill> sets the fill for the symbol [transparent]
+	        +n<dx>[/<dy>] to nudge symbol along line (+N for along x/y axis).
+	        +p[<pen>] draw outline of textbox [Default is no outline].
+	          Optionally append a pen [Default is default pen].
+	        +s<symbol><size> specifies the decorative symbol and its size.
+	        +w sets how many (x,y) points to use for angle calculation [auto].
+	   Ellipses: Direction, major, and minor axis must be in columns 3-5.
+	     If -SE rather than -Se is selected, psxy will expect azimuth, and
+	     axes [in km], and convert azimuths based on map projection.
+	     Use -SE- for a degenerate ellipse (circle) with only its diameter given
+	     in column 3, or append a fixed diameter to -SE- instead.
+	     Append any of the units in d|m|s|e|f|k|M|n|u to the axes [Default is k].
+	     For linear projection we scale the axes by the map scale.
+	   Rotatable Rectangle: Direction, x- and y-dimensions in columns 3-5.
+	     If -SJ rather than -Sj is selected, psxy will expect azimuth, and
+	     dimensions [in km] and convert azimuths based on map projection.
+	     Use -SJ- for a degenerate rectangle (square w/no rotation) with one dimension given
+	     in column 3, or append a fixed dimension to -SJ- instead.
+	     Append any of the units in d|m|s|e|f|k|M|n|u to the dimensions [Default is k].
+	     For linear projection we scale dimensions by the map scale.
+	   Fronts: Give <tickgap>[/<ticklen>][+l|+r][+<type>][+o<offset>][+p[<pen>]].
+	     If <tickgap> is negative it means the number of gaps instead.
+	     The <ticklen> defaults to 15% of <tickgap> if not given.  Append
+	     +l or +r   : Plot symbol to left or right of front [centered]
+	     +<type>    : +b(ox), +c(ircle), +f(ault), +s|S(lip), +t(riangle) [f]
+	     	      +s optionally accepts the arrow angle [20].
+	       box      : square when centered, half-square otherwise.
+	       circle   : full when centered, half-circle otherwise.
+	       fault    : centered cross-tick or tick only in specified direction.
+	       slip     : left-or right-lateral strike-slip arrows.
+	       Slip     : Same but with curved arrow-heads.
+	       triangle : diagonal square when centered, directed triangle otherwise.
+	     +o<offset> : Plot first symbol when along-front distance is offset [0].
+	     +p[<pen>]  : Alternate pen for symbol outline; if no <pen> then no outline [Outline with -W pen].
+	   Kustom: Append <symbolname> immediately after 'k'; this will look for
+	     <symbolname>.def in the current directory, in $GMT_USERDIR,
+	     or in $GMT_SHAREDIR (searched in that order).
+	     Use upper case 'K' if your custom symbol refers a variable symbol, ?.
+	     Available custom symbols (See Appendix N):
+	     ---------------------------------------------------------
+	     astroid        : 4-pointed concave star symbol
+	     circle         : Circle (similar to -Sc)
+	     cross          : Cross (similar to -Sx)
+	     crosshair      : Bullseye crosshair
+	     deltoid        : 3-pointed concave triangle symbol
+	     diamond        : Diamond (similar to -Sd)
+	     flash          : Lightning flash symbol
+	     hexagon        : Hexagon (similar to -Sh)
+	     hlens          : Horizontal convex lens symbol
+	     hlozenge       : Narrow horizontal diamond-like symbol
+	     hneedle        : Horizontal, very narrow diamond
+	     hurricane      : Hurricane symbol
+	     lcrescent      : Crescent with belly to the left
+	     lflag          : Post with flag to the left
+	     ltriangle      : Triangle pointing to the left
+	     meca           : Focal mechanism (beachball)
+	     octagon        : Octagon (similar to -Sg)
+	     pacman         : A Pacman symbol
+	     pentagon       : Pentagon (similar to -Sn)
+	     rcrescent      : Crescent with belly to the right
+	     rflag          : Post with flag to the right
+	     rtriangle      : Triangle pointing to the right
+	     sectoid        : Concave, triangular sector
+	     square         : Square (similar to -Ss)
+	     squaroid       : Concave square
+	     star           : Star (similar to -Sa)
+	     star3          : 3-pointed triangular star symbol
+	     star4          : 4-pointed diagonal star symbol
+	     starp          : 4-pointed polar star
+	     sun            : Shining sun symbol
+	     triangle       : Triangle (similar to -St)
+	     trirot1        : 90-degree triangle in 1st quadrant
+	     trirot2        : 90-degree triangle in 2nd quadrant
+	     trirot3        : 90-degree triangle in 3rd quadrant
+	     trirot4        : 90-degree triangle in 4th quadrant
+	     vlens          : Vertical convex lens symbol
+	     vlozenge       : Narrow vertical diamond-like symbol
+	     vneedle        : Vertical, very narrow diamond
+	     volcano        : Active with some bad fume bubbles
+	     QR             : GMT QR code (opaque)
+	     QR_transparent : GMT QR code (transparent)
+	     ---------------------------------------------------------
+	   Letter: append +t<string> after symbol size, and optionally +f<font> and +j<justify>.
+	   Mathangle: radius, start, and stop directions of math angle must be in columns 3-5.
+	     If -SM rather than -Sm is used, we draw straight angle symbol if 90 degrees.
+	   Append length of vector head, with optional modifiers:
+	   [Left and right are defined by looking from start to end of vector]
+	     +a<angle> to set angle of the vector head apex [30]
+	     +b to place a vector head at the beginning of the vector [none].
+	       Append t for terminal, c for circle, s for square, a for arrow [Default],
+	       i for tail, A for plain arrow, and I for plain tail.
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +e to place a vector head at the end of the vector [none].
+	       Append t for terminal, c for circle, s for square, a for arrow [Default],
+	       i for tail, A for plain arrow, and I for plain tail.
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +h sets the vector head shape in -2/2 range [0].
+	     +l to only draw left side of all specified vector heads [both sides].
+	     +m[f|r] to place vector head at mid-point of segment [Default expects +b|+e].
+	       Specify f or r for forward|reverse direction [forward].
+	       Append t for terminal, c for circle, s for square, or a for arrow [Default].
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +n<norm> to shrink attributes if vector length < <norm> [none].
+	     +o[<plon/plat>] sets pole [north pole] for great or small circles; only give length via input.
+	     +q if start and stop opening angle is given instead of (azimuth,length) on input.
+	     +r to only draw right side of all specified vector heads [both sides].
+	     +t[b|e]<trim(s)>[unit] to shift begin or end position along vector by given amount [no shifting].
+	   Quoted line: Give [d|f|l|n|s|x]<info>[:<labelinfo>].
+	     <code><info> controls placement of labels along lines.  Select
+	       d<dist>[c|i|p] or D<dist>[d|m|s|e|f|k|M|n|u]  [Default is d10.16c].
+	          d: Give distance between labels with specified map unit in c|i|p.
+	          D: Specify geographic distance between labels in d|m|s|e|f|k|M|n|u,
+	          The first label appears at <frac>*<dist>; change by appending /<frac> [0.25].
+	       f<file.d> reads file <file.d> and places labels at locations
+	          that match individual points along the quoted lines.
+	       l|L<line1>[,<line2>,...] Give start and stop coordinates for
+	          straight line segments; labels will be placed where these
+	          lines intersect quoted lines.  The format of each <line>
+	          is <start>/<stop>, where <start> or <stop> = <lon/lat> or a
+	          2-character XY key that uses the "pstext"-style justification
+	          format to specify a point on the map as [LCR][BMT].
+	          L Let point pairs define great circles [Straight lines].
+	       n|N<n_label> sets number of equidistant labels per quoted line.
+	          N: Starts label exactly at the start of quoted line
+	            [Default centers the labels on the quoted line].
+	          N-1 places a single label at start of the quoted line, while
+	          N+1 places a single label at the end of the quoted line.
+	          Append /<min_dist> to enforce a minimum spacing between
+	          consecutive labels [0]
+	       s|S<n_label> sets number of equidistant label per segmented quoted line.
+	          Same as n|N but splits input lines to series of 2-point segments first.
+	       x|X<xfile.d> reads the multi-segment file <xfile.d> and places
+	          labels at intersections between quoted lines and lines in
+	          <xfile.d>.  Use X to resample the lines first.
+	          For all options, append +r<radius>[unit] to specify minimum
+	          radial separation between labels [0]
+	     <labelinfo> controls the label attributes.  Choose from
+	        +a<angle> will place all label at a fixed angle.
+	        Or, specify +an (line-normal) or +ap (line-parallel) [Default].
+	        +c<dx>[/<dy>] sets clearance between label and text box [15%].
+	        +d turns on debug which draws helper points and lines.
+	        +e delays the plotting of the text as text clipping is set instead.
+	        +f sets specified label font [Default is 12p,Helvetica,black].
+	        +g[<color>] paints text box [transparent]; append color [white].
+	        +h hide the lines [Draw the lines].
+	        +j<just> sets label justification [Default is MC].
+	        +l<text> Use text as label (quote text if containing spaces).
+	        +L<d|D|f|h|n|N|x>[<unit>] Sets label according to given flag:
+	          d Cartesian plot distance; append a desired unit from c|i|p.
+	          D Map distance; append a desired unit from d|m|s|e|f|k|M|n|u.
+	          f Label is last column of given label location file.
+	          h Use segment header labels (via -Lstring).
+	          n Use the current segment number (starting at 0).
+	          N Use current file number / segment number (starting at 0/0).
+	          x Like h, but us headers in file with crossing lines instead.
+	        +n<dx>[/<dy>] to nudge label along line (+N for along x/y axis); ignored with +v.
+	        +o to use rounded rectangular text box [Default is rectangular].
+	        +p[<pen>] draw outline of textbox [Default is no outline].
+	          Optionally append a pen [Default is default pen].
+	        +r<rmin> skips labels where radius of curvature < <rmin> [0].
+	        +t[<file>] saves (x y angle label) to <file> [Line_labels.txt].
+	        +u<unit> to append unit to all labels.
+	        +v for placing curved text along path [Default is straight].
+	        +w sets how many (x,y) points to use for angle calculation [auto].
+	        +x[first,last] adds <first> and <last> to these two labels [,'].
+	          This modifier is only allowed if -SqN2 is used.
+	        +=<prefix> to give all labels a prefix.
+	   Rectangles: x- and y-dimensions must be in columns 3-4.
+	     Append +s if instead the diagonal corner coordinates are given in columns 3-4.
+	   Rounded rectangles: x- and y-dimensions and corner radius must be in columns 3-5.
+	   Vectors: Direction and length must be in columns 3-4.
+	     If -SV rather than -Sv is selected, psxy will expect azimuth and
+	     length and convert azimuths based on the chosen map projection.
+	   Append length of vector head, with optional modifiers:
+	   [Left and right are defined by looking from start to end of vector]
+	     +a<angle> to set angle of the vector head apex [30]
+	     +b to place a vector head at the beginning of the vector [none].
+	       Append t for terminal, c for circle, s for square, a for arrow [Default],
+	       i for tail, A for plain arrow, and I for plain tail.
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +e to place a vector head at the end of the vector [none].
+	       Append t for terminal, c for circle, s for square, a for arrow [Default],
+	       i for tail, A for plain arrow, and I for plain tail.
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +h sets the vector head shape in -2/2 range [0].
+	     +j<just> to justify vector at (b)eginning [default], (e)nd, or (c)enter.
+	     +l to only draw left side of all specified vector heads [both sides].
+	     +m[f|r] to place vector head at mid-point of segment [Default expects +b|+e].
+	       Specify f or r for forward|reverse direction [forward].
+	       Append t for terminal, c for circle, s for square, or a for arrow [Default].
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +n<norm> to shrink attributes if vector length < <norm> [none].
+	     +o[<plon/plat>] sets pole [north pole] for great or small circles; only give length via input.
+	     +q if start and stop opening angle is given instead of (azimuth,length) on input.
+	     +r to only draw right side of all specified vector heads [both sides].
+	     +s if (x,y) coordinates of tip is given instead of (azimuth,length) on input.
+	     +t[b|e]<trim(s)>[unit] to shift begin or end position along vector by given amount [no shifting].
+	     +z if (dx,dy) vector components are given instead of (azimuth,length) on input.
+	       Append <scale>[unit] to convert components to length in given unit.
+	   Wedges: Start and stop directions of wedge must be in columns 3-4.
+	     If -SW rather than -Sw is selected, specify two azimuths instead.
+	     -SW: Specify <size><unit> with units either from d|m|s|e|f|k|M|n|u or c|i|p [Default is k].
+	     -Sw: Specify <size><unit> with units from c|i|p [Default is cm].
+	     Append +a[<dr>] to just draw arc(s) or +r[<da>] to just draw radial lines [wedge].
+	   Geovectors: Azimuth and length must be in columns 3-4.
+	     Append any of the units in d|m|s|e|f|k|M|n|u to length [k].
+	   Append length of vector head, with optional modifiers:
+	   [Left and right are defined by looking from start to end of vector]
+	     +a<angle> to set angle of the vector head apex [30]
+	     +b to place a vector head at the beginning of the vector [none].
+	       Append t for terminal, c for circle, s for square, a for arrow [Default],
+	       i for tail, A for plain arrow, and I for plain tail.
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +e to place a vector head at the end of the vector [none].
+	       Append t for terminal, c for circle, s for square, a for arrow [Default],
+	       i for tail, A for plain arrow, and I for plain tail.
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +h sets the vector head shape in -2/2 range [0].
+	     +j<just> to justify vector at (b)eginning [default], (e)nd, or (c)enter.
+	     +l to only draw left side of all specified vector heads [both sides].
+	     +m[f|r] to place vector head at mid-point of segment [Default expects +b|+e].
+	       Specify f or r for forward|reverse direction [forward].
+	       Append t for terminal, c for circle, s for square, or a for arrow [Default].
+	       Append l|r to only draw left or right side of this head [both sides].
+	     +n<norm> to shrink attributes if vector length < <norm> [none].
+	     +o[<plon/plat>] sets pole [north pole] for great or small circles; only give length via input.
+	     +q if start and stop opening angle is given instead of (azimuth,length) on input.
+	     +r to only draw right side of all specified vector heads [both sides].
+	     +s if (x,y) coordinates of tip is given instead of (azimuth,length) on input.
+	     +t[b|e]<trim(s)>[unit] to shift begin or end position along vector by given amount [no shifting].
+	-T Ignore all input files.
+	-U Plot GMT Unix System Time stamp [and optionally appended text or command line].
+	   You may also set the justification point and the relative position of stamp
+	   [+jBL+o-54p/-54p].  Add +c to have the command line plotted [OFF].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Set pen attributes [Default pen is default,black]:
+	   <pen> is a comma-separated list of three optional items in the order:
+	       <width>[c|i|p], <color>, and <style>[c|i|p].
+	   <width> >= 0.0 sets pen width (default units are points); alternatively a pen
+	       name: Choose among faint, default, or [thin|thick|fat][er|est], or obese.
+	   <color> = (1) <gray> or <red>/<green>/<blue>, all in range 0-255,
+	             (2) <c>/<m>/<y>/<k> in 0-100% range,
+	             (3) <hue>-<sat>-<val> in ranges 0-360, 0-1, 0-1,
+	             (4) any valid color name.
+	   <style> = (1) pattern of dashes (-) and dots (.), scaled by <width>.
+	             (2) "dashed", "dotted", "dashdot", "dotdash", or "solid".
+	             (3) <pattern>[:<offset>]; <pattern> holds lengths (default unit points)
+	                 of any number of lines and gaps separated by underscores.
+	                The optional <offset> shifts elements from start of the line [0].
+	   For PDF stroke transparency, append @<transparency> in the range 0-100% [0 = opaque].
+	   Additional line attribute modifiers are also available.  Choose from:
+	     +o<offset>[unit] Trim the line from the end inward by the specified amount.
+	        Choose <unit> as plot distances (c|i|p) or map distances (d|m|s|e|f|k|M|n|u) [Cartesian].
+	        To trim the two ends differently, give two offsets separated by a slash (/).
+	     +s Draw line using a Bezier spline in the PostScript [Linear spline].
+	     +v[b|e]<vecspecs> Add vector head with the given specs at the ends of lines.
+	        Use +ve and +vb separately to give different endings (+v applies to both).
+	        See vector specifications for details. Note: +v must be last modifier for a pen.
+	     +c Controls how pens and fills are affected if a CPT is specified via -C:
+	          Append l to let pen colors follow the CPT setting.
+	          Append f to let fill/font colors follow the CPT setting.
+	          Default activates both effects.
+	-X -Y Shift origin of plot to (<xshift>, <yshift>).
+	   Prepend r for shift relative to current point (default), prepend a for temporary
+	   adjustment of origin, prepend f to position relative to lower left corner of page,
+	   prepend c for offset of center of plot to center of page.
+	   For overlays (-O), the default setting is [r0], otherwise [f2.54c].
+	-Z Use <value> with -C <cpt> to determine <color> instead of via -G<color> or -W<pen>.
+	   Append l for just pen color or f for fill color [Default sets both].
+	-a Give one or more comma-separated <col>=<name> associations
+	   [Default selects all aspatial fields].
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type>.
+	   Default is the required number of columns.
+	-c Move to next subplot panel or append row,col of desired panel.
+	-di Replace any <nodata> in input data with NaN.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-g Use data point separations to determine if there are data gaps.
+	   Append x|X or y|Y to identify data gaps in x or y coordinates,
+	   respectively, and append d|D for distance gaps.  Upper case X|Y|D means
+	   we first project the points (requires -J).  Append <gap>[unit][+n|p]; +n uses
+	   d=prev-curr, +p uses d=curr-prev [d=|curr-prev|]; d must exceed <gap> to detect a gap.
+	   For geographic data: choose from e|f|k|M|n|u [Default is meter (e)].
+	   For gaps based on mapped coordinates: choose unit from c|i|p [cm].
+	   For time data: the unit is controlled by TIME_UNIT.
+	   For generic data: the unit is as the data implies (user units).
+	   Repeat the -g option to specify multiple criteria, and add -ga
+	   to indicate that all criteria must be met [just one must be met].
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Sets alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-l Add symbol, line or polygon to the legend. Optionally, append label and add any of the legend codes
+	   +d<pen>, +f<font>, +g<gap>, +h<header>, +l[<just>/]<txt>, +n<cols>, +s<size>, +v[<pen>].
+	   You can also choose legend placement codes +j<just> and +x<scale>, corresponding
+	   to legend command line options -Dj|J<just> and -S<scale>.
+	-p Select a 3-D pseudo perspective view.  Append the
+	   <azimuth>/<elevation> of the viewpoint [180/90].
+	   When used with -Jz|Z, optionally add /<zlevel> for frame level [bottom of z-axis].
+	   Prepend x or y to plot against the “wall” x = level or y = level [z].
+	   Optionally, append +w<lon0>/<lat0>[/<z0>] to specify a fixed coordinate point
+	   or +v<x0>/<y0> for a fixed projected point [region center and page center].
+	   For a plain rotation about the z-axis, give rotation angle only
+	   and optionally use +w or +v to select location of axis [plot origin].
+	-t Set the layer transparency from 0-100 [Default is 0; opaque].
+	   Requires conversion to PDF or raster formats.
+	   For plotting symbols with variable transparency read from file, give no value.
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

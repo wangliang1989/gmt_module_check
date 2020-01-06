@@ -1,0 +1,1 @@
+gmt [ERROR]: Not available in classic mode

@@ -1,0 +1,22 @@
+gmt gmtset [core] 6.0.0 [64-bit] - Change individual GMT default settings
+
+usage: gmt gmtset [-C | -D[s|u] | -G<defaultsfile>] [-[BJRXYcp]<value>] PARAMETER1 [=] value1 PARAMETER2 [=] value2 PARAMETER3 [=] value3 ...
+
+	For available PARAMETERS, see gmt.conf man page.
+
+
+	OPTIONS:
+	-C Convert GMT4 .gmtdefaults4 to a gmt.conf file.
+	   The original file is retained.
+	-D Modify the default settings based on the GMT system defaults.
+	   Append s to see the SI version of defaults.
+	   Append u to see the US version of defaults.
+	-G Set name of specific gmt.conf file to modify.
+	   [Default looks for file in current directory.  If not found,
+	   it looks in the home directory, if not found it uses GMT defaults.]
+
+	Only settings that differ from the GMT SI system defaults are written
+	   to the file gmt.conf in the current directory.
+
+	-[BJRXYcp]<value> (any of these options).
+	   Set the expansion of any of these shorthand options.

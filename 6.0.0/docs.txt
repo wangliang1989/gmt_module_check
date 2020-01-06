@@ -1,0 +1,24 @@
+gmt docs [core] 6.0.0 [64-bit] - Show HTML documentation of specified module
+
+usage: gmt docs [-Q] [-S] [-V[<level>]] <module-name> [<-option>]
+
+	<module-name> is one of the core or supplemental modules,
+	   or one of gmt, api, cookbook, gallery, settings, and tutorial.
+
+	OPTIONS:
+	-Q will only display the URLs and not open them in a viewer.
+	   If given, -Q must be the first argument to gmt docs.
+	-S will open documentation files from the GMT server.
+	<-option> is the one-letter option of the module in question (e.g, -R).
+	   Display the documentation positioned at that specific option.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.

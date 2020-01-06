@@ -1,0 +1,144 @@
+gmt triangulate [core] 6.0.0 [64-bit] - Delaunay triangulation or Voronoi partitioning and gridding of Cartesian data
+
+usage: gmt triangulate [<table>] [-Dx|y] [-C<slopegrid>] [-E<empty>] [-G<outgrid>]
+	[-I<xinc>[<unit>][+e|n][/<yinc>[<unit>][+e|n]]] [-J<args>] [-M] [-N] [-Q]
+	[-R<west>/<east>/<south>/<north>[+r]] [-S] [-T] [-V[<level>]] [-Z] [-b[i|o][<ncol>][t][w][+l|b]] [-d[i|o]<nodata>]
+	[-e[~]<pattern>] [-f[i|o]<info>] [-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]]
+	[-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]] [-r[g|p]] [-s[<cols>][+a|r]] [-:[i|o]] [--PAR=<value>]
+
+	OPTIONS:
+	<table> is one or more data files (in ASCII, binary, netCDF).
+	   If no files are given, standard input is read.
+	-C Compute propagated uncertainty via CURVE algorithm. Give name of input slope grid.
+	   The slope grid (in degrees) also sets -R -I [-r].  Expects (x,y,h,v) or (x,y,z,h,v) on input.
+	   Requires -G and annot be used with -D, -M, -N, -Q, -S, or -T.
+	-D Take derivative in the x- or y-direction (only with -G) [Default is z value].
+	-E Value to use for empty nodes [Default is NaN].
+	-G Grid data. Give name of output grid file and specify -R -I [-r].
+	   If -C is used then output grids will hold propagated uncertainties and no -R -I [-r] is required.
+	   Cannot be combined with -N.
+	-I Specify increment(s) and optionally append units or flags.
+	   Full syntax is <xinc>[d|m|s|e|f|k|M|n|u][+e|n][/<yinc>[d|m|s|e|f|k|M|n|u][+e|n]]]
+	   For geographic regions in degrees you can optionally append units from this list:
+	   (d)egree [Default], (m)inute, (s)econd, m(e)ter, (f)oot, (k)ilometer, (M)ile, (n)autical mile, s(u)rvey foot.
+	   Append +e to adjust the region to fit increments [Adjust increment to fit domain].
+	   Alternatively, specify number of nodes by appending +n. Then, the increments
+	   are calculated from the given domain and node-registration settings
+	   (see Appendix B for details).  Note: If -R<grdfile> was used then -I
+	   (and -R and maybe -r) have been set; use -I to override those increments.
+	-J Select map proJection. (<scale> in cm/degree, <width> in cm)
+	   Append +dh for map height, +du for max (upper) or +dl for min (lower) map dimension [+dw for width].
+	   Azimuthal projections set -Rg unless polar aspect or -R<...>r is set.
+
+	   -Ja|A<lon0>/<lat0>[/<hor>]/<scl (or <radius>/<lat>)|<width> (Lambert Azimuthal EA)
+	   -Jb|B<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Albers Conic EA)
+	   -Jcyl_stere|Cyl_stere/[<lon0>/[<lat0>/]]<lat1>/<lat2>/<scl>|<width> (Cylindrical Stereographic)
+	   -Jc|C<lon0>/<lat0><scl>|<width> (Cassini)
+	   -Jd|D<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Equidistant Conic)
+	   -Je|E<lon0>/<lat0>[/<horizon>]/<scl (or <radius>/<lat>)|<width>  (Azimuthal Equidistant)
+	   -Jf|F<lon0>/<lat0>[/<horizon>]/<scl (or <radius>/<lat>)|<width>  (Gnomonic)
+	   -Jg|G<lon0>/<lat0>/<scl (or <radius>/<lat>)|<width>  (Orthographic)
+	   -Jg|G[<lon0>/]<lat0>[/<horizon>|/<altitude>/<azimuth>/<tilt>/<twist>/<Width>/<Height>]/<scl>|<width> (General Perspective)
+	   -Jh|H[<lon0>/]<scl>|<width> (Hammer-Aitoff)
+	   -Ji|I[<lon0>/]<scl>|<width> (Sinusoidal)
+	   -Jj|J[<lon0>/]<scl>|<width> (Miller)
+	   -Jkf|Kf[<lon0>/]<scl>|<width> (Eckert IV)
+	   -Jks|Ks[<lon0>/]<scl>|<width> (Eckert VI)
+	   -Jl|L<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Lambert Conformal Conic)
+	   -Jm|M[<lon0>/[<lat0>/]]<scl>|<width> (Mercator)
+	   -Jn|N[<lon0>/]<scl>|<width> (Robinson projection)
+	   -Jo|O (Oblique Mercator).  Specify one of three definitions:
+	      -Jo|O[a|A]<lon0>/<lat0>/<azimuth>/<scl>|<width>
+	      -Jo|O[b|B]<lon0>/<lat0>/<lon1>/<lat1>/<scl>|<width>
+	      -Jo|Oc|C<lon0>/<lat0>/<lonp>/<latp>/<scl>|<width>
+	   -Jpoly|Poly/[<lon0>/[<lat0>/]]<scl>|<width> ((American) Polyconic)
+	   -Jq|Q[<lon0>/[<lat0>/]]<scl>|<width> (Equidistant Cylindrical)
+	   -Jr|R[<lon0>/]<scl>|<width> (Winkel Tripel)
+	   -Js|S<lon0>/<lat0>/[<horizon>/]<scl> (or <slat>/<scl> or <radius>/<lat>)|<width> (Stereographic)
+	   -Jt|T<lon0>/[<lat0>/]<scl>|<width> (Transverse Mercator)
+	   -Ju|U[<zone>/]<scl>|<width> (UTM)
+	   -Jv|V<lon0>/<scl>|<width> (van der Grinten)
+	   -Jw|W<lon0>/<scl>|<width> (Mollweide)
+	   -Jy|Y[<lon0>/[<lat0>/]]<scl>|<width> (Cylindrical Equal-area)
+	   -Jp|P[a]<scl>|<width>[/<origin>][r|z] (Polar [azimuth] (theta,radius))
+	   -Jx|X<x-scl>|<width>[d|l|p<power>|t|T][/<y-scl>|<height>[d|l|p<power>|t|T]] (Linear, log, and power projections)
+	   (See psbasemap for more details on projection syntax)
+	-M Output triangle edges as multiple segments separated by segment headers.
+	   [Default is to output the indices of vertices for each Delaunay triangle].
+	-N Write indices of vertices to stdout when -G is used [only write the grid].
+	-Q Compute Voronoi polygon edges instead (requires -R and Shewchuk algorithm) [Delaunay triangulation].
+	-S Output triangle polygons as multiple segments separated by segment headers.
+	   Cannot be used with -Q.
+	-T Output triangles or polygons even if gridding has been selected with -G.
+	   Default behavior is to produce a grid based on the triangles or polygons only.
+	-Z Expect (x,y,z) data on input (and output); automatically set if -G is used [Expect (x,y) data].
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead [0].
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [2].
+	-bo Write binary (double) index table [Default is ASCII i/o].
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Sets alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-r Set (g)ridline- or (p)ixel-registration [Just -r sets pixel registration].
+	   If not given we default to gridline registration.
+	-s Suppress output for records whose z-value (col = 2) equals NaN
+	   [Default prints all records].
+	   Append <cols> to examine other column(s) instead [2].
+	   Append +a to suppress records where any column equals NaN, or
+	   append +r to reverse the suppression (only output z = NaN records).
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

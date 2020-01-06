@@ -1,0 +1,23 @@
+gmt mgd77sniffer [mgd77] 6.0.0 [64-bit] - Along-track quality control of MGD77 cruises
+
+usage: gmt mgd77sniffer <cruises> [-A<fieldabbrev>,<scale>,<offset>] [-Cmaxspd] [-Dd|e|E|f|l|m|s|v][r]
+	[-E] [-F] [-G<fieldabbrev>,<imggrid>,<scale>,<mode>[,<latmax>] or -G<fieldabbrev>,<grid>] [-H]
+	[-I<fieldabbrev>,<rec1>,<recN>] [-L<custom_limits_file>] [-M] [-N]
+ERROR: Caught signal number 11 (Segmentation fault) at
+0   libsystem_platform.dylib            0x00007fff6512ac92 _platform_strlen + 18
+1   ???                                 0x0000000000000030 0x0 + 48
+Stack backtrace:
+0   libgmt.6.0.0.dylib                  0x00000001039ab6f7 sig_handler + 583
+1   libsystem_platform.dylib            0x00007fff6512d42d _sigtramp + 29
+2   ???                                 0x0000000000000000 0x0 + 0
+3   libsystem_c.dylib                   0x00007fff64fc677b __vfprintf + 8721
+4   libsystem_c.dylib                   0x00007fff64febe1b __v2printf + 475
+5   libsystem_c.dylib                   0x00007fff64fd2058 _vsnprintf + 410
+6   libsystem_c.dylib                   0x00007fff64fd20ff vsnprintf + 68
+7   libgmt.6.0.0.dylib                  0x00000001039bb4f5 GMT_Message + 293
+8   supplements.so                      0x0000000109f32fac usage + 172
+9   libgmt.6.0.0.dylib                  0x0000000103aedbd8 gmt_report_usage + 120
+10  supplements.so                      0x0000000109f25ef1 GMT_mgd77sniffer + 673
+11  libgmt.6.0.0.dylib                  0x00000001039c9aef GMT_Call_Module + 1823
+12  gmt                                 0x00000001039a2d9e main + 1998
+13  libdyld.dylib                       0x00007fff64f347fd start + 1

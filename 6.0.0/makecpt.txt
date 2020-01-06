@@ -1,0 +1,152 @@
+gmt makecpt [core] 6.0.0 [64-bit] - Make GMT color palette tables
+
+usage: gmt makecpt [-A<transparency>[+a]] [-C<cpt>|colors] [-D[i|o]] [-E<nlevels>] [-F[R|r|h|c][+c]] [-G<zlo>/<zhi>]
+	[-I[c][z]] [-M] [-N] [-Q] [-S<mode>] [-T<min>/<max>[/<inc>[+b|l|n]] | -T<table> | -T<z1,z2,...zn>] [-V[<level>]] [-W[w]]
+	[-Z] [-bi[<ncol>][t][w][+l|b]] [-di<nodata>] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]]
+	[-ho[<nrecs>][+c][+d][+r<remark>][+t<title>]] [--PAR=<value>]
+
+
+	OPTIONS:
+	-A Set constant transparency for all colors; append +a to also include back-, for-, and nan-colors [0]
+	-C Specify a colortable [Default is turbo]:
+	   [Notes: R=Default z-range, H=Hinge, C=colormodel]
+	   ---------------------------------------------------------------------------------------
+	   abyss       : Black/dark blue to lightblue for bathymetry [R=-8000/0, C=RGB]
+	   acton       : Perceptually uniform sequential colormap, by Fabio Crameri [C=RGB]
+	   bamako      : Perceptually uniform, low-lightness gradient colormap by Fabio Crameri [C=RGB]
+	   bathy       : Like abyss but via aquamarine at mid-depths [R=-8000/0, C=RGB]
+	   batlow      : Perceptually uniform sequential 'rainbow' colormap by, Fabio Crameri [C=RGB]
+	   berlin      : Perceptually uniform bimodal colormap, dark, by Fabio Crameri [H=0,C=RGB]
+	   bilbao      : Perceptually uniform colormap by Fabio Crameri [C=RGB]
+	   broc        : Perceptually uniform bimodal colormap, light, by Fabio Crameri [H=0,C=RGB]
+	   buda        : Perceptually uniform, low-lightness gradient colormap, by Fabio Crameri [C=RGB]
+	   categorical : Color table particularly suitable for categorical data [vRGB]
+	   cool        : Linear change from blue to magenta [C=RGB]
+	   copper      : Dark to light copper brown [C=RGB]
+	   cork        : Perceptually uniform bimodal colormap, light, by Fabio Crameri [H=0,C=RGB]
+	   cubhelix    : Intensity colormap via cube helix by Dave Green [C=RGB]
+	   cyclic      : Cyclic colormap, spans 360 degrees of hue [C=HSV]
+	   davos       : Perceptually uniform colormap by Fabio Crameri [C=RGB]
+	   dem1        : Digital Elevation Model (DEM) scale by Thomas Dewez [R=0/800, C=RGB]
+	   dem2        : Digital Elevation Model (DEM) scale by Dewez/Wessel [R=0/4900, C=RGB]
+	   dem3        : Digital Elevation Model (DEM) scale by Paul Wessel [R=0/6000, C=RGB]
+	   dem4        : Digital Elevation Model (DEM) scale for Wikipedia figures [R=0/1500, C=RGB]
+	   devon       : Perceptually uniform sequential colormap, by Fabio Crameri [C=RGB]
+	   drywet      : Goes from dry to wet colors [C=RGB]
+	   earth       : Colors for global bathymetry/topography relief [R=-11000/9000, H=0, C=RGB]
+	   elevation   : Washed-out colors for topography [R=0/7000, C=RGB]
+	   etopo1      : Colormap used in the ETOPO1 global relief map [R=-11000/8500, H=0, C=RGB]
+	   gebco       : Colors for GEBCO bathymetric charts [R=-7000/0, C=RGB]
+	   geo         : Colors for global bathymetry/topography relief [R=-8000/8000, H=0, C=RGB]
+	   globe       : Colors for global bathymetry/topography relief [R=-10000/10000, H=0, C=RGB]
+	   gray        : Gray linear ramp from black to white [C=RGB]
+	   grayC       : Perceptually uniform 'gray' colormap, by Fabio Crameri [C=RGB]
+	   hawaii      : Perceptually uniform sequential colormap, by Fabio Crameri [C=RGB]
+	   haxby       : Bill Haxby's color scheme for geoid & gravity [C=RGB]
+	   hot         : Black through red and yellow to white [C=RGB]
+	   ibcso       : The IBCSO bathymetry colors [R=-12000/0, C=RGB]
+	   imola       : Perceptually uniform, low-lightness gradient colormap, by Fabio Crameri [C=RGB]
+	   inferno     : New colormap Option B from matplotlib [C=RGB]
+	   jet         : Dark to light blue, white, yellow and red [C=RGB]
+	   lajolla     : Perceptually uniform colormap, without black or white, by Fabio Crameri [C=RGB]
+	   lapaz       : Perceptually uniform 'rainbow' colormap, by Fabio Crameri [C=RGB]
+	   lisbon      : Perceptually uniform bimodal colormap, dark, by Fabio Crameri [H=0,C=RGB]
+	   mag         : Colors for magnetic anomaly maps [C=RGB]
+	   magma       : New colormap Option A from matplotlib [C=RGB]
+	   nighttime   : Colors for DMSP-OLS Nighttime Lights Time Series [C=HSV]
+	   no_green    : For those who hate green [H=0, C=RGB]
+	   nuuk        : Perceptually uniform, low-lightness gradient colormap, by Fabio Crameri [C=RGB]
+	   ocean       : White-green-blue bathymetry scale [R=-8000/0, C=RGB]
+	   oleron      : Perceptually uniform topography colormap, by Fabio Crameri [H=0,C=RGB]
+	   oslo        : Perceptually uniform, black & white limits, by Fabio Crameri [C=RGB]
+	   paired      : Qualitative color map with 6 pairs of colors [C=RGB]
+	   panoply     : Default colormap of Panoply [C=RGB]
+	   plasma      : New colormap Option C from matplotlib [C=RGB]
+	   polar       : Blue via white to red [H=0, C=RGB]
+	   rainbow     : Rainbow: magenta-blue-cyan-green-yellow-red [C=HSV]
+	   red2green   : Polar scale from red to green via white [H=0, C=RGB]
+	   relief      : Wessel/Martinez colors for topography [R=-8000/+8000, H=0, C=RGB]
+	   roma        : Perceptually uniform 'seis' colormap, by Fabio Crameri [C=RGB]
+	   seafloor    : Purple-blue-white bathymetry scale [R=-6000/0, C=RGB]
+	   sealand     : Smith bathymetry/topography scale [R=-6000/+3000, H=0, C=HSV]
+	   seis        : R-O-Y-G-B seismic tomography colors [C=RGB]
+	   split       : Like polar, but via black instead of white [H=0, C=RGB]
+	   srtm        : Like dem2, but with blue for oceans [H=1, C=RGB]
+	   terra       : Colors for global bathymetry/topography relief [R=-7000/7000, H=0, C=RGB]
+	   tofino      : Perceptually uniform bimodal colormap, dark, by Fabio Crameri [H=0,C=RGB]
+	   tokyo       : Perceptually uniform colormap without black or white, by Fabio Crameri [C=RGB]
+	   topo        : Sandwell/Anderson colors for topography [R=-7000/+7000, H=0, C=HSV]
+	   turku       : Perceptually uniform colormap by Fabio Crameri [C=RGB]
+	   turbo       : Google's Improved Rainbow Colormap for Visualization [C=RGB]
+	   vik         : Perceptually uniform bimodal colormap, light, by Fabio Crameri [H=0,C=RGB]
+	   viridis     : New colormap Option D from matplotlib [C=RGB]
+	   world       : Colors for global bathymetry/topography relief [R=-7000/7000, H=0, C=RGB]
+	   wysiwyg     : 20 well-separated RGB colors [C=RGB]
+	   ---------------------------------------------------------------------------------------
+	   [For more, visit soliton.vm.bytemark.co.uk/pub/cpt-city and www.fabiocrameri.ch/visualisation.php]
+	   Alternatively, specify -Ccolor1,color2[,color3,...] to build a linear
+	   continuous CPT from those colors automatically.
+	-D Set back- and foreground color to match the bottom/top limits
+	   in the output CPT [Default uses color table]. Append i to match the
+	   bottom/top values in the input CPT.
+	-E Use <nlevels> equidistant color levels from zmin to zmax.
+	   This option implies we read data from given command-line files [or stdin] to
+	   determine data range (use -i to select a data column, else last column is used).
+	   If <nlevels> is not set we use the number of color slices in the chosen CPT.
+	-F Select the color model for output (R for r/g/b or grayscale or colorname,
+	   r for r/g/b only, h for h-s-v, c for c/m/y/k) [Default uses the input model]
+	   Append +c to output a discrete CPT in categorical CPT format.
+	-G Truncate incoming CPT to be limited to the z-range <zlo>/<zhi>.
+	   To accept one of the incoming limits, set that limit to NaN.
+	-I Reverse sense of CPT in one or two ways:
+	   -Ic Reverse sense of color table as well as back- and foreground color [Default].
+	   -Iz Reverse sign of z-values in the color table (takes affect before -G, T are consulted).
+	-M Use GMT defaults to set back-, foreground, and NaN colors
+	   [Default uses the settings in the color table].
+	-N Do not write back-, foreground, and NaN colors [Default will].
+	-Q The z-values given to -T are log10(z). Assign colors via log10(z) but write z.
+	-S Determine range in -T from input data table(s) instead.  Choose operation:
+	   -Sa<scl> Make symmetric range around average (i.e., mean) and +/- <scl> * sigma.
+	   -Sm<scl> Make symmetric range around median and +/- <scl> * L1_scale.
+	   -Sp<scl> Make symmetric range around mode and +/- <scl> * LMS_scale.
+	   -Sq<low>/<high> Set range from <low> quartile to <high> quartile.
+	   -S<inc>[+d] Read data and round range to nearest <inc>; append +d for discrete CPT.
+	   -Sr	Read data and use min/max as range.
+	   Last data column is used in the calculation; see -i to arrange columns.
+	-T Make evenly spaced color boundaries from <min> to <max> in steps of <inc>.
+	   Append +b for log2 spacing in integer <inc> or +l for log10 spacing via <inc> = 1,2,3.
+	   Append +n to indicate <inc> is the number of color boundaries to produce instead.
+	   For absolute time series, append a valid time unit (y|o|w|d|h|m|s) to the increment.
+	   Alternatively, give a file with color boundaries in the first column, or a comma-separate list of values.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Do not interpolate color palette. Alternatively, append w for a wrapped CPT.
+	-Z Create a continuous color palette [Default is discontinuous,
+	   i.e., constant color intervals]. Without -T or when using -T<z_min>/<z_max> this
+	   has no effect; the input palette table is used untouched with possible scaling.
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type>.
+	-di Replace any <nodata> in input data with NaN.
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Sets alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

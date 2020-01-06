@@ -1,0 +1,270 @@
+gmt histogram [core] 6.0.0 [64-bit] - Calculate and plot histograms
+
+usage: gmt histogram [<table>] -Jx|X<args> -T[<min>/<max>/]<inc>[<unit>][+n] [-A] [-B<args>] [-C<cpt>] [-D[+b][+f<font>][+o<off>][+r]]
+	[-F] [-G<fill>] [-I[o|O]] [-Ll|h|b] [-N[<mode>][+p<pen>]] [-Q[r]]
+	[-R[<unit>]<xmin>/<xmax>/<ymin>/<ymax>[+r]] [-S] [-U[<label>][+c][+j<just>][+o<dx>/<dy>]]
+	[-V[<level>]] [-W<pen>] [-X[a|c|f|r]<xshift>[<unit>]] [-Y[a|c|f|r]<yshift>[<unit>]] [-Z[0-5][+w]]
+	[-c[<row>,<col>]] [-bi[<ncol>][t][w][+l|b]] [-di<nodata>] [-e[~]<pattern>]
+	[-f[i|o]<info>] [-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]]
+	[-p[x|y|z]<azim>[/<elev>[/<zlevel>]][+w<lon0>/<lat0>[/<z0>][+v<x0>/<y0>]] [-s[<cols>][+a|r]] [-t<transp>] [--PAR=<value>]
+
+	-J Select the map proJection. The projection type is identified by a 1- or
+	   2-character ID (e.g. 'm' or 'kf') or by an abbreviation followed by a slash
+	   (e.g. 'cyl_stere/'). When using a lower-case ID <scale> can be given either as 1:<xxxx>
+	   or in cm/degree along the standard parallel. Alternatively, when the projection ID is
+	   Capitalized, <scale>|<width> denotes the width of the plot in cm
+	   Append +dh for map height, +du for max map dimension, and +dl for min map dimension [Default +dw is width].
+	   When the central meridian (lon0) is optional and omitted, the center of the
+	   longitude range specified by -R is used. The default standard parallel is the equator
+	   Azimuthal projections set -Rg unless polar aspect or -R<...>r is given.
+	   -Ja|A<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Lambert Azimuthal Equal Area)
+	     <lon0>/<lat0> is the center of the projection.
+	     <horizon> is max distance from center of the projection (<= 180, default 90).
+	     <scale> can also be given as <radius>/<lat>, where <radius> is the distance
+	     in cm to the oblique parallel <lat>.
+	   -Jb|B<lon0>/<lat0>/<lat1>/<lat2>/<scale>|<width> (Albers Equal-Area Conic)
+	     Give origin, 2 standard parallels, and true scale
+	   -Jc|C<lon0>/<lat0><scale>|<width> (Cassini)
+	     Give central point and scale
+	   -Jcyl_stere|Cyl_stere/[<lon0>/[<lat0>/]]<scale>|<width> (Cylindrical Stereographic)
+	     Give central meridian (opt), standard parallel (opt) and scale
+	     <lat0> = 66.159467 (Miller's modified Gall), 55 (Kamenetskiy's First),
+	     45 (Gall Stereographic), 30 (Bolshoi Sovietskii Atlas Mira), 0 (Braun)
+	   -Jd|D<lon0>/<lat0>/<lat1>/<lat2>/<scale>|<width> (Equidistant Conic)
+	     Give origin, 2 standard parallels, and true scale
+	   -Je|E<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Azimuthal Equidistant)
+	     <lon0>/<lat0> is the center of the projection.
+	     <horizon> is max distance from center of the projection (<= 180, default 180).
+	     <scale> can also be given as <radius>/<lat>, where <radius> is the distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jf|F<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Gnomonic)
+	     <lon0>/<lat0> is the center of the projection.
+	     <horizon> is max distance from center of the projection (< 90, default 60).
+	     <scale> can also be given as <radius>/<lat>, where <radius> is distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jg|G<lon0>/<lat0>/<scale>|<width> (Orthographic)
+	     <lon0>/<lat0> is the center of the projection.
+	     <scale> can also be given as <radius>/<lat>, where <radius> is distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jg|G<lon0>/<lat0>/<altitude>/<azimuth>/<tilt>/<twist>/<Width>/<Height>/<scale>|<width> (General Perspective)
+	     <lon0>/<lat0> is the center of the projection.
+	     <altitude> is the height (in km) of the viewpoint above local sea level
+	        - if <altitude> less than 10 then it is the distance 
+	        from center of earth to viewpoint in earth radii
+	        - if <altitude> has a suffix of 'r' then it is the radius 
+	        from the center of earth in kilometers
+	     <azimuth> is azimuth east of North of view
+	     <tilt> is the upward tilt of the plane of projection
+	       if <tilt> < 0 then viewpoint is centered on the horizon
+	     <twist> is the CW twist of the viewpoint in degree
+	     <width> is width of the viewpoint in degree
+	     <height> is the height of the viewpoint in degrees
+	     <scale> can also be given as <radius>/<lat>, where <radius> is distance
+	     in cm to the oblique parallel <lat>. 
+	   -Jh|H[<lon0>/]<scale>|<width> (Hammer-Aitoff)
+	     Give central meridian (opt) and scale
+	   -Ji|I[<lon0>/]<scale>|<width> (Sinusoidal)
+	     Give central meridian (opt) and scale
+	   -Jj|J[<lon0>/]<scale>|<width> (Miller)
+	     Give central meridian (opt) and scale
+	   -Jkf|Kf[<lon0>/]<scale>|<width> (Eckert IV)
+	     Give central meridian (opt) and scale
+	   -Jk|K[s][<lon0>/]<scale>|<width> (Eckert VI)
+	     Give central meridian (opt) and scale
+	   -Jl|L<lon0>/<lat0>/<lat1>/<lat2>/<scale>|<width> (Lambert Conformal Conic)
+	     Give origin, 2 standard parallels, and true scale
+	   -Jm|M[<lon0>/[<lat0>/]]<scale>|<width> (Mercator).
+	     Give central meridian (opt), true scale parallel (opt), and scale
+	   -Jn|N[<lon0>/]<scale>|<width> (Robinson projection)
+	     Give central meridian (opt) and scale
+	   -Jo|O<parameters> (Oblique Mercator).  Specify one of three definitions:
+	     -Jo|O[a|A]<lon0>/<lat0>/<azimuth>/<scale>|<width>
+	       Give origin, azimuth of oblique equator, and scale at oblique equator
+	     -Jo|O[b|B]<lon0>/<lat0>/<lon1>/<lat1>/<scale>|<width>
+	       Give origin, second point on oblique equator, and scale at oblique equator
+	     -Jo|Oc|C<lon0>/<lat0>/<lonp>/<latp>/<scale>|<width>
+	       Give origin, pole of projection, and scale at oblique equator
+	       Specify region in oblique degrees OR use -R<>r
+	       Upper-case A|B|C removes enforcement of a northern hemisphere pole.
+	   -Jp|P[a]<scale>|<width>[/<base>][r|z] (Polar (theta,radius))
+	     Linear scaling for polar coordinates.
+	     Optionally append 'a' to -Jp or -JP to use azimuths (CW from North) instead of directions (CCW from East) [default].
+	     Give scale in cm/units, and append theta value for angular offset (base) [0]
+	     Append r to reverse radial direction (s/n must be in 0-90 range) or z to annotate depths rather than radius [Default]
+	   -Jpoly|Poly/[<lon0>/[<lat0>/]]<scale>|<width> ((American) Polyconic)
+	     Give central meridian (opt), reference parallel (opt, default = equator), and scale
+	   -Jq|Q[<lon0>/[<lat0>/]]<scale>|<width> (Equidistant Cylindrical)
+	     Give central meridian (opt), standard parallel (opt), and scale
+	     <lat0> = 61.7 (Min. linear distortion), 50.5 (R. Miller equirectangular),
+	     45 (Gall isographic), 43.5 (Min. continental distortion), 42 (Grafarend & Niermann),
+	     37.5 (Min. overall distortion), 0 (Plate Carree, default)
+	   -Jr|R[<lon0>/]<scale>|<width> (Winkel Tripel)
+	     Give central meridian and scale
+	   -Js|S<lon0>/<lat0>[/<horizon>]/<scale>|<width> (Stereographic)
+	     <lon0>/<lat0> is the center or the projection.
+	     <horizon> is max distance from center of the projection (< 180, default 90).
+	     <scale> is either <1:xxxx> (true at pole) or <slat>/<1:xxxx> (true at <slat>)
+	     or <radius>/<lat> (distance in cm to the [oblique] parallel <lat>.
+	   -Jt|T<lon0>/[<lat0>/]<scale>|<width> (Transverse Mercator).
+	         Give central meridian and scale
+	     Optionally, also give the central parallel (default = equator)
+	   -Ju|U<zone>/<scale>|<width> (UTM)
+	     Give zone (A,B,Y,Z, or 1-60 (negative for S hemisphere) or append GMT-X) and scale
+	     Or give -Ju|U<scale>|<width> to have the UTM zone determined from the region.
+	   -Jv|V[<lon0>/]<scale>|<width> (van der Grinten)
+	     Give central meridian (opt) and scale
+	   -Jw|W[<lon0>/]<scale>|<width> (Mollweide)
+	     Give central meridian (opt) and scale
+	   -Jy|Y[<lon0>/[<lat0>/]]<scale>|<width> (Cylindrical Equal-area)
+	     Give central meridian (opt), standard parallel (opt) and scale
+	     <lat0> = 50 (Balthasart), 45 (Gall), 37.5 (Hobo-Dyer), 37.4 (Trystan Edwards),
+	              37.0666 (Caster), 30 (Behrmann), 0 (Lambert, default)
+	   -Jx|X<x-scale|<width>[/<y-scale|height>] (Linear, log, power scaling)
+	     <scale> in cm/units (or 1:xxxx). Optionally, append to <x-scale> and/or <y-scale>:
+	       d         Geographic coordinate (in degrees)
+	       l         Log10 projection
+	       p<power>  x^power projection
+	       t         Calendar time projection using relative time coordinates
+	       T         Calendar time projection using absolute time coordinates
+	     Use / to specify separate x/y scaling (e.g., -Jx0.5c/0.3c).  If 1:xxxxx is used it implies -R is in meters.
+	     If -JX is used then give axes lengths rather than scales.
+	-T Make evenly spaced bin boundaries from <min> to <max> by <inc>.
+	   If <min>/<max> is not given then boundaries in -R is used.
+	   Append +n to indicate <inc> is the number of bin boundaries to produce instead.
+	   For absolute time bins, append a valid time unit (y|o|w|d|h|m|s) to the increment.
+	   Alternatively, give a file with bin boundaries in the first column, or a comma-separate list of values.
+	-X -Y Shift origin of plot to (<xshift>, <yshift>).
+	   Prepend r for shift relative to current point (default), prepend a for temporary
+	   adjustment of origin, prepend f to position relative to lower left corner of page,
+	   prepend c for offset of center of plot to center of page.
+	   For overlays (-O), the default setting is [r0], otherwise [f2.54c].
+
+	OPTIONS:
+	<table> is one or more data files (in ASCII, binary, netCDF).
+	   If no files are given, standard input is read.
+	-B Specify both (1) basemap frame settings and (2) axes parameters.
+	   (1) Frame settings are modified via an optional single invocation of
+	     -B[<axes>][+g<fill>][+n][+o<lon>/<lat>][+t<title>]
+	   (2) Axes parameters are specified via one or more invocations of
+	       -B[p|s][x|y|z]<intervals>[+a<angle>][+l<label>][+p<prefix>][+u<unit>]
+	   <intervals> is composed of concatenated [<type>]<stride>[<unit>][l|p] sub-strings
+	   See psbasemap man page for more details and examples of all settings.
+	-A Plot horizontal bars, i.e., flip x and y axis [Default is vertical].
+	-C Use CPT to assign fill to bars based on the mid x-value.
+	-D Place histogram count labels on top of each bar; optionally append modifiers:
+	   +b places the labels beneath the bars [above]
+	   +f<font> sets the label font [FONT_ANNOT_PRIMARY]
+	   +o sets the offset <off> between bar and label [6p]
+	   +r rotates the label to be vertical [horizontal]
+	-F The bin boundaries given should be considered bin centers instead.
+	-G<fill> Select color/pattern for columns. Specify <fill> as one of:
+	   1) <gray> or <red>/<green>/<blue>, all in the range 0-255;
+	   2) <c>/<m>/<y>/<k> in range 0-100%;
+	   3) <hue>-<sat>-<val> in ranges 0-360, 0-1, 0-1;
+	   4) any valid color name;
+	   5) P|p<pattern>[+b<color>][+f<color>][+r<dpi>];
+	      Give <pattern> number from 1-90 or a filename, optionally add +r<dpi> [300].
+	      Optionally, use +f,+b to change fore- or background colors (set - for transparency).
+	   For PDF fill transparency, append @<transparency> in the range 0-100 [0 = opaque].
+	-I Inquire about min/max x and y.  No plotting is done.
+	   Append o to output the resulting x, y data.
+	   Append O to output all resulting x, y data even with y=0.
+	-L Append l|h|b to place extreme values in the first, last, or both bins [skip extremes].
+	-N Draw the equivalent normal distribution; append desired pen [0.25p,black].
+	   <mode> selects which central location and scale to use:
+	   0 = mean and standard deviation [Default]
+	   1 = median and L1 scale (MAD w.r.t. median)
+	   2 = LMS mode and LMS scale (MAD w.r.t. mode)
+	   The -N option may be repeated to draw several of these curves.
+	-Q Plot a cumulative histogram; append r for reverse cumulative histogram.
+	   If neither -R nor -I are set, w/e/s/n will be based on input data.
+	-S Draw a stairs-step diagram [Default is bar histogram].
+	-U Plot GMT Unix System Time stamp [and optionally appended text or command line].
+	   You may also set the justification point and the relative position of stamp
+	   [+jBL+o-54p/-54p].  Add +c to have the command line plotted [OFF].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Specify pen for histogram outline or stair-step curves.
+	   <pen> is a comma-separated list of three optional items in the order:
+	       <width>[c|i|p], <color>, and <style>[c|i|p].
+	   <width> >= 0.0 sets pen width (default units are points); alternatively a pen
+	       name: Choose among faint, default, or [thin|thick|fat][er|est], or obese.
+	   <color> = (1) <gray> or <red>/<green>/<blue>, all in range 0-255,
+	             (2) <c>/<m>/<y>/<k> in 0-100% range,
+	             (3) <hue>-<sat>-<val> in ranges 0-360, 0-1, 0-1,
+	             (4) any valid color name.
+	   <style> = (1) pattern of dashes (-) and dots (.), scaled by <width>.
+	             (2) "dashed", "dotted", "dashdot", "dotdash", or "solid".
+	             (3) <pattern>[:<offset>]; <pattern> holds lengths (default unit points)
+	                 of any number of lines and gaps separated by underscores.
+	                The optional <offset> shifts elements from start of the line [0].
+	   For PDF stroke transparency, append @<transparency> in the range 0-100% [0 = opaque].
+	-X -Y Shift origin of plot to (<xshift>, <yshift>).
+	   Prepend r for shift relative to current point (default), prepend a for temporary
+	   adjustment of origin, prepend f to position relative to lower left corner of page,
+	   prepend c for offset of center of plot to center of page.
+	   For overlays (-O), the default setting is [r0], otherwise [f2.54c].
+	-Z To choose type of vertical axis.  Select from
+	   0 - Counts [Default].
+	   1 - Frequency percent.
+	   2 - Log (1+counts).
+	   3 - Log (1+frequency percent).
+	   4 - Log10 (1+counts).
+	   5 - Log10 (1+frequency percent).
+	   Append +w to use bin weights in 2nd column rather than counts.
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [2].
+	-c Move to next subplot panel or append row,col of desired panel.
+	-di Replace any <nodata> in input data with NaN.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-f Special formatting of input/output columns (time or geographical).
+	   Specify i(nput) or o(utput) [Default is both input and output].
+	   Give one or more columns (or column ranges) separated by commas.
+	   Append T (Calendar format), t (time relative to TIME_EPOCH),
+	   f (floating point), x (longitude), y (latitude) to each item.
+	   -f[i|o]g means -f[i|o]0x,1y (geographic coordinates).
+	   -f[i|o]c means -f[i|o]0-1f (Cartesian coordinates).
+	   -fp[<unit>] means input x,y are in projected coordinates.
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Sets alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-p Select a 3-D pseudo perspective view.  Append the
+	   <azimuth>/<elevation> of the viewpoint [180/90].
+	   When used with -Jz|Z, optionally add /<zlevel> for frame level [bottom of z-axis].
+	   Prepend x or y to plot against the “wall” x = level or y = level [z].
+	   Optionally, append +w<lon0>/<lat0>[/<z0>] to specify a fixed coordinate point
+	   or +v<x0>/<y0> for a fixed projected point [region center and page center].
+	   For a plain rotation about the z-axis, give rotation angle only
+	   and optionally use +w or +v to select location of axis [plot origin].
+	-s Suppress output for records whose z-value (col = 2) equals NaN
+	   [Default prints all records].
+	   Append <cols> to examine other column(s) instead [2].
+	   Append +a to suppress records where any column equals NaN, or
+	   append +r to reverse the suppression (only output z = NaN records).
+	-t Set the layer transparency from 0-100 [Default is 0; opaque].
+	   Requires conversion to PDF or raster formats.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

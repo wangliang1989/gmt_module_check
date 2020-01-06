@@ -1,0 +1,55 @@
+gmt img2grd [img] 6.0.0 [64-bit] - Extract a subset from an img file in Mercator or Geographic format
+
+usage: gmt img2grd <world_image_filename> -R<west>/<east>/<south>/<north>[+r] -G<outgrid> -T<type>
+	[-D[<minlat>/<maxlat>]] [-E] [-F] [-I<min>[m|s]] [-M] [-N<navg>] [-S[<scale>]] [-V[<level>]]
+	[-W<maxlon>] [-n[b|c|l|n][+a][+b<BC>][+c][+t<threshold>]] [--PAR=<value>]
+
+	<world_image_filename> gives name of img file.
+	-G Set filename for the output grid file.
+	-R Specify the region in decimal degrees or degrees:minutes.
+
+	OPTIONS:
+	-D Set input img file bottom and top latitudes [-72.006/72.006].
+	   If no latitudes are given it is taken to mean -80.738/80.738.
+	   Without -D we automatically determine the extent from the file size.
+	-E Resample geographic grid to the specified -R.  Cannot be used with -M .
+	   (Default gives the exact -R of the Mercator grid).
+	-F Translate Mercator coordinates so lower left is (0,0); requires -M
+	-I Set input img pixels to be <min> minutes of longitude wide [2.0].
+	   Without -I we automatically determine the pixel size from the file size.
+	-M Write a Mercator grid [Default writes a geographic grid].
+	-N Output averages of input in <navg> by <navg> squares [no averaging].
+	-S Multiply img integer values by <scale> before output [1].
+	   To set scale based on information encoded in filename, just give -S.
+	-T Select the img type format:
+	   -T0 for obsolete img files w/ no constraint code, gets data.
+	   -T1 for new img file w/ constraints coded, gets data at all points [Default].
+	   -T2 for new img file w/ constraints coded, gets data only at constrained points, NaN elsewhere.
+	   -T3 for new img file w/ constraints coded, gets 1 at constraints, 0 elsewhere.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Input img file runs from 0 to <maxlon> longitude [360.0].
+	-n[b|c|l|n][+a][+b<BC>][+c][+t<threshold>] Specify the grid interpolation mode.
+	   (b = B-spline, c = bicubic, l = bilinear, n = nearest-neighbor) [Default is bicubic].
+	   Append +a to switch off antialiasing (except for l) [Default: on].
+	   Append +b<BC> to change boundary conditions.  <BC> can be either:
+	     g for geographic, p for periodic, and n for natural boundary conditions.
+	     For p and n you may optionally append x or y [default is both]:
+	       x for periodic boundary conditions on x,
+	       y for periodic boundary conditions on y.
+	   [Default: Natural conditions, unless grid is known to be geographic].
+	   Append +c to clip interpolated grid to input z-min/max [Default may exceed limits].
+	   Append +t<threshold> to change the minimum weight in vicinity of NaNs. A threshold of
+	   1.0 requires all nodes involved in interpolation to be non-NaN; 0.5 will interpolate
+	   about half way from a non-NaN to a NaN node [Default: 0.5].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

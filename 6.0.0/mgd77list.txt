@@ -1,0 +1,185 @@
+gmt mgd77list [mgd77] 6.0.0 [64-bit] - Extract data from MGD77 files
+
+usage: gmt mgd77list <cruise(s)> -F<dataflags>[,<tests>] [-Ac|d|f|m|t[<code>][+f]]
+	[-Da<startdate>] [-Db<stopdate>] [-E] [-Ga<startrec>] [-Gb<stoprec>] [-I<code>]
+	[-L[<corrtable.txt>]] [-N[s|p][<unit>]]] [-Qa|v<min>/<max>]
+	[-R<west>/<east>/<south>/<north>[+r]] [-Sa<startdist>[<unit>]] [-Sb<stopdist>[<unit>]]
+	[-T[m|e]] [-V[<level>]] [-W<Weight>] [-Z[n|p] [-bo[<ncol>][t][w][+l|b]] [-do<nodata>] [-h] [-je|f|g] [-:[i|o]] [--PAR=<value>]
+
+	<cruises> can be one of five kinds of specifiers:
+	1) 8-character NGDC IDs, e.g., 01010083, JA010010, etc., etc.
+	2) 2-character <agency> codes which will return all cruises from each agency.
+	3) 4-character <agency><vessel> codes, which will return all cruises from those vessels.
+	4) A single =<list>, where <list> is a table with NGDC IDs, one per line.
+	5) If nothing is specified we return all cruises in the data base.
+	   [See the documentation for agency and vessel codes].
+	-F <dataflags> is a comma-separated string made up of one or more of these abbreviations
+	   (for standard MGD77 files - use mgd77list to probe for other columns in MGD77+ files):
+	   >Track information:
+	     time:    Choose between Absolute time [default], Relative time, or fractional year:
+	       atime: Absolute time (formatted according to FORMAT_DATE_OUT, FORMAT_CLOCK_OUT).
+	       rtime: Relative time (formatted according to FORMAT_FLOAT_OUT and TIME_SYSTEM (or TIME_EPOCH, TIME_UNIT)).
+	       ytime: Absolute time as decimal year (formatted according to FORMAT_FLOAT_OUT).
+	       year:  Record year.
+	       month: Record month (1-12).
+	       day :  Record day of month (1-31).
+	       hour:  Record hour(0-23).
+	       min:   Record minute (0-59).
+	       sec:   Record second (0-60).
+	       dmin:  Decimal minute (0-59.xxxx).
+	       hhmm:  Clock hhmm.xxxx (0-2359.xxxx).
+	       date:  yyyymmdd string.
+	       tz :   Time zone adjustment in hours (-13 to +12).
+	     lon:     Longitude (formatted according to FORMAT_GEO_OUT).
+	     lat:     Latitude (formatted according to FORMAT_GEO_OUT).
+	     id:      Survey leg ID [string_output].
+	     ngdcid:  NGDC ID [TEXTSTRING].
+	     recno:   Record number.
+	   >Derived navigational information:
+	     dist:    Along-track distances (see -j for method and -N for units).
+	     azim:    Track azimuth (Degrees east from north).
+	     cc:      Course change, i.e., change in azimuth (Degrees east from north).
+	     vel:     Ship velocity (m/s).
+	   >Geophysical Observations:
+	     twt:     Two-way travel-time (s).
+	     depth:   Corrected bathymetry (m) [Also see -Z].
+	     mtf1:    Magnetic Total Field Sensor 1 (gamma, nTesla).
+	     mtf2:    Magnetic Total Field Sensor 2 (gamma, nTesla).
+	     mag:     Magnetic residual anomaly (gamma, nTesla).
+	     gobs:    Observed gravity (mGal).
+	     faa:     Free-air gravity anomaly (mGal).
+	   >Codes, Corrections, and Information:
+	     drt:     Data record type [5].
+	     ptc:     Position type code.
+	     bcc:     Bathymetric correction code.
+	     btc:     Bathymetric type code.
+	     msens:   Magnetic sensor for residual field.
+	     msd:     Magnetic sensor depth/altitude (m).
+	     diur:    Magnetic diurnal correction (gamma, nTesla).
+	     eot:     Stored Eotvos correction (mGal).
+	     sln:     Seismic line number string [TEXTSTRING].
+	     sspn:    Seismic shot point number string [TEXTSTRING].
+	     nqc:     Navigation quality code.
+	   >Computed Information:
+	     carter:  Carter correction from twt (m).
+	     igrf:    International Geomagnetic Reference Field (gamma, nTesla).
+	     ceot:    Calculated Eotvos correction (mGal).
+	     ngrav:   IGF, or Theoretical (Normal) Gravity Field (mGal).
+	     weight:  Report weight as specified in -W [1].
+	  The data are written in the order specified in <dataflags>.
+	  Shortcut flags are:
+	     mgd77:   The full set of all 27 fields in the MGD77 specification.
+	     mgd77t:  The full set of all 26 columns in the MGD77T specification.
+	     geo:     time,lon,lat + the 7 geophysical observations.
+	     all:     As mgd77 but with time items written as a date-time string.
+	     allt:    As mgd77t but with time items written as a date-time string.
+	     dat:     As mgd77t but in plain table file order.
+	    Append + to include the 5 derived quantities dist, azim, cc, vel, and weight [see -W]
+	    [Default is all].
+	  Abbreviations in UPPER CASE will suppress records where any such column is NaN.
+	  (Note that -E is a shorthand to set all abbreviations to upper case).
+	  Optionally, append comma-separated logical tests that data columns must pass to be output.
+	  (Note: These checks do not applied to derived or computed data columns).
+	  Format is <flag><OP><value>, where flag is any of the dataflags above, and <OP> is
+	  one of the operators <, <=, =, >=, >, |, and !=.  <value> is the limit you are testing,
+	  including NaN (with = and != only).  If <flag> is UPPERCASE the test MUST be passed;
+	  else at least ONE of the tests must pass for output to take place.  When using operators
+	  involving characters <, >, and |, put entire argument to -F in single quotes.
+	  Finally, for MGD77+ files you may optionally append : followed by one or more comma-
+	  separated -+|-<col> terms.  This compares specific E77 bitflags for each listed column
+	  + means bit must be 1, - means it must be 0.  All bit tests given must be passed.
+	  By default, MGD77+ files with error bit flags will use the flags to suppress bad data.
+	  Turn this behavior off by append : with no arguments.  For controlling systematic
+	  corrections encoded in MGD77+ files, see -T.
+
+	OPTIONS:
+	-A Adjust some data values before output. Append c|d|f|m|t to select field:
+	   c<code>[,<v>] Adjust field carter. <v>, the sound velocity in water, is taken from
+	     the MGD77 header (or 1500 if invalid); optionally append your <v> (in m/s)
+	     Here, C(twt) is Carter correction, U(twt,v) is uncorrected depth (given <v>).
+	     TC(z) is twt from inverse Carter correction, TU(z,v) is twt from uncorrected depth.
+	       c1 return difference between U(twt,v) and depth [Default].
+	       c2 return difference between U(twt,v) and Carter(twt).
+	       c4 return difference between (uncorrected) depth and Carter (TU(depth,v)).
+	       c8 return difference between U(TC(depth),v) and depth.
+	   d<code>[,<v>] Adjust field depth. <v> is optional sound speed in water (m/s)
+	       d1 return depth as stored in file [Default].
+	       d2 return calculated uncorrected depth U(twt,v).
+	       d4 return calculated corrected depth Carter (twt,v).
+	   f<code>[,<field>] Adjust field faa. <field>, the IGF reference field, is taken
+	     from the MGD77 header (or 4 if invalid); optionally append your <field> from:
+	     1 = Heiskanen 1924 formula:
+	       g = 978052 * [1 + 0.005285 * sin^2(lat) - 0.0000070 * sin^2(2*lat) + 0.000027 * cos^2(lat) * cos^2(lon-18)]
+	     2 = International 1930 formula:
+	       g = 978049 * [1 + 0.0052884 * sin^2(lat) - 0.0000059 * sin^2(2*lat)]
+	     3 = International 1967 formula:
+	       g = 978031.846 * [1 + 0.0053024 * sin^2(lat) - 0.0000058 * sin^2(2*lat)]
+	     4 = International 1980 formula:
+	       g = 978032.67714 * [(1 + 0.00193185138639 * sin^2(lat)) / sqrt (1 - 0.00669437999013 * sin^2(lat))]
+	       f1 return faa as stored in file [Default].
+	       f2 return difference gobs - ngrav.
+	       f4 return difference gobs + eot - ngrav.
+	       f8 return difference gobs + ceot - ngrav.
+	   m<code> Adjust field mag.
+	       m1  return mag as stored in file [Default].
+	       m2  return difference mtfx - igrf, where x = msens (or 1 if undefined).
+	       m4  return difference mtfx - igrf, where x != msens (or 2 if undefined).
+	       m8  return difference mtfx + diur - igrf, where x = msens (or 1 if undefined).
+	       m16 return difference mtfx + diur - igrf, where x != msens (or 2 if undefined).
+	       mc<offset>[unit] Apply cable tow distance correction to mtf1.
+	   t will compute fake times for cruises with known duration but lacking record times.
+	   Append +f to force selected anomalies to be recalculated even when the original
+	   anomaly is NaN [Default honors NaNs in existing anomalies].
+	-D List from a<date> (given as yyyy-mm-ddT[hh:mm:ss]) [Start of cruise]
+	   up to b<date> (given as yyyy-mm-ddT[hh:mm:ss]) [End of cruise].
+	   If A|B is used instead or a|b then records with no time are excluded from output.
+	-E Output records that exactly matches the requested geophysical information in -F
+	   [Default will output all record that matches at least one column].
+	-G List from given a<record> [Start of cruise] up to given b<record> [End of cruise].
+	-I Ignore certain data file formats from consideration. Append combination of act to ignore
+	   (a) MGD77 ASCII, (c) MGD77+ netCDF, (m) MGD77T ASCII, or (t) plain table files. [Default ignores none].
+	-L Subtract systematic corrections from the data. If no correction file is given,
+	   the default file mgd77_corrections.txt in $MGD77_HOME is assumed.
+	-N Append (d)istances or (s)peed, and your choice for <unit>. Choose among:
+	   e Metric units I (meters, m/s).
+	   f British/US units I (feet, feet/s).
+	   k Metric units II (km, km/hr).
+	   M British/US units II (miles, miles/hr).
+	   n Nautical units (nautical miles, knots).
+	   u Old US units (survey feet, sfeets).
+	   [Default is -Ndk -Nse].
+	-Q Return data whose azimuth (-Qa) or velocity (-Qv) fall inside specified range:
+	   -Qa<min_az>/<max_az>, where <min_az> < <max_az> [all azimuths, i.e., 0/360].
+	   -Qc<min_cc>/<max_cc>, where <min_cc> < <max_cc> [all course changes, i.e., -360/360].
+	      Use -QC to use abs value |cc| in the test [0/360].
+	   -Qv<min_vel>[/<max_vel>], where <max_vel> is optional [all velocities, i.e., 0/infinity].
+	      Velocities are given in m/s unless changed by -Ns.
+	-R Return data inside the specified region only [0/360/-90/90].
+	-S Begin list from a<startdist>[<unit>], with <unit> from e|f|k|M|n|u [meter] [Start of cruise]
+	   End list at b<stopdist>[<unit>] [End of cruise].
+	-T Turn OFF the otherwise automatic adjustment of values based on correction terms
+	   stored in the mgd77+ file (option has no effect on plain MGD77 ASCII files).
+	   Append m or e to indicate the MGD77 data set or the extended columns set [Default is both].
+	   For controlling application of point bit flags, see -F and the : modifier discussion.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Set weight for these data [1].
+	-Z Append n to report bathymetry and msd as negative depths [Default is positive -Zp].
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-do Replace any NaNs in output data with <nodata>.
+	-h Write header record with column information [Default is no header].
+	-j Sets spherical distance calculation mode for modules that offer that flexibility.
+	   Append f for Flat Earth, g for Great Circle [Default], and e for Ellipsoidal mode.
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

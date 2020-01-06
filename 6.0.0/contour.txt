@@ -1,0 +1,272 @@
+gmt contour [core] 6.0.0 [64-bit] - Contour table data by direct triangulation
+
+usage: gmt contour <table> -J<args> -R<west>/<east>/<south>/<north>[/<zmin>/<zmax>][+r]
+	[-A[-|<contours>][<labelinfo>] [-B<args>] [-C<contours>] [-D<template>]
+	[-E<indextable>] [-G[d|f|n|l|L|x|X]<args>] [-I] [-L<pen>] [-N]
+	[-Q[<cut>[<unit>]][+z]] [-S[p|t]] [-T[h|l][+a][+d<gap>[c|i|p][/<length>[c|i|p]]][+l[<labels>]]]
+	[-U[<label>][+c][+j<just>][+o<dx>/<dy>]] [-W[a|c]<pen>[+c[l|f]]] [-V[<level>]] [-X[a|c|f|r]<xshift>[<unit>]]
+	[-Y[a|c|f|r]<yshift>[<unit>]] [-b[i|o][<ncol>][t][w][+l|b]] [-c[<row>,<col>]] [-d[i|o]<nodata>]
+	[-e[~]<pattern>] [-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]]
+	[-p[x|y|z]<azim>[/<elev>[/<zlevel>]][+w<lon0>/<lat0>[/<z0>][+v<x0>/<y0>]] [-t<transp>]
+	[-s[<cols>][+a|r]] [-:[i|o]] [--PAR=<value>]
+
+	-J Select map proJection. (<scale> in cm/degree, <width> in cm)
+	   Append +dh for map height, +du for max (upper) or +dl for min (lower) map dimension [+dw for width].
+	   Azimuthal projections set -Rg unless polar aspect or -R<...>r is set.
+
+	   -Ja|A<lon0>/<lat0>[/<hor>]/<scl (or <radius>/<lat>)|<width> (Lambert Azimuthal EA)
+	   -Jb|B<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Albers Conic EA)
+	   -Jcyl_stere|Cyl_stere/[<lon0>/[<lat0>/]]<lat1>/<lat2>/<scl>|<width> (Cylindrical Stereographic)
+	   -Jc|C<lon0>/<lat0><scl>|<width> (Cassini)
+	   -Jd|D<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Equidistant Conic)
+	   -Je|E<lon0>/<lat0>[/<horizon>]/<scl (or <radius>/<lat>)|<width>  (Azimuthal Equidistant)
+	   -Jf|F<lon0>/<lat0>[/<horizon>]/<scl (or <radius>/<lat>)|<width>  (Gnomonic)
+	   -Jg|G<lon0>/<lat0>/<scl (or <radius>/<lat>)|<width>  (Orthographic)
+	   -Jg|G[<lon0>/]<lat0>[/<horizon>|/<altitude>/<azimuth>/<tilt>/<twist>/<Width>/<Height>]/<scl>|<width> (General Perspective)
+	   -Jh|H[<lon0>/]<scl>|<width> (Hammer-Aitoff)
+	   -Ji|I[<lon0>/]<scl>|<width> (Sinusoidal)
+	   -Jj|J[<lon0>/]<scl>|<width> (Miller)
+	   -Jkf|Kf[<lon0>/]<scl>|<width> (Eckert IV)
+	   -Jks|Ks[<lon0>/]<scl>|<width> (Eckert VI)
+	   -Jl|L<lon0>/<lat0>/<lat1>/<lat2>/<scl>|<width> (Lambert Conformal Conic)
+	   -Jm|M[<lon0>/[<lat0>/]]<scl>|<width> (Mercator)
+	   -Jn|N[<lon0>/]<scl>|<width> (Robinson projection)
+	   -Jo|O (Oblique Mercator).  Specify one of three definitions:
+	      -Jo|O[a|A]<lon0>/<lat0>/<azimuth>/<scl>|<width>
+	      -Jo|O[b|B]<lon0>/<lat0>/<lon1>/<lat1>/<scl>|<width>
+	      -Jo|Oc|C<lon0>/<lat0>/<lonp>/<latp>/<scl>|<width>
+	   -Jpoly|Poly/[<lon0>/[<lat0>/]]<scl>|<width> ((American) Polyconic)
+	   -Jq|Q[<lon0>/[<lat0>/]]<scl>|<width> (Equidistant Cylindrical)
+	   -Jr|R[<lon0>/]<scl>|<width> (Winkel Tripel)
+	   -Js|S<lon0>/<lat0>/[<horizon>/]<scl> (or <slat>/<scl> or <radius>/<lat>)|<width> (Stereographic)
+	   -Jt|T<lon0>/[<lat0>/]<scl>|<width> (Transverse Mercator)
+	   -Ju|U[<zone>/]<scl>|<width> (UTM)
+	   -Jv|V<lon0>/<scl>|<width> (van der Grinten)
+	   -Jw|W<lon0>/<scl>|<width> (Mollweide)
+	   -Jy|Y[<lon0>/[<lat0>/]]<scl>|<width> (Cylindrical Equal-area)
+	   -Jp|P[a]<scl>|<width>[/<origin>][r|z] (Polar [azimuth] (theta,radius))
+	   -Jx|X<x-scl>|<width>[d|l|p<power>|t|T][/<y-scl>|<height>[d|l|p<power>|t|T]] (Linear, log, and power projections)
+	   (See psbasemap for more details on projection syntax)
+	   -JZ|z For z component of 3-D projections.  Same syntax as -JX|x, i.e.,
+	   -Jz|Z<z-scl>|<height>[d|l|p<power>|t|T] (Linear, log, and power projections)
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead [0].
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+
+	OPTIONS:
+	<table> is one or more data files (in ASCII, binary, netCDF).
+	   If no files are given, standard input is read.
+	-A Annotation label information. [Default is no annotated contours].
+	   Give annotation interval or comma-separated list of contours.
+	   Alternatively, give - to disable all contour annotations
+	     implied by the information provided in -C.
+	   <labelinfo> controls the specifics of the labels.  Choose from:
+	      +a<angle> will place all label at a fixed angle.
+	      Or, specify +an (line-normal) or +ap (line-parallel) [Default].
+	        For +ap, you may optionally append u for up-hill
+	        and d for down-hill cartographic annotations.
+	      +c<dx>[/<dy>] sets clearance between label and text box [15%].
+	      +d turns on debug which draws helper points and lines.
+	      +e delays the plotting of the text as text clipping is set instead.
+	      +f sets specified label font [Default is 12p,Helvetica,black].
+	      +g[<color>] paints text box [transparent]; append color [white].
+	      +j<just> sets label justification [Default is MC].
+	      +n<dx>[/<dy>] to nudge label along line (+N for along x/y axis); ignored with +v.
+	      +o to use rounded rectangular text box [Default is rectangular].
+	      +p[<pen>] draw outline of textbox [Default is no outline].
+	        Optionally append a pen [Default is default pen].
+	      +r<rmin> skips labels where radius of curvature < <rmin> [0].
+	      +t[<file>] saves (x y angle label) to <file> [Contour_labels.txt].
+	      +u<unit> to append unit to all labels.
+	       If z is appended we use the z-unit from the grdfile [no unit].
+	      +v for placing curved text along path [Default is straight].
+	      +w sets how many (x,y) points to use for angle calculation [auto].
+	      +=<prefix> to give all labels a prefix.
+	-B Specify both (1) basemap frame settings and (2) axes parameters.
+	   (1) Frame settings are modified via an optional single invocation of
+	     -B[<axes>][+g<fill>][+n][+o<lon>/<lat>][+t<title>]
+	   (2) Axes parameters are specified via one or more invocations of
+	       -B[p|s][x|y|z]<intervals>[+a<angle>][+l<label>][+p<prefix>][+u<unit>]
+	   <intervals> is composed of concatenated [<type>]<stride>[<unit>][l|p] sub-strings
+	   See psbasemap man page for more details and examples of all settings.
+	-C Contours to be drawn can be specified in one of four ways:
+	   1. Fixed contour interval.
+	   2. Comma-separated contours (for single contour append comma to be seen as list).
+	   3. File with contour levels in col 1 and C(ont) or A(nnot) in col 2
+	      [and optionally an individual annotation angle in col 3].
+	   4. Name of a CPT.
+	   If -T is used, only contours with upper case C or A is ticked
+	     [CPT contours are set to C unless the CPT flags are set;
+	     Use -A to force all to become A].
+	     If neither -A nor -C are set then we auto-select the intervals.
+	-D Dump contours as data line segments; no plotting takes place.
+	   Append filename template which may contain C-format specifiers.
+	   If no filename template is given we write all lines to stdout.
+	   If filename has no specifiers then we write all lines to a single file.
+	   If a float format (e.g., %6.2f) is found we substitute the contour z-value.
+	   If an integer format (e.g., %06d) is found we substitute a running segment count.
+	   If an char format (%c) is found we substitute C or O for closed and open contours.
+	   The 1-3 specifiers may be combined and appear in any order to produce the
+	   the desired number of output files (e.g., just %c gives two files, just %f would.
+	   separate segments into one file per contour level, and %d would write all segments.
+	   to individual files; see manual page for more examples.
+	-E File with triplets of point indices for each triangle
+	   [Default performs the Delaunay triangulation on xyz-data].
+	-G Control placement of labels along contours.  Choose among five algorithms:
+	   d<dist>[c|i|p] or D<dist>[d|m|s|e|f|k|M|n|u]  [Default is d10.16c].
+	      d: Give distance between labels with specified map unit in c|i|p.
+	      D: Specify geographic distance between labels in d|m|s|e|f|k|M|n|u,
+	      The first label appears at <frac>*<dist>; change by appending /<frac> [0.25].
+	   f<file.d> reads file <file.d> and places labels at locations
+	      that match individual points along the contours.
+	   l|L<line1>[,<line2>,...] Give start and stop coordinates for
+	      straight line segments; labels will be placed where these
+	      lines intersect contours.  The format of each <line>
+	      is <start>/<stop>, where <start> or <stop> = <lon/lat> or a
+	      2-character XY key that uses the "pstext"-style justification
+	      format to specify a point on the map as [LCR][BMT].
+	      In addition, you can use Z-, Z+ to mean the global
+	      minimum and maximum locations in the grid.
+	      L Let point pairs define great circles [Straight lines].
+	   n|N<n_label> sets number of equidistant labels per contour.
+	      N: Starts label exactly at the start of contour
+	        [Default centers the labels on the contour].
+	      N-1 places a single label at start of the contour, while
+	      N+1 places a single label at the end of the contour.
+	      Append /<min_dist> to enforce a minimum spacing between
+	      consecutive labels [0]
+	   x|X<xfile.d> reads the multi-segment file <xfile.d> and places
+	      labels at intersections between contours and lines in
+	      <xfile.d>.  Use X to resample the lines first.
+	      For all options, append +r<radius>[unit] to specify minimum
+	      radial separation between labels [0]
+	-I Color triangles using the CPT.
+	-L Draws the triangular mesh with the specified pen.
+	   <pen> is a comma-separated list of three optional items in the order:
+	       <width>[c|i|p], <color>, and <style>[c|i|p].
+	   <width> >= 0.0 sets pen width (default units are points); alternatively a pen
+	       name: Choose among faint, default, or [thin|thick|fat][er|est], or obese.
+	   <color> = (1) <gray> or <red>/<green>/<blue>, all in range 0-255,
+	             (2) <c>/<m>/<y>/<k> in 0-100% range,
+	             (3) <hue>-<sat>-<val> in ranges 0-360, 0-1, 0-1,
+	             (4) any valid color name.
+	   <style> = (1) pattern of dashes (-) and dots (.), scaled by <width>.
+	             (2) "dashed", "dotted", "dashdot", "dotdash", or "solid".
+	             (3) <pattern>[:<offset>]; <pattern> holds lengths (default unit points)
+	                 of any number of lines and gaps separated by underscores.
+	                The optional <offset> shifts elements from start of the line [0].
+	   For PDF stroke transparency, append @<transparency> in the range 0-100% [0 = opaque].
+	-N Do NOT clip contours/image at the border [Default clips].
+	-Q Do not draw closed contours with less than <cut> points [Draw all contours].
+	   Alternatively, give a minimum contour length and append a unit (d|m|s|e|f|k|M|n|u, or c for Cartesian).
+	   Unit C means Cartesian distances after first projecting the input coordinates.
+	   Optionally, append +z to skip tracing the zero-contour.
+	-S (or -Sp) Skip xyz points outside region [Default keeps all].
+	   Use -St to instead skip triangles whose 3 vertices are outside.
+	-T Will embellish innermost, closed contours with ticks pointing in
+	   the downward direction.  User may specify to tick only highs
+	   (-Th) or lows (-Tl) [-T implies both extrema]. Use +a to tick all closed contours.
+	   Append +d<spacing>[/<ticklength>] (with units) to change defaults [15p/3p].
+	   Append +lXY (or +l"low,high") to place X and Y (or low and high) at the center
+	   of local lows and highs.  If no labels are given we default to - and +.
+	   If two characters are passed (e.g., +lLH) we place them at local lows and highs.
+	   For string labels, simply give two strings separated by a comma (e.g., +llo,hi).
+	-U Plot GMT Unix System Time stamp [and optionally appended text or command line].
+	   You may also set the justification point and the relative position of stamp
+	   [+jBL+o-54p/-54p].  Add +c to have the command line plotted [OFF].
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-W Set pen attributes. Append a<pen> for annotated or c<pen> for regular contours [Default].
+	   <pen> is a comma-separated list of three optional items in the order:
+	       <width>[c|i|p], <color>, and <style>[c|i|p].
+	   <width> >= 0.0 sets pen width (default units are points); alternatively a pen
+	       name: Choose among faint, default, or [thin|thick|fat][er|est], or obese.
+	   <color> = (1) <gray> or <red>/<green>/<blue>, all in range 0-255,
+	             (2) <c>/<m>/<y>/<k> in 0-100% range,
+	             (3) <hue>-<sat>-<val> in ranges 0-360, 0-1, 0-1,
+	             (4) any valid color name.
+	   <style> = (1) pattern of dashes (-) and dots (.), scaled by <width>.
+	             (2) "dashed", "dotted", "dashdot", "dotdash", or "solid".
+	             (3) <pattern>[:<offset>]; <pattern> holds lengths (default unit points)
+	                 of any number of lines and gaps separated by underscores.
+	                The optional <offset> shifts elements from start of the line [0].
+	   For PDF stroke transparency, append @<transparency> in the range 0-100% [0 = opaque].
+	   The default settings are
+	   Contour pen: default,black.
+	   Annotate pen: thin,black.
+	   +c Controls how pens and fills are affected if a CPT is specified via -C:
+	      Append l to let pen colors follow the CPT setting (requires -C).
+	      Append f to let fill/font colors follow the CPT setting.
+	      Default [+c] sets both effects.
+	-X -Y Shift origin of plot to (<xshift>, <yshift>).
+	   Prepend r for shift relative to current point (default), prepend a for temporary
+	   adjustment of origin, prepend f to position relative to lower left corner of page,
+	   prepend c for offset of center of plot to center of page.
+	   For overlays (-O), the default setting is [r0], otherwise [f2.54c].
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type> in binary file(s) [3].
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-c Move to next subplot panel or append row,col of desired panel.
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Sets alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-p Select a 3-D pseudo perspective view.  Append the
+	   <azimuth>/<elevation> of the viewpoint [180/90].
+	   When used with -Jz|Z, optionally add /<zlevel> for frame level [bottom of z-axis].
+	   Prepend x or y to plot against the “wall” x = level or y = level [z].
+	   Optionally, append +w<lon0>/<lat0>[/<z0>] to specify a fixed coordinate point
+	   or +v<x0>/<y0> for a fixed projected point [region center and page center].
+	   For a plain rotation about the z-axis, give rotation angle only
+	   and optionally use +w or +v to select location of axis [plot origin].
+	-s Suppress output for records whose z-value (col = 2) equals NaN
+	   [Default prints all records].
+	   Append <cols> to examine other column(s) instead [2].
+	   Append +a to suppress records where any column equals NaN, or
+	   append +r to reverse the suppression (only output z = NaN records).
+	-t Set the layer transparency from 0-100 [Default is 0; opaque].
+	   Requires conversion to PDF or raster formats.
+	-: Swap 1st and 2nd column on input and/or output [OFF/OFF].
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

@@ -1,0 +1,77 @@
+gmt earthtide [geodesy] 6.0.0 [64-bit] - Compute grids or time-series of solid Earth tides
+
+usage: gmt earthtide [-G<outgrid>] [-C<comp>] [-L<lon>/<lat>]
+	[-I<xinc>[<unit>][+e|n][/<yinc>[<unit>][+e|n]]] [-T[<min>/<max>/][-|+]<inc>[<unit>][+n]]
+	[-R<west>/<east>/<south>/<north>[+r]] [-S]
+	[-bo[<ncol>][t][w][+l|b]] [-o<cols>[,...][t[<word>]]] [-r[g|p]] [ [-x[[-]<n>]] ] [--PAR=<value>]
+
+	-G Specify file name for output grid file(s).
+	   If more than one component is set via -C then <outgrid> must contain %s to format component code.
+
+	OPTIONS:
+	-C List of comma-separated components to be written as grids (requires -G). Choose from
+	   x|e, y|n, z|v. [Default is v(ertical) only].
+	-I Specify increment(s) and optionally append units or flags.
+	   Full syntax is <xinc>[d|m|s|e|f|k|M|n|u][+e|n][/<yinc>[d|m|s|e|f|k|M|n|u][+e|n]]]
+	   For geographic regions in degrees you can optionally append units from this list:
+	   (d)egree [Default], (m)inute, (s)econd, m(e)ter, (f)oot, (k)ilometer, (M)ile, (n)autical mile, s(u)rvey foot.
+	   Append +e to adjust the region to fit increments [Adjust increment to fit domain].
+	   Alternatively, specify number of nodes by appending +n. Then, the increments
+	   are calculated from the given domain and node-registration settings
+	   (see Appendix B for details).  Note: If -R<grdfile> was used then -I
+	   (and -R and maybe -r) have been set; use -I to override those increments.
+	-L <lon/lat> Geographical coordinate where to compute the time-series.
+	-R Specify the min/max coordinates of your data region in user units.
+	   Use dd:mm[:ss] for regions given in arc degrees, minutes [and seconds].
+	   Use -R<xmin/xmax/ymin/ymax>+<unit> for regions given in projected coordinates.
+	     with <unit> selected from e|f|k|M|n|u.
+	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
+	   Append +r if -R specifies the coordinates of the lower left and
+	     upper right corners of a rectangular area.
+	   Use -R<gridfile> to use its limits (and increments if applicable).
+	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
+	   Derive region from closed polygons from the Digital Chart of the World (DCW):
+	     Append a comma-separated list of ISO 3166 codes for countries to set region, i.e.,
+	     <code1>,<code2>,... etc., using the 2-character ISO country codes (see pscoast -E+l for list).
+	     To select a state of a country (if available), append .state, e.g, US.TX for Texas.
+	     To select a whole continent, give =AF|AN|AS|EU|OC|NA|SA as <code>.
+	     Use +r to modify the region from polygon(s): Append <inc>, <xinc>/<yinc>, or <winc>/<einc>/<sinc>/<ninc>
+	     to round region to these multiples; use +R to extend region by those increments instead [0].
+	   Or use -R<code><x0>/<y0>/<n_columns>/<n_rows> for origin and grid dimensions, where
+	     <code> is a 2-char combo from [T|M|B][L|C|R] (top/middle/bottom/left/center/right)
+	     and grid spacing must be specified via -I<dx>[/<dy>] (also see -r).
+	-S Output position of Sun and Moon in geographical coordinates plus
+	   distance in meters. Output is a Mx7 matrix, where M is the number of
+	   times (set by -T) and columns are time, sun_lon, sun_lat, sun_dist
+	   moon_lon, moon_lat, moon_dist.
+	-T Make evenly spaced output time steps from <min> to <max> by <inc>.
+	   Append +n to indicate <inc> is the number of t-values to produce over the range instead.
+	   Append a valid time unit (y|o|w|d|h|m|s) to the increment and add +t.
+	   If no -T is provided get current time in UTC from the computer clock.
+	   If no -G or -S are provided then -T is interpreted to mean compute a time-series
+	   at the location specified by -L, thus then -L becomes mandatory.
+	   When -G and -T only first time T series is considered.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-o Set alternate output column order [Default writes all columns in order].
+	   Append list of columns; t[<word>] = trailing text; use <word> for writing a single word from the text.
+	   Use -on for numerical output only.
+	-r Set (g)ridline- or (p)ixel-registration [Just -r sets pixel registration].
+	   If not given we default to gridline registration.
+	-x Limit the number of cores used in multi-threaded algorithms.
+	   Default uses all available cores [4].
+	   -x<n>  Select <n> cores (up to all available).
+	   -x-<n> Select (all - <n>) cores (or at least 1).
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).
