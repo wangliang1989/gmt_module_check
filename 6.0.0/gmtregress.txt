@@ -1,0 +1,104 @@
+gmt gmtregress [core] 6.0.0 [64-bit] - Linear regression of 1-D data sets
+
+usage: gmt gmtregress [<table>] [-A[<min>/<max>/<inc>]] [-C<level>] [-Ex|y|o|r] [-F<flags>] [-N1|2|r|w]
+	[-S[r]] [-T[<min>/<max>/]<inc>[+n] [-V[<level>]] [-W[w][x][y][r]] [-a<col>=<name>[,...]]
+	[-b[i|o][<ncol>][t][w][+l|b]] [-d[i|o]<nodata>] [-e[~]<pattern>] [-g[a]x|y|d|X|Y|D|[<col>]z<gap>[<unit>][+n|p]]
+	[-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]] [-o<cols>[,...][t[<word>]]] [--PAR=<value>]
+
+	OPTIONS:
+	<table> is one or more data files (in ASCII, binary, netCDF).
+	   If no files are given, standard input is read.
+	-A Examine E as function of line slope; give angle range and increment [-90/+90/1].
+	   Option -F is not required as no model will be returned; instead we return
+	   records of (angle, E, slope, intercept) for all angles specified.
+	-C Select level (in %) to use in confidence band calculations (see -Fc) [95].
+	-E Regression type. Select how misfit should be measured:
+	     x : Horizontally from data point to regression line.
+	     y : Vertically from data point to regression line [Default].
+	     o : Orthogonally from data point to regression line.
+	     r : Use Reduced Major Axis area misfit.
+	-F Append desired output columns in any order; choose from:
+	     x : The x observations.
+	     y : The y observations.
+	     m : The estimated model values.
+	     r : The estimated residuals.
+	     c : The confidence limits (to add/subtract from m).
+	     z : The standardized residuals (z-scores).
+	     w : The outlier flags (1 or 0), or Reweighted Least Squares weights (for -Nw).
+	         A value of 0 identifies an outlier.
+	     Note: Cannot use y|r|z|w with -T. With -T, x means locations implied by -T.
+	     [Default is xymrczw].
+	     Alternatively, choose -Fp to output only the model parameters:
+	     N meanX meanY angle misfit slope icept sigma_slope sigma_icept
+	-N Append desired misfit norm; choose from:
+	     1 : L-1 measure (mean absolute residuals).
+	     2 : L-2 measure (mean squared residuals) [Default].
+	     r : LMS robust measure (median of squared residuals).
+	     w : RLS Reweighted L-2 measure (r followed by 2 after excluding outliers.
+	-S Skip records identified as outliers on output. Append r to reverse mode and
+	   only output the outlier records. Cannot be used with -T [output all records].
+	-T Evaluate model at the equidistant points implied by the arguments.
+	   If only -T<inc>[+n] is given we reset <min> and <max> to the extreme x-values
+	   for each segment.  Append +n if <inc> is the number of t-values to produce instead.
+	   For absolute time data, append a valid time unit (y|o|w|d|h|m|s) to the increment.
+	   Alternatively, give a file with output times in the first column, or a comma-separated list.
+	   Use -T0 to bypass model evaluation entirely.
+	   [Default uses locations of input data to evaluate the model].
+	-W Supply individual 1-sigma uncertainties for data points [no weights].
+	   Append x for sigma_x, y for sigma_y, and r for x-y correlation.
+	   We then expect 1-3 extra columns with these data in the given order.
+	   Given a sigma, the weight will be computed via weight = 1/sigma.
+	   Use -Ww if weights are precomputed and not given as 1-sigma values.
+	   Except for -N1 we square the weights when computing misfits.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-a Give one or more comma-separated <col>=<name> associations
+	   [Default selects all aspatial fields].
+	-bi For binary input; [<n>]<type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D.
+	    Prepend <n> for the number of columns for each <type>.
+	-bo For binary output; append <type>[w][+l|b]; <type> = c|u|h|H|i|I|l|L|f|D..
+	    Prepend <n> for the number of columns for each <type>.
+	-d On input, replace <nodata> with NaN; on output do the reverse.
+	-e Only accept input data records that contain the string "pattern".
+	   Use -e~"pattern" to only accept data records that DO NOT contain this pattern.
+	   If your pattern begins with ~, escape it with \~.  To match against
+	   extended regular expressions use -e[~]/regexp/[i] (i for case-insensitive).
+	   Give +f<file> for a file list with such patterns, one per line.
+	   To give a single pattern starting with +f, escape it with \+f.
+	-g Use data point separations to determine if there are data gaps.
+	   Append x|X or y|Y to identify data gaps in x or y coordinates,
+	   respectively, and append d|D for distance gaps.  Upper case X|Y|D means
+	   we first project the points (requires -J).  Append <gap>[unit][+n|p]; +n uses
+	   d=prev-curr, +p uses d=curr-prev [d=|curr-prev|]; d must exceed <gap> to detect a gap.
+	   For geographic data: choose from e|f|k|M|n|u [Default is meter (e)].
+	   For gaps based on mapped coordinates: choose unit from c|i|p [cm].
+	   For time data: the unit is controlled by TIME_UNIT.
+	   For generic data: the unit is as the data implies (user units).
+	   Repeat the -g option to specify multiple criteria, and add -ga
+	   to indicate that all criteria must be met [just one must be met].
+	-h[i][<n>][+c][+d][+r<remark>][+t<title>] Input/output file has [0] Header record(s) [OFF]
+	   Optionally, append i for input only and/or number of header records [0].
+	     -hi turns off the writing of all headers on output.
+	   Append +c to add header record with column information [none].
+	   Append +d to delete headers before adding new ones [Default will append headers].
+	   Append +r to add a <remark> comment to the output [none].
+	   Append +t to add a <title> comment to the output [none].
+	     (these strings may contain \n to indicate line-breaks)
+	   For binary files, <n> is considered to mean number of bytes.
+	-i Sets alternate input column order and optional transformations [Default reads all columns in original order].
+	   Append list of columns; t[<word>] = trailing text; use <word> to pick a word from the text.
+	   Use -in for considering numerical input only.
+	-o Set alternate output column order [Default writes all columns in order].
+	   Append list of columns; t[<word>] = trailing text; use <word> for writing a single word from the text.
+	   Use -on for numerical output only.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.
+	--PAR=<value> Temporarily override GMT default setting(s) (repeatable).
+	(See gmt.conf man page for GMT default parameters).

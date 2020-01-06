@@ -3,7 +3,7 @@ gmt plot [core] 6.0.0 [64-bit] - Plot lines, polygons, and symbols in 2-D
 usage: gmt plot [<table>] -J<args> -R<west>/<east>/<south>/<north>[/<zmin>/<zmax>][+r] [-A[m|p|x|y]]
 	[-B<args>] [-C<cpt>] [-D<dx>/<dy>] [-E[x|y|X|Y][+a][+c[l|f]][+n][+p<pen>][+w<width>]] [-F<arg>] [-G<fill>]
 	[-I[<intens>]] [-L[+b|d|D][+xl|r|x0][+yb|t|y0][+p<pen>]] [-N[c|r]] 
-	[-S[<symbol>][<size>[unit]]] [-T] [-U[<label>][+c][+j<just>][+o<dx>/<dy>]] [-V[<level>]] [-W[<pen>][<attr>]]
+	[-S[<symbol>][<size>[unit]]] [-U[<label>][+c][+j<just>][+o<dx>/<dy>]] [-V[<level>]] [-W[<pen>][<attr>]]
 	[-X[a|c|f|r]<xshift>[<unit>]] [-Y[a|c|f|r]<yshift>[<unit>]] [-Z[l|f]<val>] [-a<col>=<name>[,...]]
 	[-bi[<ncol>][t][w][+l|b]] [-c[<row>,<col>]] [-di<nodata>] [-e[~]<pattern>]
 	[-f[i|o]<info>] [-g[a]x|y|d|X|Y|D|[<col>]z<gap>[<unit>][+n|p]] [-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]]
@@ -56,6 +56,7 @@ usage: gmt plot [<table>] -J<args> -R<west>/<east>/<south>/<north>[/<zmin>/<zmax
 	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
 	   Append +r if -R specifies the coordinates of the lower left and
 	     upper right corners of a rectangular area.
+	   Use -Re and -Ra to set exact or approximate regions based on your input data (if applicable).
 	   Use -R<gridfile> to use its limits (and increments if applicable).
 	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
 	   Derive region from closed polygons from the Digital Chart of the World (DCW):
@@ -410,7 +411,6 @@ usage: gmt plot [<table>] -J<args> -R<west>/<east>/<south>/<north>[/<zmin>/<zmax
 	     +r to only draw right side of all specified vector heads [both sides].
 	     +s if (x,y) coordinates of tip is given instead of (azimuth,length) on input.
 	     +t[b|e]<trim(s)>[unit] to shift begin or end position along vector by given amount [no shifting].
-	-T Ignore all input files.
 	-U Plot GMT Unix System Time stamp [and optionally appended text or command line].
 	   You may also set the justification point and the relative position of stamp
 	   [+jBL+o-54p/-54p].  Add +c to have the command line plotted [OFF].

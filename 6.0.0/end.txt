@@ -1,1 +1,17 @@
-gmt [ERROR]: Not available in classic mode
+gmt end [core] 6.0.0 [64-bit] - Terminate GMT modern mode session and produce optional graphics
+
+usage: gmt end [show] [-V[<level>]]
+
+	OPTIONS:
+	show Display each figure in the default viewer.
+	-V Change the verbosity level (currently v).
+	   Choose among 6 levels; each level adds more messages:
+	     q - Quiet, not even fatal error messages.
+	     n - Normal verbosity: only error messages.
+	     c - Also produce compatibility warnings [Default when no -V is used].
+	     v - Verbose progress messages [Default when -V is used].
+	     l - Long verbose progress messages.
+	     d - Debugging messages.
+	-^ (or -) Print short synopsis message.
+	-+ (or +) Print longer synopsis message.
+	-? (or no arguments) Print this usage message.

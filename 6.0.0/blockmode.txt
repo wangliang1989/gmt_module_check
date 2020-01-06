@@ -4,7 +4,7 @@ usage: gmt blockmode [<table>] -I<xinc>[<unit>][+e|n][/<yinc>[<unit>][+e|n]] -R<
 	[-A<fields>] [-C] [-D<width>[+c][+l|h]] [-E] [-Er|s[+l|h]] [-G<grdfile>] [-Q] [-W[i][o][+s]]
 	[-a<col>=<name>[,...]] [-b[i|o][<ncol>][t][w][+l|b]] [-d[i|o]<nodata>] [-e[~]<pattern>] [-f[i|o]<info>]
 	[-h[i|o][<nrecs>][+c][+d][+r<remark>][+t<title>]] [-i<cols>[+l][+s<scale>][+o<offset>][,...][,t[<word>]]]
-	[-o<cols>[,...][t[<word>]]] [-r[g|p]] [-:[i|o]] [--PAR=<value>] [PSØŽÿ]
+	[-o<cols>[,...][t[<word>]]] [-r[g|p]] [-:[i|o]] [--PAR=<value>] [(null)]
 
 	-I Specify increment(s) and optionally append units or flags.
 	   Full syntax is <xinc>[d|m|s|e|f|k|M|n|u][+e|n][/<yinc>[d|m|s|e|f|k|M|n|u][+e|n]]]

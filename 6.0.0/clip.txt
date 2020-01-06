@@ -57,6 +57,7 @@ usage: gmt clip -C[a|<n>] [-A[m|p|x|y]] [-K] [-O]  OR
 	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
 	   Append +r if -R specifies the coordinates of the lower left and
 	     upper right corners of a rectangular area.
+	   Use -Re and -Ra to set exact or approximate regions based on your input data (if applicable).
 	   Use -R<gridfile> to use its limits (and increments if applicable).
 	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
 	   Derive region from closed polygons from the Digital Chart of the World (DCW):

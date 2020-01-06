@@ -1,9 +1,8 @@
 gmt basemap [core] 6.0.0 [64-bit] - Plot base maps and frames
 
 usage: gmt basemap -J<args> -R<west>/<east>/<south>/<north>[/<zmin>/<zmax>][+r] [-B<args>]
-	[-A[<file>]] [-D[g|j|J|n|x]<refpoint>+w<width>[<unit>][/<height>[<unit>]][+j<justify>][+o<dx>[/<dy>]][+s<file>][+t]] |
-	[-D<xmin>/<xmax>/<ymin>/<ymax>[+r][+s<file>][+t][+u<unit>]]
-	[-F[d|l|t][+c<clearance(s)>][+g<fill>][+i[[<gap>/]<pen>]][+p[<pen>]][+r[<radius>]][+s[<dx>/<dy>/][<fill>]]] 
+	[-A[<file>]] [-F[l|t][+c<clearance(s)>][+g<fill>][+i[[<gap>/]<pen>]][+p[<pen>]][+r[<radius>]][+s[<dx>/<dy>/][<fill>]]]
+	
 	[-L[g|j|J|n|x]<refpoint>+c[<slon>/]<slat>+w<length>[e|f|M|n|k|u][+a<align>][+f][+j<justify>][+l[<label>]][+o<dx>[/<dy>]][+u]]
 	[-Td[g|j|J|n|x]<refpoint>+w<width>[+f[<level>]][+j<justify>][+l<w,e,s,n>][+o<dx>[/<dy>]]]
 	[-Tm[g|j|J|n|x]<refpoint>+w<width>[+d[<dec>[/<dlabel>]]][+i<pen>][+j<justify>][+l<w,e,s,n>][+p<pen>][+t<ints>][+o<dx>[/<dy>]]]
@@ -140,6 +139,7 @@ usage: gmt basemap -J<args> -R<west>/<east>/<south>/<north>[/<zmin>/<zmax>][+r] 
 	   Use [yyy[-mm[-dd]]]T[hh[:mm[:ss[.xxx]]]] format for time axes.
 	   Append +r if -R specifies the coordinates of the lower left and
 	     upper right corners of a rectangular area.
+	   Use -Re and -Ra to set exact or approximate regions based on your input data (if applicable).
 	   Use -R<gridfile> to use its limits (and increments if applicable).
 	   Use -Rg and -Rd as shorthands for -R0/360/-90/90 and -R-180/180/-90/90.
 	   Derive region from closed polygons from the Digital Chart of the World (DCW):
@@ -235,28 +235,7 @@ usage: gmt basemap -J<args> -R<west>/<east>/<south>/<north>[/<zmin>/<zmax>][+r] 
 	     Log10 axis: Append l to annotate log10 (value) or p for 10^(log10(value)) [Default annotates value].
 	     Power axis: Append p to annotate value at equidistant pow increments [Default is nonlinear].
 	     See psbasemap man pages for more details and examples of all settings.
-	-D Draw a simple map inset box as specified below:
-	     Specify the map inset region using one of three specifications:
-	     a) Give <west>/<east>/<south>/<north> of geographic rectangle bounded by meridians and parallels.
-	        Append +r if coordinates are the lower left and upper right corners of a rectangular area.
-	     b) Give <xmin>/<xmax>/<ymin>/<ymax>[+u<unit>] of bounding rectangle in projected coordinates [meters].
-	     c) Set reference point and dimensions of the inset:
-	        Positioning is specified via one of four coordinate systems:
-	          Use -Dg to specify <refpoint> with map coordinates.
-	          Use -Dj or -DJ to specify <refpoint> with 2-char justification code (BL, MC, etc).
-	          Use -Dn to specify <refpoint> with normalized coordinates in 0-1 range.
-	          Use -Dx to specify <refpoint> with plot coordinates.
-	        All except -Dx require the -R and -J options to be set.
-	        Use J if item should be placed outside the map frame and j if inside.
-	        Append +w<width>[<u>]/<height>[<u>] of bounding rectangle (<u> is a unit from c|i|p).
-	        Append 2-char +j<justify> code to associate that anchor point on the inset with <refpoint>.
-	        If +j<justify> is not given then <justify> will default to the same as <refpoint> (with -Dj),
-	          or the mirror opposite of <refpoint> (with -DJ), or BL (else).
-	        Optionally, append +o<dx>[/<dy>] to offset inset from <refpoint> in direction implied by <justify> [0/0].
-	     Append +s<file> to save inset lower left corner and dimensions to <file>.
-	     Append +t to translate plot origin to the lower left corner of the inset.
-	   Set panel attributes separately via the -F option.
-	-F Specify a rectangular panel behind the map inset, scale or rose.
+	-F Specify a rectangular panel behind the map scale or rose.
 	   Without further options: draw border around the scale panel (using MAP_FRAME_PEN)
 	     [Default is no border].
 	   Append +c<clearance> where <clearance> is <gap>, <xgap/ygap>, or <lgap/rgap/bgap/tgap> [4p].
@@ -266,7 +245,7 @@ usage: gmt basemap -J<args> -R<west>/<east>/<south>/<north>[/<zmin>/<zmax>][+r] 
 	   Append +p[<pen>] to draw the border and optionally change the border pen [thicker,black].
 	   Append +r[<radius>] to plot rounded rectangles instead [Default radius is 6p].
 	   Append +s[<dx>/<dy>/][<shade>] to plot a shadow behind the scale panel [Default is 4p/-4/gray50].
-	   For separate panel attributes, use -Fd, -Fl, -Ft.
+	   For separate panel attributes, use -Fl, -Ft.
 	-L Draw a map scale at specified reference point.
 	   Positioning is specified via one of four coordinate systems:
 	     Use -Lg to specify <refpoint> with map coordinates.
